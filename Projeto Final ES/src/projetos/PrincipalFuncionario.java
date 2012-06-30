@@ -143,6 +143,7 @@ public class PrincipalFuncionario extends JFrame {
         PrincipalFuncionario esse = new PrincipalFuncionario();
         esse.setVisible(true);
     }
+    
     //------- Geral
     private JPanel pnlMenu;
     private JPanel pnlLogin;

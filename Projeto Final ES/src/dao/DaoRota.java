@@ -29,10 +29,10 @@ public class DaoRota {
                 rota.setRota_cidadeDestinoId(rs.getInt("rota_cidadeDestino"));
                 DaoCidade daoCidade = new DaoCidade();
                 Cidade cidade = new Cidade();
-                cidade.setId(rs.getInt("itinerario_cidadeOrigem"));
+                cidade.setId(rs.getInt("rota_cidadeOrigem"));
                 cidade = daoCidade.consultaCidade(cidade);
                 rota.setRota_cidadeOrigem(cidade.getNome());
-                cidade.setId(rs.getInt("itinerario_cidadeDestino"));
+                cidade.setId(rs.getInt("rota_cidadeDestino"));
                 cidade = daoCidade.consultaCidade(cidade);
                 rota.setRota_cidadeDestino(cidade.getNome());
                 arrayList.add(rota);
@@ -185,18 +185,5 @@ public class DaoRota {
             ex.printStackTrace();
         }
         return arrayList;
-    }
-
-    public static void main(String[] args) {
-        ArrayList<Rota> rotas = new ArrayList<Rota>();
-        DaoRota in = new DaoRota();
-        rotas = in.carregaRotas(1);
-
-        for (int i = 0; i < rotas.size(); i++) {
-            System.out.println(rotas.get(i).getRota_cidadeOrigem());
-            System.out.println(rotas.get(i).getRota_cidadeDestino());
-            System.out.println(rotas.get(i).getRotaDuracao());
-
-        }
     }
 }

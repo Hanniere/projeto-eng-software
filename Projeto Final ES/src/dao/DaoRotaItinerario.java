@@ -1,6 +1,6 @@
 package dao;
 
-import cadastro_rota.RotaItinerario;
+import entidades.RotaItinerario;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

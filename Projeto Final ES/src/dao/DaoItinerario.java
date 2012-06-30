@@ -140,6 +140,7 @@ public class DaoItinerario {
                 cidade.setId(rs.getInt("itinerario_cidadeDestino"));
                 cidade = daoCidade.consultaCidade(cidade);
                 itinerario.setItinerario_cidadeDestino(cidade.getNome());
+                arrayList.add(itinerario);
             }
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -181,17 +182,5 @@ public class DaoItinerario {
             ex.printStackTrace();
         }
         return arrayList;
-    }
-
-    public static void main(String[] args) {
-        ArrayList<Itinerario> itinerarios = new ArrayList<Itinerario>();
-        DaoItinerario in = new DaoItinerario();
-        itinerarios = in.consultarTodosItinerarios();
-
-        for (int i = 0; i < itinerarios.size(); i++) {
-            System.out.println(itinerarios.get(i).getItinerario_cidadeOrigem());
-            System.out.println(itinerarios.get(i).getItinerario_cidadeDestino());
-
-        }
     }
 }

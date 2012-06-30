@@ -52,8 +52,9 @@ public class PanelMenu extends JPanel {
         estadoPanel = new PanelEstado();
         cidadePanel = new PanelCidade();
         consultaPanel = new PanelConsulta();
-        rotaItinerarioPanel = new PanelRotaItinerario();
+        rotaItinerarioPanel = new PanelItinerarioRota();
         funcionarioPanel = new PanelFuncionario();
+        horarioPanel = new PanelHorario();
 
         pnlHome = homePanel.inserirPnlHome();
         pnlOnibus = onibusPanel.inserirPnlOnibus();
@@ -63,6 +64,7 @@ public class PanelMenu extends JPanel {
         pnlConsulta = consultaPanel.inserirPnlConsulta();
         pnlRotaItinerario = rotaItinerarioPanel.inserirPnlRotaItinerario();
         pnlFuncionario = funcionarioPanel.inserirPnlFuncionario();
+        pnlHorario = horarioPanel.inserirPnlItinerario();
 
         btnOnibus.addMouseListener(new MouseAdapter() {
 
@@ -123,9 +125,9 @@ public class PanelMenu extends JPanel {
         GroupLayout pnlMenuLayout = new javax.swing.GroupLayout(pnlMenu);
         pnlMenu.setLayout(pnlMenuLayout);
         pnlMenuLayout.setHorizontalGroup(
-                pnlMenuLayout.createParallelGroup().addGroup(pnlMenuLayout.createSequentialGroup().addGap(28, 28, 28).addGroup(pnlMenuLayout.createParallelGroup().addComponent(btnConsulta, 73, 73, 73).addComponent(btnRotaItinerario, 73, 73, 73).addComponent(btnHorario, 73, 73, 73).addComponent(btnCidade, 73, 73, 73).addComponent(btnEstado, 73, 73, 73).addComponent(btnMotorista, 73, 73, 73).addComponent(btnOnibus, 73, 73, 73)).addGap(28, 28, 28).addComponent(separadorMenu, 2, 2, 2).addGap(28, 28, 28).addComponent(pnlHome, 695, 695, 695).addComponent(pnlOnibus, 695, 695, 695).addComponent(pnlMotorista, 695, 695, 695).addComponent(pnlEstado, 695, 695, 695).addComponent(pnlCidade, 695, 695, 695).addComponent(pnlConsulta, 695, 695, 695).addComponent(pnlRotaItinerario, 695, 695, 695).addComponent(pnlFuncionario, 695, 695, 695).addContainerGap(29, 29)));
+                pnlMenuLayout.createParallelGroup().addGroup(pnlMenuLayout.createSequentialGroup().addGap(28, 28, 28).addGroup(pnlMenuLayout.createParallelGroup().addComponent(btnConsulta, 73, 73, 73).addComponent(btnRotaItinerario, 73, 73, 73).addComponent(btnHorario, 73, 73, 73).addComponent(btnCidade, 73, 73, 73).addComponent(btnEstado, 73, 73, 73).addComponent(btnMotorista, 73, 73, 73).addComponent(btnOnibus, 73, 73, 73)).addGap(28, 28, 28).addComponent(separadorMenu, 2, 2, 2).addGap(28, 28, 28).addComponent(pnlHome, 695, 695, 695).addComponent(pnlOnibus, 695, 695, 695).addComponent(pnlMotorista, 695, 695, 695).addComponent(pnlEstado, 695, 695, 695).addComponent(pnlCidade, 695, 695, 695).addComponent(pnlConsulta, 695, 695, 695).addComponent(pnlRotaItinerario, 695, 695, 695).addComponent(pnlHorario, 695, 695, 695).addContainerGap(29, 29)));
         pnlMenuLayout.setVerticalGroup(
-                pnlMenuLayout.createParallelGroup().addGroup(pnlMenuLayout.createSequentialGroup().addGap(28, 28, 28).addGroup(pnlMenuLayout.createParallelGroup().addComponent(pnlHome, 590, 590, 590).addComponent(pnlOnibus, 590, 590, 590).addComponent(pnlMotorista, 590, 590, 590).addComponent(pnlEstado, 590, 590, 590).addComponent(pnlCidade, 590, 590, 590).addComponent(pnlConsulta, 590, 590, 590).addComponent(pnlFuncionario, 590, 590, 590).addComponent(pnlRotaItinerario, 590, 590, 590).addGroup(pnlMenuLayout.createSequentialGroup().addComponent(btnOnibus, 73, 73, 73).addGap(12, 12, 12).addComponent(btnMotorista, 73, 73, 73).addGap(12, 12, 12).addComponent(btnEstado, 73, 73, 73).addGap(12, 12, 12).addComponent(btnCidade, 73, 73, 73).addGap(12, 12, 12).addComponent(btnRotaItinerario, 73, 73, 73).addGap(12, 12, 12).addComponent(btnHorario, 73, 73, 73).addGap(12, 12, 12).addComponent(btnConsulta, 73, 73, 73).addGap(7, 7, 7)).addComponent(separadorMenu, 590, 590, 590)).addContainerGap(31, 31)));
+                pnlMenuLayout.createParallelGroup().addGroup(pnlMenuLayout.createSequentialGroup().addGap(28, 28, 28).addGroup(pnlMenuLayout.createParallelGroup().addComponent(pnlHome, 590, 590, 590).addComponent(pnlOnibus, 590, 590, 590).addComponent(pnlMotorista, 590, 590, 590).addComponent(pnlEstado, 590, 590, 590).addComponent(pnlCidade, 590, 590, 590).addComponent(pnlConsulta, 590, 590, 590).addComponent(pnlHorario, 590, 590, 590).addComponent(pnlRotaItinerario, 590, 590, 590).addGroup(pnlMenuLayout.createSequentialGroup().addComponent(btnOnibus, 73, 73, 73).addGap(12, 12, 12).addComponent(btnMotorista, 73, 73, 73).addGap(12, 12, 12).addComponent(btnEstado, 73, 73, 73).addGap(12, 12, 12).addComponent(btnCidade, 73, 73, 73).addGap(12, 12, 12).addComponent(btnRotaItinerario, 73, 73, 73).addGap(12, 12, 12).addComponent(btnHorario, 73, 73, 73).addGap(12, 12, 12).addComponent(btnConsulta, 73, 73, 73).addGap(7, 7, 7)).addComponent(separadorMenu, 590, 590, 590)).addContainerGap(31, 31)));
 
         return pnlMenu;
     }
@@ -252,6 +254,7 @@ public class PanelMenu extends JPanel {
         pnlConsulta.setVisible(false);
         pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(false);
+        pnlHorario.setVisible(false);
         onibusPanel.focusTxtPrincipal();
         onibusPanel.carregaCombosOnibus(2);
         onibusPanel.carregaCombosOnibus(3);
@@ -266,6 +269,7 @@ public class PanelMenu extends JPanel {
         pnlConsulta.setVisible(false);
         pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(false);
+        pnlHorario.setVisible(false);
         motoristaPanel.focusTxtPrincipal();
         motoristaPanel.carregaCombosMotorista(2);
         motoristaPanel.carregaCombosMotorista(3);
@@ -280,6 +284,7 @@ public class PanelMenu extends JPanel {
         pnlConsulta.setVisible(false);
         pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(false);
+        pnlHorario.setVisible(false);
         estadoPanel.focusTxtPrincipal();
         estadoPanel.carregaCombosEstado(2);
         estadoPanel.carregaCombosEstado(3);
@@ -294,6 +299,7 @@ public class PanelMenu extends JPanel {
         pnlConsulta.setVisible(false);
         pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(false);
+        pnlHorario.setVisible(false);
         cidadePanel.focusTxtPrincipal();
         cidadePanel.carregaCombosCidade(2);
         cidadePanel.carregaCombosCidade(3);
@@ -309,6 +315,7 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(false);
         pnlConsulta.setVisible(true);
         pnlRotaItinerario.setVisible(false);
+        pnlHorario.setVisible(false);
         pnlFuncionario.setVisible(false);
         consultaPanel.carregaCombosOnibus();
         consultaPanel.focusCboPrincipal();
@@ -322,8 +329,9 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(false);
         pnlConsulta.setVisible(false);
         pnlRotaItinerario.setVisible(false);
-        pnlFuncionario.setVisible(true);
-        funcionarioPanel.carregaCombosFuncionario();
+        pnlFuncionario.setVisible(false);
+        pnlHorario.setVisible(true);
+        horarioPanel.carregaComboItinerario();
     }
 
     private void btnRotaItinerarioMouseReleased(MouseEvent evt) {
@@ -334,6 +342,7 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(false);
         pnlConsulta.setVisible(false);
         pnlRotaItinerario.setVisible(true);
+        pnlHorario.setVisible(false);
         pnlFuncionario.setVisible(false);
     }
 
@@ -417,15 +426,15 @@ public class PanelMenu extends JPanel {
     private void menuSairFecharProgramaClick(ActionEvent evt) {
         System.exit(0);
     }
-    
     private PanelHome homePanel;
     private PanelOnibus onibusPanel;
     private PanelMotorista motoristaPanel;
     private PanelEstado estadoPanel;
     private PanelCidade cidadePanel;
     private PanelConsulta consultaPanel;
-    private PanelRotaItinerario rotaItinerarioPanel;
+    private PanelItinerarioRota rotaItinerarioPanel;
     private PanelFuncionario funcionarioPanel;
+    private PanelHorario horarioPanel;
     private JSeparator separadorMenu;
     private JPanel pnlHome;
     private JPanel pnlOnibus;
@@ -435,6 +444,7 @@ public class PanelMenu extends JPanel {
     private JPanel pnlConsulta;
     private JPanel pnlRotaItinerario;
     private JPanel pnlFuncionario;
+    private JPanel pnlHorario;
     private JPanel pnlMenu;
     private JLabel btnOnibus;
     private JLabel btnMotorista;

@@ -1,987 +1,896 @@
 package interfaces;
 
+import dao.DaoCidade;
+import dao.DaoHorario;
+import entidades.RotaItinerario;
+import entidades.Horario;
+import dao.DaoItinerario;
+import dao.DaoRota;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
-
+import java.util.Calendar;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
-
-import dao.DaoItinerario;
-import dao.DaoRota;
-import dao.DaoCidade;
-import entidades.*;
+import javax.swing.table.DefaultTableModel;
+import dao.DaoMotorista;
+import dao.DaoOnibus;
+import dao.DaoRotaItinerario;
+import entidades.Cidade;
+import entidades.Itinerario;
+import entidades.Motorista;
+import entidades.Onibus;
+import entidades.Rota;
 
 public class PanelRotaItinerario extends JPanel {
 
-    public JPanel inserirPnlRotaItinerario() {
+    public JPanel inserirPnlItinerario() {
+        format = NumberFormat.getNumberInstance();
+        format.setMinimumIntegerDigits(2);
+        gridLayout2_4 = new GridLayout(2, 4);
         fontePadrao = new Font("Segoe UI", 1, 14);
-        layoutRight = new FlowLayout(FlowLayout.RIGHT);
-        layoutRight.setHgap(5);
-        rota = new Rota();
-        itinerario = new Itinerario();
-        daoRota = new DaoRota();
+        
+        pnlItinerario = new JPanel();
+        pnlItinerario.setSize(695, 590);
+        pnlItinerario.setPreferredSize(new Dimension(885, 650));
+        pnlItinerario.setBorder(BorderFactory.createTitledBorder(null, " ASSOCIAR HORARIOS ", TitledBorder.CENTER, TitledBorder.TOP, fontePadrao));
+        pnlItinerario.setBackground(new Color(240, 240, 240));
+        pnlItinerario.setLayout(null);
+        pnlItinerario.setOpaque(true);
+        pnlItinerario.setVisible(false);
+
+        lblItinerario = new JLabel();
+        lblItinerario.setText("Selecione o Itinerario:");
+        lblItinerario.setBounds(27, 50, 155, 20);
+
+        cboItinerario = new JComboBox(new String[]{"Selecione"});
+        cboItinerario.setBounds(187, 45, 222, 30);
+
+        cboItinerarioHora = new JComboBox();
+        cboItinerarioHora.setBounds(538, 45, 60, 30);
+        cboItinerarioHora.setEnabled(false);
+
+        cboItinerarioMin = new JComboBox();
+        cboItinerarioMin.setBounds(603, 45, 60, 30);
+        cboItinerarioMin.setEnabled(false);
+
+        cboItinerarioOnibus = new JComboBox();
+        cboItinerarioOnibus.setBounds(187, 90, 200, 30);
+        cboItinerarioOnibus.setEnabled(false);
+
+        lblItinerarioHoraSaida = new JLabel("Horario de saida:");
+        lblItinerarioHoraSaida.setBounds(414, 45, 120, 30);
+
+        lblItinerarioTipoOnibus = new JLabel("Selecione o onibus:");
+        lblItinerarioTipoOnibus.setBounds(27, 95, 155, 20);
+
+        btnItinerarioConfirma = new JButton("Confirma");
+        btnItinerarioConfirma.setBounds(400, 535, 100, 30);
+        btnItinerarioConfirma.setEnabled(false);
+
+        btnItinerarioCancela = new JButton("Cancela");
+        btnItinerarioCancela.setBounds(550, 535, 100, 30);
+
+
+        btnItinerarioAlterarRota = new JButton("Alterar Rota");
+        btnItinerarioAlterarRota.setBounds(450, 480, 150, 30);
+        btnItinerarioAlterarRota.setEnabled(false);
+
+        arrayRotaAtual = new ArrayList<Rota>();
+        arrayRotaItinerario = new ArrayList<RotaItinerario>(); //inicializando novo RotaItinerario
+        arrayHorario = new ArrayList<Horario>();
+
+        inserirPnlItinerarioDias();
+        inserirPnlItinerarioRotas();
+        inserirPnlItinerarioLista();
+
+        pnlItinerario.add(btnItinerarioAlterarRota);
+        pnlItinerario.add(btnItinerarioConfirma);
+        pnlItinerario.add(btnItinerarioCancela);
+
+        pnlItinerario.add(cboItinerario);
+        pnlItinerario.add(cboItinerarioHora);
+        pnlItinerario.add(cboItinerarioMin);
+        pnlItinerario.add(cboItinerarioOnibus);
+
+        pnlItinerario.add(lblItinerario);
+        pnlItinerario.add(lblItinerarioHoraSaida);
+        pnlItinerario.add(lblItinerarioTipoOnibus);
+
+        pnlItinerario.add(pnlItinerarioDias);
+        pnlItinerario.add(pnlItinerarioRotas);
+        pnlItinerario.add(pnlItinarioLista);
+
+        carregaComboItinerario();
+        carregaComboMotorista();
+        carregaComboOnibus();
+        carregaComboMinuto();
+        carregaComboHora();
+
+        cboItinerario.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboItinerario.getSelectedItem().equals("Selecione"))) {
+                        selectedCboIndexItinerario = cboItinerario.getSelectedIndex() - 1;
+
+                        carregaComboDestino(arrayItinerario.get(selectedCboIndexItinerario).getItinerario_cidadeOrigemId()); //carregando destinos alcancaveis da cidade selecionada
+                        txtItinerarioOrigem.setText(arrayRotaAtual.get(0).getRota_cidadeOrigem()); //setando primeiramente Origem           
+
+                        cboItinerario.setEnabled(false);
+
+
+                        cboItinerarioOnibus.setEnabled(true);
+
+
+                    }
+
+                }
+            }
+        });
+
+        cboItinerarioMin.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (cboItinerarioHora.getSelectedIndex() == 0 && flagMin == 0) {
+                        JOptionPane.showMessageDialog(pnlItinerario, "Selecione o campo hora!");
+                        flagMin = 1;
+                        cboItinerarioMin.setSelectedIndex(0);
+                    } else if ((chBxDomingo.isSelected() || chBxSegundaFeira.isSelected() || chBxTercaFeira.isSelected() || chBxQuartaFeira.isSelected()
+                            || chBxQuintaFeira.isSelected() || chBxSextaFeira.isSelected() || chBxSabado.isSelected()
+                            || chBxFeriados.isSelected()) && flagMin == 0) {
+
+                        cboItinerarioHora.setEnabled(false);
+                        cboItinerarioMin.setEnabled(false);
+                        txtItinerarioSaida.setText(cboItinerarioHora.getSelectedItem() + ":" + cboItinerarioMin.getSelectedItem());
+                        chBxDomingo.setEnabled(false);
+                        chBxSegundaFeira.setEnabled(false);
+                        chBxTercaFeira.setEnabled(false);
+                        chBxQuartaFeira.setEnabled(false);
+                        chBxQuintaFeira.setEnabled(false);
+                        chBxSextaFeira.setEnabled(false);
+                        chBxSabado.setEnabled(false);
+                        chBxFeriados.setEnabled(false);
+                        txtItinerarioPreco.setEnabled(true);
+                        cboItinerarioDestino.setEnabled(true);
+                        cboItinerarioMotorista.setEnabled(true);
+                        btnItinerarioAddRota.setEnabled(true);
+
+                    } else if (flagMin == 0) {
+                        JOptionPane.showMessageDialog(pnlItinerario, "Selecione pelo menos um dia!");
+                        flagMin = 1;
+                        cboItinerarioMin.setSelectedIndex(0);
+                        cboItinerarioHora.setSelectedIndex(0);
+
+                    } else {
+                        flagMin = 0;
+                    }
+
+
+                }
+            }
+        });
+
+        cboItinerarioOnibus.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!chBxDomingo.isSelected()) {
+                    }
+                    chBxDomingo.setEnabled(true);
+                    chBxSegundaFeira.setEnabled(true);
+                    chBxTercaFeira.setEnabled(true);
+                    chBxQuartaFeira.setEnabled(true);
+                    chBxQuintaFeira.setEnabled(true);
+                    chBxSextaFeira.setEnabled(true);
+                    chBxSabado.setEnabled(true);
+                    chBxFeriados.setEnabled(true);
+                    cboItinerarioOnibus.setEnabled(false);
+                    cboItinerarioHora.setEnabled(true);
+                    cboItinerarioMin.setEnabled(true);
+
+                }
+            }
+        });
+        btnItinerarioCancela.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+
+                //initComponents();
+                reinicia();
+
+
+            }
+        });
+
+        btnItinerarioAlterarRota.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+
+                if (rowIndexSelected == 0) {
+                    tableRotas.setVisible(false);
+                }
+
+                int idRotaItinerario = arrayRotaItinerario.get(rowIndexSelected).getRotaItinerarioId();
+                int i = 0;
+                while (arrayHorario.get(i).getHorario_RotaItinerarioId() != idRotaItinerario) {
+                    i++;
+                }
+                txtItinerarioPreco.setText(Double.toString(arrayHorario.get(i).getHorarioPreco()));
+                txtItinerarioSaida.setText(arrayHorario.get(i).getHorarioSaida().substring(0, 5));
+
+                for (int j = arrayHorario.size() - 1; j >= i; j--) {
+                    arrayHorario.remove(j);
+                    System.out.println("Excluindo linha: " + j);
+                }
+
+                cboItinerarioDestino.removeAllItems();
+                cboItinerarioDestino.addItem("Selecione");
+                arrayRotaAtual.clear();
+
+                //recarregando o cbo de destino
+                txtItinerarioOrigem.setText(arrayRotasAddicionadas.get(rowIndexSelected).getRota_cidadeOrigem());
+                carregaComboDestino(arrayRotasAddicionadas.get(rowIndexSelected).getRota_cidadeOrigemId());
+
+                for (int j = arrayRotasAddicionadas.size() - 1; j >= rowIndexSelected; j--) {
+                    arrayRotasAddicionadas.remove(j);
+                    tbm.removeRow(j);
+                    arrayRotaItinerario.remove(j);
+                }
+                tbm.fireTableDataChanged(); //atualizando table de rotas
+                btnItinerarioAlterarRota.setEnabled(false);
+                btnItinerarioConfirma.setEnabled(false);
+                btnItinerarioAddRota.setEnabled(true);
+                cboItinerarioDestino.setEnabled(true);
+                txtItinerarioPreco.setEnabled(true);
+                cboItinerarioMotorista.setEnabled(true);
+
+            }
+        });
+
+        btnItinerarioConfirma.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+
+                daoHorario = new DaoHorario();
+                daoRotaItinerario = new DaoRotaItinerario();
+                for (int i = 0; i < arrayRotaItinerario.size(); i++) {
+                    daoRotaItinerario.cadastrarNovoRotaItinerario(arrayRotaItinerario.get(i));
+                }
+                for (int j = 0; j < arrayHorario.size(); j++) {
+                    daoHorario.cadastrarNovoHorario(arrayHorario.get(j));
+                }
+                ordemRota = 0;
+                reinicia();
+            }
+        });
+
+        return pnlItinerario;
+
+    }
+
+    private void inserirPnlItinerarioDias() {
+        pnlItinerarioDias = new JPanel();
+
+        pnlItinerarioDias.setBounds(25, 125, 640, 100);
+        //pnlItinerarioDias.setPreferredSize(new Dimension(885, 650));
+        pnlItinerarioDias.setBorder(BorderFactory.createTitledBorder(null, " Dias de operacao ", TitledBorder.CENTER, TitledBorder.TOP, fontePadrao));
+        pnlItinerarioDias.setBackground(new Color(240, 240, 240));
+        pnlItinerarioDias.setLayout(gridLayout2_4);
+
+
+        chBxSegundaFeira = new JCheckBox("Segunda-feira");
+        chBxTercaFeira = new JCheckBox("Terca-feira");
+        chBxQuartaFeira = new JCheckBox("Quarta-feira");
+        chBxQuintaFeira = new JCheckBox("Quinta-feira");
+        chBxSextaFeira = new JCheckBox("Sexta-feira");
+        chBxSabado = new JCheckBox("Sabado");
+        chBxDomingo = new JCheckBox("Domingo");
+        chBxFeriados = new JCheckBox("Feriados");
+
+
+        pnlItinerarioDias.add(chBxSegundaFeira);
+        pnlItinerarioDias.add(chBxTercaFeira);
+        pnlItinerarioDias.add(chBxQuartaFeira);
+        pnlItinerarioDias.add(chBxQuintaFeira);
+        pnlItinerarioDias.add(chBxSextaFeira);
+        pnlItinerarioDias.add(chBxSabado);
+        pnlItinerarioDias.add(chBxDomingo);
+        pnlItinerarioDias.add(chBxFeriados);
+
+        chBxDomingo.setEnabled(false);
+        chBxSegundaFeira.setEnabled(false);
+        chBxTercaFeira.setEnabled(false);
+        chBxQuartaFeira.setEnabled(false);
+        chBxQuintaFeira.setEnabled(false);
+        chBxSextaFeira.setEnabled(false);
+        chBxSabado.setEnabled(false);
+        chBxFeriados.setEnabled(false);
+
+
+
+
+
+    }
+
+    private void inserirPnlItinerarioRotas() {
+        pnlItinerarioRotas = new JPanel();
+
+        pnlItinerarioRotas.setBounds(25, 230, 360, 340);
+        pnlItinerarioRotas.setBorder(BorderFactory.createTitledBorder(null, " Rotas do Itinerario ", TitledBorder.CENTER, TitledBorder.TOP, fontePadrao));
+        pnlItinerarioRotas.setBackground(new Color(240, 240, 240));
+        pnlItinerarioRotas.setLayout(null);
+
+        lblItinerarioOrigem = new JLabel("Origem:");
+        lblItinerarioOrigem.setBounds(30, 43, 70, 20);
+
+
+        lblItinerarioDestino = new JLabel("Destino:");
+        lblItinerarioDestino.setBounds(30, 93, 70, 20);
+
+        lblItinerarioSaida = new JLabel("Saida:");
+        lblItinerarioSaida.setBounds(30, 143, 70, 20);
+
+        lblItinerarioPreco = new JLabel("Preco:");
+        lblItinerarioPreco.setBounds(30, 193, 70, 20);
+
+        lblItinerarioMotorista = new JLabel("Motorista:");
+        lblItinerarioMotorista.setBounds(30, 243, 75, 20);
+
+        txtItinerarioOrigem = new JTextField();
+        txtItinerarioOrigem.setBounds(150, 40, 180, 30);
+        txtItinerarioOrigem.setEnabled(false);
+
+
+        txtItinerarioSaida = new JTextField();
+        txtItinerarioSaida.setBounds(150, 140, 180, 30);
+        txtItinerarioSaida.setEnabled(false);
+
+        txtItinerarioPreco = new JTextField();
+        txtItinerarioPreco.setBounds(150, 190, 180, 30);
+        txtItinerarioPreco.setEnabled(false);
+
+
+
+        cboItinerarioDestino = new JComboBox();
+        cboItinerarioDestino.setBounds(150, 90, 180, 30);
+        cboItinerarioDestino.addItem("Selecione");
+        cboItinerarioDestino.setEnabled(false);
+
+
+        cboItinerarioMotorista = new JComboBox();
+        cboItinerarioMotorista.setBounds(150, 240, 180, 30);
+        cboItinerarioMotorista.setEnabled(false);
+
+
+
+        btnItinerarioAddRota = new JButton("Adicionar Rota");
+        btnItinerarioAddRota.setBounds(150, 290, 180, 30);
+        btnItinerarioAddRota.setEnabled(false);
+
+
+        pnlItinerarioRotas.add(lblItinerarioOrigem);
+        pnlItinerarioRotas.add(lblItinerarioDestino);
+        pnlItinerarioRotas.add(lblItinerarioSaida);
+        pnlItinerarioRotas.add(lblItinerarioPreco);
+        pnlItinerarioRotas.add(lblItinerarioMotorista);
+
+        pnlItinerarioRotas.add(txtItinerarioOrigem);
+        pnlItinerarioRotas.add(txtItinerarioSaida);
+        pnlItinerarioRotas.add(txtItinerarioPreco);
+
+
+        pnlItinerarioRotas.add(cboItinerarioDestino);
+        pnlItinerarioRotas.add(cboItinerarioMotorista);
+
+        pnlItinerarioRotas.add(btnItinerarioAddRota);
+
+
+        arrayRotasAddicionadas = new ArrayList<Rota>();
+
+
+
+
+        btnItinerarioAddRota.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                if (cboItinerarioDestino.getSelectedIndex() == 0 && txtItinerarioPreco.getText().equals("") && cboItinerarioMotorista.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(pnlItinerario, "Campos obrigatorios!");
+                    cboItinerarioDestino.requestFocus();
+                    cboItinerarioMotorista.requestFocus();
+                    txtItinerarioPreco.requestFocus();
+
+                } else if (cboItinerarioDestino.getSelectedIndex() == 0) {
+                    JOptionPane.showMessageDialog(pnlItinerario, "Selecione um destino!");
+                    cboItinerarioDestino.requestFocus();
+                } else if (txtItinerarioPreco.getText().equals("")) {
+                    JOptionPane.showMessageDialog(pnlItinerario, "Coloque um preco!");
+                    txtItinerarioPreco.requestFocus();
+                } else if (cboItinerarioMotorista.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(pnlItinerario, "Selecione um motorista");
+                    cboItinerarioMotorista.requestFocus();
+                } else {
+                    int idRotaItinerario = 1;
+                    int idRota = arrayRotaAtual.get(cboItinerarioDestino.getSelectedIndex() - 1).getId();
+                    Rota rotaAux = arrayRotaAtual.get(cboItinerarioDestino.getSelectedIndex() - 1);
+                    arrayRotasAddicionadas.add(rotaAux); //salvando Array de rotas Para possivel utiliza��o
+                    tbm.addRow(new Object[]{rotaAux.getRota_cidadeOrigem(), rotaAux.getRota_cidadeDestino()});
+                    int idItinerario = arrayItinerario.get(selectedCboIndexItinerario).getId();
+                    if (arrayRotaItinerario.isEmpty()) {
+                        ordemRota++;
+                    } else {
+                        ordemRota = (arrayRotaItinerario.get(arrayRotaItinerario.size() - 1).getRotaitinerarioOrdem()) + 1; //somando um a ordem anterior
+                        idRotaItinerario = (arrayRotaItinerario.get(arrayRotaItinerario.size() - 1).getRotaItinerarioId()) + 1; //somando um ao id anterior          		
+                    }
+                    RotaItinerario RI = new RotaItinerario();
+                    RI.setRotaItinerarioId(idRotaItinerario);
+                    RI.setRotaitinerario_rotaId(idRota);
+                    RI.setRotaitinerario_itinerarioId(idItinerario);
+                    RI.setRotaitinerarioOrdem(ordemRota);
+                    arrayRotaItinerario.add(RI);
+                    // Nao esquecer de zerar ordem quando finalizar a insercao
+
+
+
+                    if (rotaAux.getRota_cidadeDestinoId() == arrayItinerario.get(selectedCboIndexItinerario).getItinerario_cidadeDestinoId()) {
+                        btnItinerarioConfirma.setEnabled(true);
+                    }
+                    int idCidadeOrigemAux = arrayRotaAtual.get(cboItinerarioDestino.getSelectedIndex() - 1).getRota_cidadeDestinoId(); //salvando id da nova cidade Origem
+                    DaoCidade daoCidade = new DaoCidade();
+                    Cidade cidade = new Cidade();
+                    cidade.setId(idCidadeOrigemAux);
+                    cidade = daoCidade.consultaCidade(cidade);
+                    txtItinerarioOrigem.setText(cidade.getNome()); //atualizando txt origem
+                    carregaComboDestino(idCidadeOrigemAux); //remotando comboDestino
+
+                    tableRotas.setVisible(true);
+                    btnItinerarioCancela.setEnabled(true);
+
+
+                    Horario horario = new Horario();
+                    if (arrayRotasAddicionadas.size() == 1) {
+                        Time timeSaida = Time.valueOf(txtItinerarioSaida.getText() + ":00"); //pegando horario de saida do TXT na primeira vez
+                        int duracao = Integer.parseInt(arrayRotasAddicionadas.get(0).getRotaDuracao()); //pegando duracao da primeira rota
+                        Calendar calAux = Calendar.getInstance();
+                        calAux.setTime(timeSaida);
+                        calAux.add(Calendar.MINUTE, duracao); //somando a duração (em minutos)para obter horario de chegada
+                        String horarioChegada = dateFormat.format(calAux.getTime()) + ":00";
+                        //System.out.println("Chegadaaaaaa" +horarioChegada);
+                        Double preco = Double.parseDouble(txtItinerarioPreco.getText());
+                        int idMotorista = arrayIdMotorista.get(cboItinerarioMotorista.getSelectedIndex() - 1);
+                        int idOnibus = arrayIdOnibus.get(cboItinerarioOnibus.getSelectedIndex() - 1);
+
+                        horario.setHorario_RotaItinerarioId(idRotaItinerario);
+                        horario.setHorarioSaida(timeSaida.toString());
+                        horario.setHorarioChegada(horarioChegada);
+                        horario.setHorarioPreco(preco);
+                        horario.setHorario_MotoristaId(idMotorista);
+                        horario.setHorario_OnibusId(idOnibus);
+
+                        calAux.add(Calendar.MINUTE, 15);//atualizando txt horario d saida do proximo
+                        horarioChegada = dateFormat.format(calAux.getTime());
+                        txtItinerarioSaida.setText(horarioChegada);
+                    } else { //caso tenha 1 rota add comeca a adicionar 15 min e e calc hor d chegada
+                        Time horarioChegadaAnt = Time.valueOf(arrayHorario.get(arrayHorario.size() - 1).getHorarioChegada());
+                        int duracao = Integer.parseInt(arrayRotasAddicionadas.get(arrayRotasAddicionadas.size() - 1).getRotaDuracao());
+                        Calendar calAux = Calendar.getInstance();
+                        calAux.setTime(horarioChegadaAnt);
+                        calAux.add(Calendar.MINUTE, 15);
+                        String horarioSaida = dateFormat.format(calAux.getTime()) + ":00";
+                        calAux.add(Calendar.MINUTE, duracao);
+                        String horarioChegada = dateFormat.format(calAux.getTime()) + ":00";
+                        Double preco = Double.parseDouble(txtItinerarioPreco.getText());
+                        int idMotorista = arrayIdMotorista.get(cboItinerarioMotorista.getSelectedIndex() - 1);
+                        int idOnibus = arrayIdOnibus.get(cboItinerarioOnibus.getSelectedIndex() - 1);
+                        horario.setHorario_RotaItinerarioId(idRotaItinerario);
+                        horario.setHorarioSaida(horarioSaida);
+                        horario.setHorarioChegada(horarioChegada);
+                        horario.setHorarioPreco(preco);
+                        horario.setHorario_MotoristaId(idMotorista);
+                        horario.setHorario_OnibusId(idOnibus);
+
+                        calAux.add(Calendar.MINUTE, 15);//atualizando txt horario d saida do proximo
+                        horarioChegada = dateFormat.format(calAux.getTime());
+                        txtItinerarioSaida.setText(horarioChegada);
+                    }
+
+                    if (chBxDomingo.isSelected()) {
+
+                        arrayHorario.add(clonaHorario(horario, 1));
+                    }
+                    if (chBxSegundaFeira.isSelected()) {
+                        arrayHorario.add(clonaHorario(horario, 2));
+
+                    }
+                    if (chBxTercaFeira.isSelected()) {
+                        arrayHorario.add(clonaHorario(horario, 3));
+                    }
+                    if (chBxQuartaFeira.isSelected()) {
+                        arrayHorario.add(clonaHorario(horario, 4));
+                    }
+                    if (chBxQuintaFeira.isSelected()) {
+                        arrayHorario.add(clonaHorario(horario, 5));
+                    }
+                    if (chBxSextaFeira.isSelected()) {
+                        arrayHorario.add(clonaHorario(horario, 6));
+                    }
+                    if (chBxSabado.isSelected()) {
+                        arrayHorario.add(clonaHorario(horario, 7));
+                    }
+                    if (chBxFeriados.isSelected()) {
+                        arrayHorario.add(clonaHorario(horario, 8));
+                    }
+
+                    if (arrayItinerario.get(selectedCboIndexItinerario).getItinerario_cidadeDestino().equals(arrayRotasAddicionadas.get(arrayRotasAddicionadas.size() - 1).getRota_cidadeDestino())) {
+                        btnItinerarioAddRota.setEnabled(false);
+                        btnItinerarioConfirma.setEnabled(true);
+                        cboItinerarioDestino.setEnabled(false);
+
+                        txtItinerarioPreco.setEnabled(false);
+                        txtItinerarioPreco.setText("");
+                        txtItinerarioSaida.setText("");
+                        cboItinerarioMotorista.setEnabled(false);
+
+                    }
+                    for (int i = 0; i < arrayHorario.size(); i++) {
+                        System.out.println("Dia:" + arrayHorario.get(i).getHorarioDiaId());
+                        System.out.println("Horario saida: " + arrayHorario.get(i).getHorarioSaida());
+                        System.out.println("Horario Chegada: " + arrayHorario.get(i).getHorarioChegada());
+                        System.out.println("Rota:" + arrayHorario.get(i).getHorario_RotaItinerarioId());
+                        System.out.println("Quantidade tabela horario:" + arrayHorario.size());
+                        System.out.println("---------------------------------------------------------");
+                    }
+
+
+
+                }
+            }
+        });
+
+
+        KeyListener keyListener = new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent arg0) {
+                // TODO Auto-generated method stub
+
+                if (Character.isDigit(arg0.getKeyChar()) == false) {
+                    arg0.setKeyChar(KeyEvent.CHAR_UNDEFINED);
+                } else {
+                    if (txtItinerarioPreco.getText().length() + 1 >= 3) {
+                        String aux = "";
+                        int indice = txtItinerarioPreco.getText().indexOf(".");
+
+                        if (indice != -1) {
+                            aux = txtItinerarioPreco.getText().substring(0, indice);
+                            aux += txtItinerarioPreco.getText().substring(indice + 1, txtItinerarioPreco.getText().length());
+                            txtItinerarioPreco.setText(aux);
+                        }
+
+                        aux = txtItinerarioPreco.getText().substring(0, txtItinerarioPreco.getText().length() - 1);
+                        aux += ".";
+                        aux += txtItinerarioPreco.getText().substring(txtItinerarioPreco.getText().length() - 1, txtItinerarioPreco.getText().length());
+
+                        txtItinerarioPreco.setText(aux);
+                    }
+
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent arg0) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void keyPressed(KeyEvent arg0) {
+                // TODO Auto-generated method stub
+            }
+        };
+
+        txtItinerarioPreco.addKeyListener(keyListener);
+    }
+
+    private void inserirPnlItinerarioLista() {
+        pnlItinarioLista = new JPanel();
+
+        pnlItinarioLista.setBounds(393, 230, 275, 340);
+        pnlItinarioLista.setBackground(new Color(240, 240, 240));
+        pnlItinarioLista.setLayout(null);
+
+
+
+
+        tbm = new DefaultTableModel();
+        tableRotas = new JTable(tbm);
+
+        tbm.addColumn("Origem");
+        tbm.addColumn("Destino");
+
+//    	tbm.removeRow(1);
+//    	tbm.getDataVector().removeAllElements();
+//    	tbm.fireTableDataChanged();
+//    	for(int i = tbm.getRowCount()-1; i >= 0; i--){ 
+//            tbm.setValueAt("haha", 0, 0);
+//        }
+
+
+        tableRotas.setFillsViewportHeight(true);
+
+        JScrollPane scrollPane = new JScrollPane(tableRotas);
+        scrollPane.setBounds(0, 0, 271, 250);
+        scrollPane.setBorder(BorderFactory.createTitledBorder(null, "Rotas Adicionadas", TitledBorder.CENTER, TitledBorder.ABOVE_TOP, fontePadrao));
+        tableRotas.setVisible(false);
+        pnlItinarioLista.add(scrollPane, BorderLayout.CENTER);
+
+        tableRotas.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+                    JTable target = (JTable) e.getSource();
+                    rowIndexSelected = target.getSelectedRow();
+                    System.out.println(rowIndexSelected);
+                    btnItinerarioAlterarRota.setEnabled(true);
+                }
+            }
+        });
+
+    }
+
+    public void carregaComboItinerario() {
         daoItinerario = new DaoItinerario();
-        daoCidade = new DaoCidade();
+        arrayItinerario = daoItinerario.consultarTodosItinerarios();
 
-        pnlRotaItinerario = new JPanel(layoutRight);
-        pnlRotaItinerario.setVisible(false);
-        pnlRotaItinerario.setBorder(BorderFactory.createTitledBorder(null, " ROTA / ITINERARIO ", TitledBorder.CENTER, TitledBorder.TOP, fontePadrao));
-        pnlRotaItinerario.setBackground(new Color(240, 240, 240));
-
-        inserePnlRota();
-        inserePnlItinerario();
-
-        carregaCombosCidade();
-        carregaCombosRota();
-        carregaCombosItinerario();
-
-        pnlRotaItinerario.add(pnlRotaCadastro);
-        pnlRotaItinerario.add(pnlItinerarioCadastro);
-        pnlRotaItinerario.add(pnlRotaAlteracao);
-        pnlRotaItinerario.add(pnlItinerarioAlteracao);
-        pnlRotaItinerario.add(pnlRotaRemocao);
-        pnlRotaItinerario.add(pnlItinerarioRemocao);
-
-        carregaCombosCidade();
-        carregaCombosRota();
-
-        return pnlRotaItinerario;
+        cboItinerario.removeAllItems();
+        cboItinerario.addItem("Selecione");
+        for (int i = 0; i < arrayItinerario.size(); i++) {
+            cboItinerario.addItem(arrayItinerario.get(i).getItinerario_cidadeOrigem() + " - " + arrayItinerario.get(i).getItinerario_cidadeDestino());
+        }
     }
 
-    public void inserePnlRota() {
-        pnlRotaCadastro = new JPanel(layoutRight);
-        pnlRotaAlteracao = new JPanel(layoutRight);
-        pnlRotaRemocao = new JPanel(layoutRight);
-
-        pnlRotaCadastro.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)), " Cadastro Rota ", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, fontePadrao));
-        pnlRotaAlteracao.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)), " Alteracao Rota ", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, fontePadrao));
-        pnlRotaRemocao.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)), " Remocao Rota ", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, fontePadrao));
-
-        pnlRotaCadastro.setBackground(new Color(240, 240, 240));
-        pnlRotaAlteracao.setBackground(new Color(240, 240, 240));
-        pnlRotaRemocao.setBackground(new Color(240, 240, 240));
-
-        pnlRotaCadastro.setPreferredSize(new Dimension(320, 180));
-        pnlRotaAlteracao.setPreferredSize(new Dimension(320, 210));
-        pnlRotaRemocao.setPreferredSize(new Dimension(320, 140));
-
-        //cadastro
-        lblRotaCadastroOrigem = new JLabel("Origem:");
-        lblRotaCadastroDestino = new JLabel("Destino:");
-        lblRotaCadastroDuracao = new JLabel("Duracao:");
-        btnRotaCadastrar = new JButton("Cadastrar");
-        btnRotaCadastroLimpa = new JButton("Limpar Campos");
-        cboRotaCadastroOrigem = new JComboBox(new String[]{"Selecione"});
-        cboRotaCadastroDestino = new JComboBox(new String[]{"Selecione"});
-        txtRotaCadastroDuracao = new JTextField("", 19);
-        cboRotaCadastroOrigemOculto = new JComboBox(new String[]{"Selecione"});
-        cboRotaCadastroDestinoOculto = new JComboBox(new String[]{"Selecione"});
-
-        lblRotaCadastroOrigem.setPreferredSize(new Dimension(70, 30));
-        lblRotaCadastroDestino.setPreferredSize(new Dimension(70, 30));
-        lblRotaCadastroDuracao.setPreferredSize(new Dimension(70, 30));
-        btnRotaCadastrar.setPreferredSize(new Dimension(100, 32));
-        btnRotaCadastroLimpa.setPreferredSize(new Dimension(125, 32));
-        cboRotaCadastroOrigem.setPreferredSize(new Dimension(222, 30));
-        cboRotaCadastroDestino.setPreferredSize(new Dimension(222, 30));
-
-        pnlRotaCadastro.add(lblRotaCadastroOrigem);
-        pnlRotaCadastro.add(cboRotaCadastroOrigem);
-        pnlRotaCadastro.add(lblRotaCadastroDestino);
-        pnlRotaCadastro.add(cboRotaCadastroDestino);
-        pnlRotaCadastro.add(lblRotaCadastroDuracao);
-        pnlRotaCadastro.add(txtRotaCadastroDuracao);
-        pnlRotaCadastro.add(btnRotaCadastroLimpa);
-        pnlRotaCadastro.add(btnRotaCadastrar);
-
-        //alteracao
-        lblRotaAlteracaoDuracao = new JLabel("Duracao:");
-        lblRotaAlteracaoOrigem = new JLabel("Origem:");
-        lblRotaAlteracaoRota = new JLabel("Rota:");
-        lblRotaAlteracaoDestino = new JLabel("Destino:");
-        btnRotaAlterar = new JButton("Alterar");
-        cboRotaAlteracaoIdRota = new JComboBox(new String[]{"Selecione"});
-        cboRotaAlteracaoIdRotaOculto = new JComboBox(new String[]{"Selecione"});
-        cboRotaAlteracaoOrigem = new JComboBox(new String[]{"Selecione"});
-        cboRotaAlteracaoDestino = new JComboBox(new String[]{"Selecione"});
-        cboRotaAlteracaoOrigemOculto = new JComboBox(new String[]{"Selecione"});
-        cboRotaAlteracaoDestinoOculto = new JComboBox(new String[]{"Selecione"});
-        txtRotaAlteracaoDuracao = new JTextField("", 18);
-
-        lblRotaAlteracaoDuracao.setPreferredSize(new Dimension(70, 30));
-        btnRotaAlterar.setPreferredSize(new Dimension(100, 32));
-        cboRotaAlteracaoIdRota.setPreferredSize(new Dimension(222, 30));
-        cboRotaAlteracaoOrigem.setPreferredSize(new Dimension(222, 30));
-        cboRotaAlteracaoDestino.setPreferredSize(new Dimension(222, 30));
-        lblRotaAlteracaoOrigem.setPreferredSize(new Dimension(70, 30));
-        lblRotaAlteracaoRota.setPreferredSize(new Dimension(70, 30));
-        lblRotaAlteracaoDestino.setPreferredSize(new Dimension(70, 30));
-
-        cboRotaAlteracaoIdRotaOculto.setVisible(false);
-        pnlRotaAlteracao.add(lblRotaAlteracaoRota);
-        pnlRotaAlteracao.add(cboRotaAlteracaoIdRota);
-        pnlRotaAlteracao.add(lblRotaAlteracaoOrigem);
-        pnlRotaAlteracao.add(cboRotaAlteracaoOrigem);
-        pnlRotaAlteracao.add(lblRotaAlteracaoDestino);
-        pnlRotaAlteracao.add(cboRotaAlteracaoDestino);
-        pnlRotaAlteracao.add(lblRotaAlteracaoDuracao);
-        pnlRotaAlteracao.add(txtRotaAlteracaoDuracao);
-        pnlRotaAlteracao.add(btnRotaAlterar);
-
-        //remocao
-        lblRotaRemocaoOrigemDestino = new JLabel("Rota:");
-        lblRotaRemocaoDuracao = new JLabel("Duracao:");
-        cboRotaRemocaoIdRota = new JComboBox(new String[]{"Selecione"});
-        cboRotaRemocaoIdRotaOculto = new JComboBox(new String[]{"Selecione"});
-        lblRotaRemocaoDuracaoR = new JLabel();
-        btnRotaRemover = new JButton("Remover");
-
-        cboRotaRemocaoIdRota.setPreferredSize(new Dimension(222, 30));
-        lblRotaRemocaoOrigemDestino.setPreferredSize(new Dimension(70, 30));
-        lblRotaRemocaoDuracao.setPreferredSize(new Dimension(70, 30));
-        lblRotaRemocaoDuracaoR.setPreferredSize(new Dimension(222, 30));
-        btnRotaRemover.setPreferredSize(new Dimension(100, 32));
-
-        cboRotaRemocaoIdRotaOculto.setVisible(false);
-        pnlRotaRemocao.add(lblRotaRemocaoOrigemDestino);
-        pnlRotaRemocao.add(cboRotaRemocaoIdRota);
-        pnlRotaRemocao.add(lblRotaRemocaoDuracao);
-        pnlRotaRemocao.add(lblRotaRemocaoDuracaoR);
-        pnlRotaRemocao.add(btnRotaRemover);
-
-        btnRotaCadastrar.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                btnRotaCadastrarClick(evt);
-            }
-        });
-
-        btnRotaCadastroLimpa.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                btnRotaCadastroLimpaClick(evt);
-            }
-        });
-
-        btnRotaAlterar.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                btnRotaAlterarClick(evt);
-            }
-        });
-
-        btnRotaRemover.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                btnRotaRemoverClick(evt);
-            }
-        });
-
-        cboRotaAlteracaoIdRota.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboRotaAlteracaoIdRotaClick(evt);
-            }
-        });
-
-        cboRotaRemocaoIdRota.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboRotaRemocaoOrigemDestinoClick(evt);
-            }
-        });
-
-        cboRotaCadastroOrigem.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboRotaCadastroOrigemClick(evt);
-            }
-        });
-
-        cboRotaCadastroDestino.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboRotaCadastroDestinoClick(evt);
-            }
-        });
-
-        cboRotaAlteracaoOrigem.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboRotaAlteracaoCidadeOrigemClick(evt);
-            }
-        });
-
-        cboRotaAlteracaoDestino.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboRotaAlteracaoCidadeDestinoClick(evt);
-            }
-        });
-
-    }
-
-    public void inserePnlItinerario() {
-        pnlItinerarioCadastro = new JPanel(layoutRight);
-        pnlItinerarioAlteracao = new JPanel(layoutRight);
-        pnlItinerarioRemocao = new JPanel(layoutRight);
-
-        pnlItinerarioCadastro.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)), " Cadastro Itinerario ", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, fontePadrao));
-        pnlItinerarioAlteracao.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)), " Alteracao Itinerario ", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, fontePadrao));
-        pnlItinerarioRemocao.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)), " Remocao Itinerario ", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, fontePadrao));
-
-        pnlItinerarioCadastro.setBackground(new Color(240, 240, 240));
-        pnlItinerarioAlteracao.setBackground(new Color(240, 240, 240));
-        pnlItinerarioRemocao.setBackground(new Color(240, 240, 240));
-
-        pnlItinerarioCadastro.setPreferredSize(new Dimension(320, 180));
-        pnlItinerarioAlteracao.setPreferredSize(new Dimension(320, 210));
-        pnlItinerarioRemocao.setPreferredSize(new Dimension(320, 140));
-
-        //cadastro
-        JLabel lblItinerarioCadatroAux = new JLabel("");
-        lblItinerarioCadastroOrigem = new JLabel("Origem:");
-        lblItinerarioCadastroDestino = new JLabel("Destino:");
-        btnItinerarioCadastrar = new JButton("Cadastrar");
-        btnItinerarioCadastroLimpa = new JButton("Limpar Campos");
-        cboItinerarioCadastroOrigem = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioCadastroOrigemOculto = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioCadastroDestino = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioCadastroDestinoOculto = new JComboBox(new String[]{"Selecione"});
-
-        lblItinerarioCadastroOrigem.setPreferredSize(new Dimension(70, 30));
-        lblItinerarioCadastroDestino.setPreferredSize(new Dimension(70, 30));
-        btnItinerarioCadastrar.setPreferredSize(new Dimension(100, 32));
-        btnItinerarioCadastroLimpa.setPreferredSize(new Dimension(125, 32));
-        cboItinerarioCadastroOrigem.setPreferredSize(new Dimension(222, 30));
-        cboItinerarioCadastroDestino.setPreferredSize(new Dimension(222, 30));
-        lblItinerarioCadatroAux.setPreferredSize(new Dimension(292, 30));
-
-
-        pnlItinerarioCadastro.add(lblItinerarioCadastroOrigem);
-        pnlItinerarioCadastro.add(cboItinerarioCadastroOrigem);
-        pnlItinerarioCadastro.add(lblItinerarioCadastroDestino);
-        pnlItinerarioCadastro.add(cboItinerarioCadastroDestino);
-        pnlItinerarioCadastro.add(lblItinerarioCadatroAux);
-        pnlItinerarioCadastro.add(btnItinerarioCadastroLimpa);
-        pnlItinerarioCadastro.add(btnItinerarioCadastrar);
-
-        //alteracao
-        JLabel lblItinerarioAlteracaoAux = new JLabel("");
-        lblItinerarioAlteracaoOrigem = new JLabel("Origem:");
-        lblItinerarioAlteracaoOrigemDestino = new JLabel("Itinerario:");
-        lblItinerarioAlteracaoDestino = new JLabel("Destino:");
-        btnItinerarioAlterar = new JButton("Alterar");
-        cboItinerarioAlteracaoIdItinerario = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioAlteracaoIdItinerarioOculto = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioAlteracaoOrigem = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioAlteracaoOrigemOculto = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioAlteracaoDestino = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioAlteracaoDestinoOculto = new JComboBox(new String[]{"Selecione"});
-
-        btnItinerarioAlterar.setPreferredSize(new Dimension(100, 32));
-        cboItinerarioAlteracaoIdItinerario.setPreferredSize(new Dimension(222, 30));
-        cboItinerarioAlteracaoOrigem.setPreferredSize(new Dimension(222, 30));
-        cboItinerarioAlteracaoDestino.setPreferredSize(new Dimension(222, 30));
-        lblItinerarioAlteracaoAux.setPreferredSize(new Dimension(292, 30));
-        lblItinerarioAlteracaoOrigem.setPreferredSize(new Dimension(70, 30));
-        lblItinerarioAlteracaoOrigemDestino.setPreferredSize(new Dimension(70, 30));
-        lblItinerarioAlteracaoDestino.setPreferredSize(new Dimension(70, 30));
-
-        cboItinerarioAlteracaoIdItinerarioOculto.setVisible(false);
-        pnlItinerarioAlteracao.add(lblItinerarioAlteracaoOrigemDestino);
-        pnlItinerarioAlteracao.add(cboItinerarioAlteracaoIdItinerario);
-        pnlItinerarioAlteracao.add(lblItinerarioAlteracaoOrigem);
-        pnlItinerarioAlteracao.add(cboItinerarioAlteracaoOrigem);
-        pnlItinerarioAlteracao.add(lblItinerarioAlteracaoDestino);
-        pnlItinerarioAlteracao.add(cboItinerarioAlteracaoDestino);
-        pnlItinerarioAlteracao.add(lblItinerarioAlteracaoAux);
-        pnlItinerarioAlteracao.add(btnItinerarioAlterar);
-
-        //remocao
-        lblItinerarioRemocaoOrigemDestino = new JLabel("Itinerario:");
-        JLabel lblItinerarioRemocaoAux = new JLabel("");
-        cboItinerarioRemocaoIdItinerario = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioRemocaoIdItinerarioOculto = new JComboBox(new String[]{"Selecione"});
-        btnItinerarioRemover = new JButton("Remover");
-
-        cboItinerarioRemocaoIdItinerario.setPreferredSize(new Dimension(222, 30));
-        lblItinerarioRemocaoOrigemDestino.setPreferredSize(new Dimension(70, 30));
-        lblItinerarioRemocaoAux.setPreferredSize(new Dimension(292, 30));
-
-        btnItinerarioRemover.setPreferredSize(new Dimension(100, 32));
-
-        cboItinerarioRemocaoIdItinerarioOculto.setVisible(false);
-        pnlItinerarioRemocao.add(lblItinerarioRemocaoOrigemDestino);
-        pnlItinerarioRemocao.add(cboItinerarioRemocaoIdItinerario);
-        pnlItinerarioRemocao.add(lblItinerarioRemocaoAux);
-        pnlItinerarioRemocao.add(btnItinerarioRemover);
-
-        /* Cadastro */
-        btnItinerarioCadastrar.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                btnItinerarioCadastrarClick(evt);
-            }
-        });
-
-        btnItinerarioCadastroLimpa.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                btnItinerarioCadastroLimpaClick(evt);
-            }
-        });
-
-        cboItinerarioCadastroOrigem.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboItinerarioCadastroOrigemClick(evt);
-            }
-        });
-
-        cboItinerarioCadastroDestino.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboItinerarioCadastroDestinoClick(evt);
-            }
-        });
-
-        /* Altera��o */
-        btnItinerarioAlterar.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                btnItinerarioAlterarClick(evt);
-            }
-        });
-
-        cboItinerarioAlteracaoIdItinerario.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboItinerarioAlteracaoIdItinerarioClick(evt);
-            }
-        });
-
-        cboItinerarioAlteracaoOrigem.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboItinerarioAlteracaoOrigemClick(evt);
-            }
-        });
-
-        cboItinerarioAlteracaoDestino.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboItinerarioAlteracaoDestinoClick(evt);
-            }
-        });
-
-        /* Remover */
-        btnItinerarioRemover.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                btnItinerarioRemoverClick(evt);
-            }
-        });
-
-        cboItinerarioRemocaoIdItinerario.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboItinerarioRemocaoIdItinerarioClick(evt);
-            }
-        });
-    }
-
-    public void focusTxtPrincipal() {
-        cboRotaCadastroOrigem.requestFocus();
-    }
-
-    public void carregaCombosCidade() {
-        ArrayList<Cidade> arraylist = daoCidade.consultarTodasCidades();
-        /* Rota */
-
-        //cadastro
-        cboRotaCadastroOrigem.removeAllItems();
-        cboRotaCadastroOrigem.addItem("Selecione");
-        cboRotaCadastroDestino.removeAllItems();
-        cboRotaCadastroDestino.addItem("Selecione");
-        cboRotaCadastroOrigemOculto.removeAllItems();
-        cboRotaCadastroOrigemOculto.addItem("Selecione");
-        cboRotaCadastroDestinoOculto.removeAllItems();
-        cboRotaCadastroDestinoOculto.addItem("Selecione");
-
-        //alteracao
-        cboRotaAlteracaoOrigem.removeAllItems();
-        cboRotaAlteracaoOrigem.addItem("Selecione");
-        cboRotaAlteracaoDestino.removeAllItems();
-        cboRotaAlteracaoDestino.addItem("Selecione");
-        cboRotaAlteracaoOrigemOculto.removeAllItems();
-        cboRotaAlteracaoOrigemOculto.addItem("Selecione");
-        cboRotaAlteracaoDestinoOculto.removeAllItems();
-        cboRotaAlteracaoDestinoOculto.addItem("Selecione");
-
-        /* Itinerario */
-
-        //cadastro
-        cboItinerarioCadastroOrigem.removeAllItems();
-        cboItinerarioCadastroOrigem.addItem("Selecione");
-        cboItinerarioCadastroDestino.removeAllItems();
-        cboItinerarioCadastroDestino.addItem("Selecione");
-        cboItinerarioCadastroOrigemOculto.removeAllItems();
-        cboItinerarioCadastroOrigemOculto.addItem("Selecione");
-        cboItinerarioCadastroDestinoOculto.removeAllItems();
-        cboItinerarioCadastroDestinoOculto.addItem("Selecione");
-
-        //alteracao
-        cboItinerarioAlteracaoOrigem.removeAllItems();
-        cboItinerarioAlteracaoOrigem.addItem("Selecione");
-        cboItinerarioAlteracaoDestino.removeAllItems();
-        cboItinerarioAlteracaoDestino.addItem("Selecione");
-        cboItinerarioAlteracaoOrigemOculto.removeAllItems();
-        cboItinerarioAlteracaoOrigemOculto.addItem("Selecione");
-        cboItinerarioAlteracaoDestinoOculto.removeAllItems();
-        cboItinerarioAlteracaoDestinoOculto.addItem("Selecione");
-
-        for (int i = 0; i < arraylist.size(); i++) {
-            /* Rota */
-            cboRotaCadastroOrigem.addItem(arraylist.get(i).getNome());
-            cboRotaCadastroOrigemOculto.addItem(arraylist.get(i).getId());
-            cboRotaCadastroDestino.addItem(arraylist.get(i).getNome());
-            cboRotaCadastroDestinoOculto.addItem(arraylist.get(i).getId());
-            cboRotaAlteracaoOrigem.addItem(arraylist.get(i).getNome());
-            cboRotaAlteracaoDestino.addItem(arraylist.get(i).getNome());
-            cboRotaAlteracaoOrigemOculto.addItem(arraylist.get(i).getId());
-            cboRotaAlteracaoDestinoOculto.addItem(arraylist.get(i).getId());
-
-            /* Itinerario */
-            cboItinerarioCadastroOrigem.addItem(arraylist.get(i).getNome());
-            cboItinerarioCadastroOrigemOculto.addItem(arraylist.get(i).getId());
-            cboItinerarioCadastroDestino.addItem(arraylist.get(i).getNome());
-            cboItinerarioCadastroDestinoOculto.addItem(arraylist.get(i).getId());
-            cboItinerarioAlteracaoOrigem.addItem(arraylist.get(i).getNome());
-            cboItinerarioAlteracaoDestino.addItem(arraylist.get(i).getNome());
-            cboItinerarioAlteracaoOrigemOculto.addItem(arraylist.get(i).getId());
-            cboItinerarioAlteracaoDestinoOculto.addItem(arraylist.get(i).getId());
+    private void carregaComboMinuto() {//SALVAR IDS
+
+        arrayMinuto = new ArrayList<String>();
+        for (int i = 0; i < 60; i += 5) {
+            arrayMinuto.add(format.format(i));
+        }
+        cboItinerarioMin.removeAllItems();
+        cboItinerarioMin.addItem("--");
+        for (int i = 0; i < arrayMinuto.size(); i++) {
+
+            cboItinerarioMin.addItem(arrayMinuto.get(i));
         }
 
     }
 
-    public void carregaCombosRota() {
-        ArrayList<Rota> arraylistRotas = daoRota.consultarTodasRotas();
-        //alteracao
-        cboRotaAlteracaoIdRota.removeAllItems();
-        cboRotaAlteracaoIdRota.addItem("Selecione");
-        cboRotaAlteracaoIdRotaOculto.removeAllItems();
-        cboRotaAlteracaoIdRotaOculto.addItem("Selecione");
-        //remocao
-        cboRotaRemocaoIdRota.removeAllItems();
-        cboRotaRemocaoIdRota.addItem("Selecione");
-        cboRotaRemocaoIdRotaOculto.removeAllItems();
-        cboRotaRemocaoIdRotaOculto.addItem("Selecione");
-        for (int i = 0; i < arraylistRotas.size(); i++) {
-            cboRotaAlteracaoIdRota.addItem(arraylistRotas.get(i).getRota_cidadeOrigem() + " - " + arraylistRotas.get(i).getRota_cidadeDestino());
-            cboRotaRemocaoIdRota.addItem(arraylistRotas.get(i).getRota_cidadeOrigem() + " - " + arraylistRotas.get(i).getRota_cidadeDestino());
-            cboRotaAlteracaoIdRotaOculto.addItem(arraylistRotas.get(i).getId());
-            cboRotaRemocaoIdRotaOculto.addItem(arraylistRotas.get(i).getId());
+    private void carregaComboHora() {//SALVAR IDS
+
+        arrayHora = new ArrayList<String>();
+        for (int i = 0; i < 24; i++) {
+            arrayHora.add(format.format(i));
+        }
+        cboItinerarioHora.removeAllItems();
+        cboItinerarioHora.addItem("--");
+        for (int i = 0; i < arrayHora.size(); i++) {
+
+            cboItinerarioHora.addItem(arrayHora.get(i));
         }
 
     }
 
-    public void carregaCombosItinerario() {
-        ArrayList<Itinerario> arraylistItinerarios = daoItinerario.consultarTodosItinerarios2();
-        //alteracao
-        cboItinerarioAlteracaoIdItinerario.removeAllItems();
-        cboItinerarioAlteracaoIdItinerario.addItem("Selecione");
-        cboItinerarioAlteracaoIdItinerarioOculto.removeAllItems();
-        cboItinerarioAlteracaoIdItinerarioOculto.addItem("Selecione");
-        //remocao
-        cboItinerarioRemocaoIdItinerario.removeAllItems();
-        cboItinerarioRemocaoIdItinerario.addItem("Selecione");
-        cboItinerarioRemocaoIdItinerarioOculto.removeAllItems();
-        cboItinerarioRemocaoIdItinerarioOculto.addItem("Selecione");
-        for (int i = 0; i < arraylistItinerarios.size(); i++) {
-            cboItinerarioAlteracaoIdItinerario.addItem(arraylistItinerarios.get(i).getItinerario_cidadeOrigem() + " - " + arraylistItinerarios.get(i).getItinerario_cidadeDestino());
-            cboItinerarioRemocaoIdItinerario.addItem(arraylistItinerarios.get(i).getItinerario_cidadeOrigem() + " - " + arraylistItinerarios.get(i).getItinerario_cidadeDestino());
-            cboItinerarioAlteracaoIdItinerarioOculto.addItem(arraylistItinerarios.get(i).getId());
-            cboItinerarioRemocaoIdItinerarioOculto.addItem(arraylistItinerarios.get(i).getId());
+    private void carregaComboDestino(int idCidadeOrigem) {
+        daoRota = new DaoRota();
+        arrayRotaAtual = daoRota.carregaRotas(idCidadeOrigem);
+        cboItinerarioDestino.removeAllItems();
+        cboItinerarioDestino.addItem("Selecione");
+        for (int i = 0; i < arrayRotaAtual.size(); i++) {
+            cboItinerarioDestino.addItem(arrayRotaAtual.get(i).getRota_cidadeDestino());
+
+        }
+    }
+
+    private void carregaComboMotorista() {
+        daoItinerarioMotorista = new DaoMotorista();
+        arrayItinerarioMotoristaList = new ArrayList<Motorista>();
+        arrayItinerarioMotoristaList = daoItinerarioMotorista.consultarTodosMotoristas();
+        arrayIdMotorista = new ArrayList<Integer>();
+        cboItinerarioMotorista.removeAllItems();
+        cboItinerarioMotorista.addItem("Selecione");
+        for (int i = 0; i < arrayItinerarioMotoristaList.size(); i++) {
+            arrayIdMotorista.add(arrayItinerarioMotoristaList.get(i).getId()); //salvando ids Motorista
+            cboItinerarioMotorista.addItem(arrayItinerarioMotoristaList.get(i).getId());
         }
 
     }
 
-    /* Rota */
-    /* Cadastro */
-    private void btnRotaCadastrarClick(ActionEvent evt) {
-        if (cboRotaCadastroOrigem.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
-            cboRotaCadastroOrigem.requestFocus();
-        } else if (cboRotaCadastroDestino.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Destino.");
-            cboRotaCadastroDestino.requestFocus();
-        } else if (txtRotaCadastroDuracao.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Digite uma Duracao.");
-            txtRotaCadastroDuracao.requestFocus();
-        } else {
-            rota.setRotaDuracao(txtRotaCadastroDuracao.getText());
-            rota.setRota_cidadeOrigemId(Integer.parseInt(String.valueOf(cboRotaCadastroOrigemOculto.getSelectedItem())));
-            rota.setRota_cidadeDestinoId(Integer.parseInt(String.valueOf(cboRotaCadastroDestinoOculto.getSelectedItem())));
-            int verifica = daoRota.cadastrarRota(rota);
-            if (verifica == 0) {
-                JOptionPane.showMessageDialog(null, "Rota cadastrada com sucesso!");
-                txtRotaCadastroDuracao.setText("");
-                cboRotaCadastroOrigem.setSelectedItem("Selecione");
-                cboRotaCadastroDestino.setSelectedItem("Selecione");
-                carregaCombosCidade();
-                carregaCombosRota();
-                cboRotaCadastroOrigem.requestFocus();
-            } else if (verifica == 1) {
-                JOptionPane.showMessageDialog(null, "Rota ja existente.");
-                cboRotaCadastroOrigem.setSelectedItem("Selecione");
-                cboRotaCadastroOrigem.requestFocus();
-                cboRotaCadastroDestino.setSelectedItem("Selecione");
-            } else if (verifica == 2) {
-                JOptionPane.showMessageDialog(null, "Selecione um Destino diferente da Origem.");
-                cboRotaCadastroDestino.setSelectedItem("Selecione");
-                cboRotaCadastroDestino.requestFocus();
-            }
+    private void carregaComboOnibus() {
+        daoItinerarioOnibus = new DaoOnibus();
+        arrayItinerarioOnibus = new ArrayList<Onibus>();
+        arrayIdOnibus = new ArrayList<Integer>();
+        arrayItinerarioOnibus = daoItinerarioOnibus.consultarTodosOnibus();
+        cboItinerarioOnibus.removeAllItems();
+        cboItinerarioOnibus.addItem("Selecione");
+
+        for (int i = 0; i < arrayItinerarioOnibus.size(); i++) {
+            arrayIdOnibus.add(arrayItinerarioOnibus.get(i).getId());
+            cboItinerarioOnibus.addItem(arrayItinerarioOnibus.get(i).getPlaca());
         }
+
+    }
+    //Geral
+
+    private Horario clonaHorario(Horario horario, int dia) {
+        Horario novoHorario = new Horario();
+
+        novoHorario.setHorario_MotoristaId(horario.getHorario_MotoristaId());
+        novoHorario.setHorario_OnibusId(horario.getHorario_OnibusId());
+        novoHorario.setHorario_RotaItinerarioId(horario.getHorario_RotaItinerarioId());
+        novoHorario.setHorarioChegada(horario.getHorarioChegada());
+        novoHorario.setHorarioDia(dia);
+        novoHorario.setHorarioId(0);
+        novoHorario.setHorarioPreco(horario.getHorarioPreco());
+        novoHorario.setHorarioSaida(horario.getHorarioSaida());
+
+
+        return novoHorario;
     }
 
-    private void btnRotaCadastroLimpaClick(ActionEvent evt) {
-        txtRotaCadastroDuracao.setText("");
-        cboRotaCadastroOrigem.setSelectedItem("Selecione");
-        cboRotaCadastroOrigemOculto.setSelectedItem("Selecione");
-        cboRotaCadastroDestino.setSelectedItem("Selecione");
-        cboRotaCadastroDestinoOculto.setSelectedItem("Selecione");
-        cboRotaCadastroOrigem.requestFocus();
-    }
+    public void reinicia() {
 
-    private void cboRotaCadastroOrigemClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboRotaCadastroOrigem.getSelectedItem().equals("Selecione"))) {
-                cboRotaCadastroOrigemOculto.setSelectedIndex(cboRotaCadastroOrigem.getSelectedIndex());
-            } else {
-                txtRotaCadastroDuracao.setText("");
-                cboRotaCadastroOrigem.setSelectedItem("Selecione");
-                cboRotaCadastroDestino.setSelectedItem("Selecione");
-            }
-        }
-    }
+        cboItinerarioDestino.removeAllItems();
+        cboItinerarioDestino.addItem("Selecione");
+        txtItinerarioOrigem.setText("");
 
-    private void cboRotaCadastroDestinoClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboRotaCadastroDestino.getSelectedItem().equals("Selecione"))) {
-                cboRotaCadastroDestinoOculto.setSelectedIndex(cboRotaCadastroDestino.getSelectedIndex());
-            } else {
-                txtRotaCadastroDuracao.setText("");
-                cboRotaCadastroOrigem.setSelectedItem("Selecione");
-                cboRotaCadastroDestino.setSelectedItem("Selecione");
-            }
-        }
-    }
+        txtItinerarioPreco.setText("");
+        txtItinerarioPreco.setEnabled(false);
+        arrayRotaAtual.clear();
+        arrayRotaItinerario.clear();
+        arrayRotasAddicionadas.clear();
+        arrayHorario.clear();
 
-    /* Alteracao */
-    private void btnRotaAlterarClick(ActionEvent evt) {
-        if (cboRotaAlteracaoIdRota.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma Rota.");
-            cboRotaAlteracaoIdRota.requestFocus();
-        } else if (cboRotaAlteracaoOrigem.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
-            cboRotaAlteracaoOrigem.requestFocus();
-        } else if (cboRotaAlteracaoDestino.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Destino.");
-            cboRotaAlteracaoDestino.requestFocus();
-        } else if (txtRotaAlteracaoDuracao.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Digite a Duracao da Rota.");
-            txtRotaAlteracaoDuracao.requestFocus();
-        } else {
-            rota.setId(Integer.parseInt(String.valueOf(cboRotaAlteracaoIdRotaOculto.getSelectedItem())));
-            rota.setRotaDuracao(txtRotaAlteracaoDuracao.getText());
-            rota.setRota_cidadeOrigemId(Integer.parseInt(String.valueOf(cboRotaAlteracaoOrigemOculto.getSelectedItem())));
-            rota.setRota_cidadeDestinoId(Integer.parseInt(String.valueOf(cboRotaAlteracaoDestinoOculto.getSelectedItem())));
-            int verifica = daoRota.alterarRota(rota);
-            if (verifica == 0) {
-                JOptionPane.showMessageDialog(null, "Rota alterada com sucesso!");
-            } else if (verifica == 1) {
-                JOptionPane.showMessageDialog(null, "Rota ja existente!");
-            } else if (verifica == 2) {
-                JOptionPane.showMessageDialog(null, "Nao foi possivel alterar essa Rota pois ela pertence a um itinerario!");
-            } else if (verifica == 3) {
-                JOptionPane.showMessageDialog(null, "Selecione um Destino diferente da Origem!");
-            }
-            txtRotaAlteracaoDuracao.setText("");
-            carregaCombosCidade();
-            carregaCombosRota();
-            cboRotaAlteracaoIdRota.setSelectedItem("Selecione");
-            cboRotaAlteracaoIdRotaOculto.setSelectedItem("Selecione");
-            cboRotaAlteracaoOrigem.setSelectedItem("Selecione");
-            cboRotaAlteracaoOrigemOculto.setSelectedItem("Selecione");
-            cboRotaAlteracaoDestino.setSelectedItem("Selecione");
-            cboRotaAlteracaoDestinoOculto.setSelectedItem("Selecione");
-            cboRotaAlteracaoIdRota.requestFocus();
-        }
-    }
+        tbm.getDataVector().removeAllElements();
+        tbm.fireTableDataChanged();
 
-    private void cboRotaAlteracaoIdRotaClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboRotaAlteracaoIdRota.getSelectedItem().equals("Selecione"))) {
-                cboRotaAlteracaoIdRotaOculto.setSelectedIndex(cboRotaAlteracaoIdRota.getSelectedIndex());
-                rota.setId(Integer.parseInt(String.valueOf(cboRotaAlteracaoIdRotaOculto.getSelectedItem())));
-                Rota aux = daoRota.consultaRota(rota);
-                txtRotaAlteracaoDuracao.setText(aux.getRotaDuracao());
-                cboRotaAlteracaoOrigemOculto.setSelectedItem(aux.getRota_cidadeOrigemId());
-                cboRotaAlteracaoDestinoOculto.setSelectedItem(aux.getRota_cidadeDestinoId());
-                cboRotaAlteracaoOrigem.setSelectedIndex(cboRotaAlteracaoOrigemOculto.getSelectedIndex());
-                cboRotaAlteracaoDestino.setSelectedIndex(cboRotaAlteracaoDestinoOculto.getSelectedIndex());
-            } else {
-                txtRotaAlteracaoDuracao.setText("");
-                cboRotaAlteracaoOrigem.setSelectedItem("Selecione");
-                cboRotaAlteracaoDestino.setSelectedItem("Selecione");
-                cboRotaAlteracaoOrigemOculto.setSelectedItem("Selecione");
-                cboRotaAlteracaoDestinoOculto.setSelectedItem("Selecione");
-            }
-        }
-    }
+        cboItinerario.setEnabled(true);
+        cboItinerario.setSelectedIndex(0);
 
-    private void cboRotaAlteracaoCidadeOrigemClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboRotaAlteracaoOrigem.getSelectedItem().equals("Selecione"))) {
-                cboRotaAlteracaoOrigemOculto.setSelectedIndex(cboRotaAlteracaoOrigem.getSelectedIndex());
-            }
-        }
-    }
+        cboItinerarioOnibus.setEnabled(false);
+        cboItinerarioOnibus.setSelectedIndex(0);
+        tableRotas.setVisible(false);
 
-    private void cboRotaAlteracaoCidadeDestinoClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboRotaAlteracaoDestino.getSelectedItem().equals("Selecione"))) {
-                cboRotaAlteracaoDestinoOculto.setSelectedIndex(cboRotaAlteracaoDestino.getSelectedIndex());
-            }
-        }
-    }
+        cboItinerarioHora.setSelectedIndex(0);
+        cboItinerarioHora.setEnabled(false);
 
-    /* Remocao */
-    private void btnRotaRemoverClick(ActionEvent evt) {
-        int confirma = 0;
-        if (cboRotaRemocaoIdRota.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma Rota para remover.");
-            cboRotaRemocaoIdRota.requestFocus();
-        } else {
-            confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
-            if (confirma == JOptionPane.YES_OPTION) {
-                rota.setId(Integer.parseInt(String.valueOf(cboRotaRemocaoIdRotaOculto.getSelectedItem())));
-                boolean verifica = daoRota.removerRota(rota);
-                if (verifica) {
-                    JOptionPane.showMessageDialog(null, "Rota removida com sucesso!");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Nao foi possivel remover Rota. Ela esta sendo usada por algum Itinerario.");
-                }
-                cboRotaRemocaoIdRota.setSelectedItem("Selecione");
-                cboRotaRemocaoIdRotaOculto.setSelectedItem("Selecione");
-                lblRotaRemocaoDuracaoR.setText("");
-                cboRotaRemocaoIdRota.requestFocus();
-            } else {
-                cboRotaRemocaoIdRota.setSelectedItem("Selecione");
-                cboRotaRemocaoIdRotaOculto.setSelectedItem("Selecione");
-                lblRotaRemocaoDuracaoR.setText("");
-                cboRotaRemocaoIdRota.requestFocus();
-            }
-            carregaCombosCidade();
-            carregaCombosRota();
-        }
-    }
+        flagMin = 1;
+        cboItinerarioMin.setEnabled(false);
+        cboItinerarioMin.setSelectedIndex(0);
 
-    private void cboRotaRemocaoOrigemDestinoClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboRotaRemocaoIdRota.getSelectedItem().equals("Selecione"))) {
-                cboRotaRemocaoIdRotaOculto.setSelectedIndex(cboRotaRemocaoIdRota.getSelectedIndex());
-                rota.setId(Integer.parseInt(String.valueOf(cboRotaRemocaoIdRotaOculto.getSelectedItem())));
-                rota = daoRota.consultaRota(rota);
-                lblRotaRemocaoDuracaoR.setText(rota.getRotaDuracao());
-            } else {
-                cboRotaRemocaoIdRotaOculto.setSelectedIndex(cboRotaRemocaoIdRota.getSelectedIndex());
-                lblRotaRemocaoDuracaoR.setText("");
-            }
-        }
-    }
+        cboItinerarioMotorista.setSelectedIndex(0);
+        cboItinerarioMotorista.setEnabled(false);
 
-    /* Itinerario */
-    /* Cadastro */
-    private void btnItinerarioCadastrarClick(ActionEvent evt) {
-        if (cboItinerarioCadastroOrigem.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
-            cboItinerarioCadastroOrigem.requestFocus();
-        } else if (cboItinerarioCadastroDestino.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Destino.");
-            cboItinerarioCadastroDestino.requestFocus();
-        } else {
-            itinerario.setItinerario_cidadeOrigemId(Integer.parseInt(String.valueOf(cboItinerarioCadastroOrigemOculto.getSelectedItem())));
-            itinerario.setItinerario_cidadeDestinoId(Integer.parseInt(String.valueOf(cboItinerarioCadastroDestinoOculto.getSelectedItem())));
-            int verifica = daoItinerario.cadastrarItinerario(itinerario);
-            if (verifica == 0) {
-                JOptionPane.showMessageDialog(null, "Itinerario cadastrado com sucesso!");
-                cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
-                cboItinerarioCadastroDestino.setSelectedItem("Selecione");
-                carregaCombosCidade();
-                carregaCombosItinerario();
-                cboItinerarioCadastroOrigem.requestFocus();
-            } else if (verifica == 1) {
-                JOptionPane.showMessageDialog(null, "Itinerario ja existente.");
-                cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
-                cboItinerarioCadastroDestino.setSelectedItem("Selecione");
-                cboItinerarioCadastroOrigem.requestFocus();
-            } else if (verifica == 2) {
-                JOptionPane.showMessageDialog(null, "Selecione um Destino diferente da Origem.");
-                cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
-                cboItinerarioCadastroDestino.setSelectedItem("Selecione");
-                cboItinerarioCadastroOrigem.requestFocus();
-            }
-        }
-    }
+        cboItinerarioDestino.setSelectedIndex(0);
+        cboItinerarioDestino.setEnabled(false);
 
-    private void btnItinerarioCadastroLimpaClick(ActionEvent evt) {
-        cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
-        cboItinerarioCadastroOrigemOculto.setSelectedItem("Selecione");
-        cboItinerarioCadastroDestino.setSelectedItem("Selecione");
-        cboItinerarioCadastroDestinoOculto.setSelectedItem("Selecione");
-        cboItinerarioCadastroOrigem.requestFocus();
-    }
+        btnItinerarioAddRota.setEnabled(false);
+        btnItinerarioConfirma.setEnabled(false);
+        btnItinerarioAlterarRota.setEnabled(false);
 
-    private void cboItinerarioCadastroOrigemClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboItinerarioCadastroOrigem.getSelectedItem().equals("Selecione"))) {
-                cboItinerarioCadastroOrigemOculto.setSelectedIndex(cboItinerarioCadastroOrigem.getSelectedIndex());
-            } else {
-                cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
-                cboItinerarioCadastroDestino.setSelectedItem("Selecione");
-            }
-        }
+        txtItinerarioSaida.setText("");
+        chBxDomingo.setSelected(false);
+        chBxSegundaFeira.setSelected(false);
+        chBxTercaFeira.setSelected(false);
+        chBxQuartaFeira.setSelected(false);
+        chBxQuintaFeira.setSelected(false);
+        chBxSextaFeira.setSelected(false);
+        chBxSabado.setSelected(false);
+        chBxFeriados.setSelected(false);
+        chBxDomingo.setEnabled(false);
+        chBxSegundaFeira.setEnabled(false);
+        chBxTercaFeira.setEnabled(false);
+        chBxQuartaFeira.setEnabled(false);
+        chBxQuintaFeira.setEnabled(false);
+        chBxSextaFeira.setEnabled(false);
+        chBxSabado.setEnabled(false);
+        chBxFeriados.setEnabled(false);
     }
-
-    private void cboItinerarioCadastroDestinoClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboItinerarioCadastroDestino.getSelectedItem().equals("Selecione"))) {
-                cboItinerarioCadastroDestinoOculto.setSelectedIndex(cboItinerarioCadastroDestino.getSelectedIndex());
-            } else {
-                cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
-                cboItinerarioCadastroDestino.setSelectedItem("Selecione");
-            }
-        }
-    }
-
-    /* Alteracao */
-    private void btnItinerarioAlterarClick(ActionEvent evt) {
-        if (cboItinerarioAlteracaoIdItinerario.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Itiner�rio.");
-            cboItinerarioAlteracaoIdItinerario.requestFocus();
-        } else if (cboItinerarioAlteracaoOrigem.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
-            cboItinerarioAlteracaoOrigem.requestFocus();
-        } else if (cboItinerarioAlteracaoDestino.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Destino.");
-            cboItinerarioAlteracaoDestino.requestFocus();
-        } else {
-            itinerario.setId(Integer.parseInt(String.valueOf(cboItinerarioAlteracaoIdItinerarioOculto.getSelectedItem())));
-            itinerario.setItinerario_cidadeOrigemId(Integer.parseInt(String.valueOf(cboItinerarioAlteracaoOrigemOculto.getSelectedItem())));
-            itinerario.setItinerario_cidadeDestinoId(Integer.parseInt(String.valueOf(cboItinerarioAlteracaoDestinoOculto.getSelectedItem())));
-            int verifica = daoItinerario.alterarItinerario(itinerario);
-            if (verifica == 0) {
-                JOptionPane.showMessageDialog(null, "Itinerario alterado com sucesso!");
-            } else if (verifica == 1) {
-                JOptionPane.showMessageDialog(null, "Itinerario ja existente!");
-            } else if (verifica == 2) {
-                JOptionPane.showMessageDialog(null, "Nao foi possivel alterar esse Itinerario pois ela pertence a uma viagem!");
-            } else if (verifica == 3) {
-                JOptionPane.showMessageDialog(null, "Selecione um  Destino diferente da Origem!");
-            }
-            carregaCombosCidade();
-            carregaCombosItinerario();
-            cboItinerarioAlteracaoIdItinerario.setSelectedItem("Selecione");
-            cboItinerarioAlteracaoIdItinerarioOculto.setSelectedItem("Selecione");
-            cboItinerarioAlteracaoOrigem.setSelectedItem("Selecione");
-            cboItinerarioAlteracaoOrigemOculto.setSelectedItem("Selecione");
-            cboItinerarioAlteracaoDestino.setSelectedItem("Selecione");
-            cboItinerarioAlteracaoDestinoOculto.setSelectedItem("Selecione");
-            cboItinerarioAlteracaoIdItinerario.requestFocus();
-        }
-    }
-
-    private void cboItinerarioAlteracaoIdItinerarioClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboItinerarioAlteracaoIdItinerario.getSelectedItem().equals("Selecione"))) {
-                cboItinerarioAlteracaoIdItinerarioOculto.setSelectedIndex(cboItinerarioAlteracaoIdItinerario.getSelectedIndex());
-                itinerario.setId(Integer.parseInt(String.valueOf(cboItinerarioAlteracaoIdItinerarioOculto.getSelectedItem())));
-                Itinerario aux = daoItinerario.consultaItinerario(itinerario);
-                cboItinerarioAlteracaoOrigemOculto.setSelectedItem(aux.getItinerario_cidadeOrigemId());
-                cboItinerarioAlteracaoDestinoOculto.setSelectedItem(aux.getItinerario_cidadeDestinoId());
-                cboItinerarioAlteracaoOrigem.setSelectedIndex(cboItinerarioAlteracaoOrigemOculto.getSelectedIndex());
-                cboItinerarioAlteracaoDestino.setSelectedIndex(cboItinerarioAlteracaoDestinoOculto.getSelectedIndex());
-            } else {
-                cboItinerarioAlteracaoOrigem.setSelectedItem("Selecione");
-                cboItinerarioAlteracaoOrigemOculto.setSelectedItem("Selecione");
-                cboItinerarioAlteracaoDestino.setSelectedItem("Selecione");
-                cboItinerarioAlteracaoDestinoOculto.setSelectedItem("Selecione");
-            }
-        }
-    }
-
-    private void cboItinerarioAlteracaoOrigemClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboItinerarioAlteracaoOrigem.getSelectedItem().equals("Selecione"))) {
-                cboItinerarioAlteracaoOrigemOculto.setSelectedIndex(cboItinerarioAlteracaoOrigem.getSelectedIndex());
-            }
-        }
-    }
-
-    private void cboItinerarioAlteracaoDestinoClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboItinerarioAlteracaoDestino.getSelectedItem().equals("Selecione"))) {
-                cboItinerarioAlteracaoDestinoOculto.setSelectedIndex(cboItinerarioAlteracaoDestino.getSelectedIndex());
-            }
-        }
-    }
-
-    /* Remocao */
-    private void btnItinerarioRemoverClick(ActionEvent evt) {
-        int confirma = 0;
-        if (cboItinerarioRemocaoIdItinerario.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Itinerario para remover.");
-            cboItinerarioRemocaoIdItinerario.requestFocus();
-        } else {
-            confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
-            if (confirma == JOptionPane.YES_OPTION) {
-                itinerario.setId(Integer.parseInt(String.valueOf(cboItinerarioRemocaoIdItinerarioOculto.getSelectedItem())));
-                boolean verifica = daoItinerario.removerItinerario(itinerario);
-                if (verifica) {
-                    JOptionPane.showMessageDialog(null, "Itinerario removido com sucesso!");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Nao foi possivel remover o itinerario. Ele pertence a uma viagem.");
-                }
-                cboItinerarioRemocaoIdItinerario.setSelectedItem("Selecione");
-                cboItinerarioRemocaoIdItinerarioOculto.setSelectedItem("Selecione");
-                cboItinerarioRemocaoIdItinerario.requestFocus();
-            } else {
-                cboItinerarioRemocaoIdItinerario.setSelectedItem("Selecione");
-                cboItinerarioRemocaoIdItinerarioOculto.setSelectedItem("Selecione");
-                cboItinerarioRemocaoIdItinerario.requestFocus();
-            }
-            carregaCombosCidade();
-            carregaCombosItinerario();
-        }
-    }
-
-    private void cboItinerarioRemocaoIdItinerarioClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboItinerarioRemocaoIdItinerario.getSelectedItem().equals("Selecione"))) {
-                cboItinerarioRemocaoIdItinerarioOculto.setSelectedIndex(cboItinerarioRemocaoIdItinerario.getSelectedIndex());
-                itinerario.setId(Integer.parseInt(String.valueOf(cboItinerarioRemocaoIdItinerarioOculto.getSelectedItem())));
-                itinerario = daoItinerario.consultaItinerario(itinerario);
-            } else {
-                cboItinerarioRemocaoIdItinerarioOculto.setSelectedIndex(cboItinerarioRemocaoIdItinerario.getSelectedIndex());
-            }
-        }
-    }
-    //------- Geral
-    private Font fontePadrao;
-    private FlowLayout layoutRight;
-    private Rota rota;
-    private Itinerario itinerario;
-    private DaoCidade daoCidade;
-    private DaoRota daoRota;
+    DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+    private NumberFormat format;
+    JTable tableRotas;
+    DefaultTableModel tbm;
+    private DaoOnibus daoItinerarioOnibus;
+    private int flagMin = 0;
+    private DaoMotorista daoItinerarioMotorista;
+    private ArrayList<Motorista> arrayItinerarioMotoristaList;
+    private ArrayList<Onibus> arrayItinerarioOnibus;
     private DaoItinerario daoItinerario;
-    private JPanel pnlRotaItinerario;
-    //------- Rota
-    private JPanel pnlRotaCadastro;
-    private JPanel pnlRotaAlteracao;
-    private JPanel pnlRotaRemocao;
-    //cadastro
-    private JLabel lblRotaCadastroOrigem;
-    private JLabel lblRotaCadastroDestino;
-    private JLabel lblRotaCadastroDuracao;
-    private JButton btnRotaCadastrar;
-    private JButton btnRotaCadastroLimpa;
-    private JTextField txtRotaCadastroDuracao;
-    private JComboBox cboRotaCadastroOrigem;
-    private JComboBox cboRotaCadastroDestino;
-    private JComboBox cboRotaCadastroOrigemOculto;
-    private JComboBox cboRotaCadastroDestinoOculto;
-    //alteracao
-    private JComboBox cboRotaAlteracaoIdRota;
-    private JComboBox cboRotaAlteracaoIdRotaOculto;
-    private JComboBox cboRotaAlteracaoOrigem;
-    private JComboBox cboRotaAlteracaoDestino;
-    private JComboBox cboRotaAlteracaoOrigemOculto;
-    private JComboBox cboRotaAlteracaoDestinoOculto;
-    private JLabel lblRotaAlteracaoRota;
-    private JLabel lblRotaAlteracaoOrigem;
-    private JLabel lblRotaAlteracaoDestino;
-    private JLabel lblRotaAlteracaoDuracao;
-    private JButton btnRotaAlterar;
-    private JTextField txtRotaAlteracaoDuracao;
-    //remocao
-    private JComboBox cboRotaRemocaoIdRota;
-    private JComboBox cboRotaRemocaoIdRotaOculto;
-    private JLabel lblRotaRemocaoOrigemDestino;
-    private JLabel lblRotaRemocaoDuracao;
-    private JButton btnRotaRemover;
-    private JLabel lblRotaRemocaoDuracaoR;
-    //------- Itinerario
-    private JPanel pnlItinerarioCadastro;
-    private JPanel pnlItinerarioAlteracao;
-    private JPanel pnlItinerarioRemocao;
-    //cadastro
-    private JLabel lblItinerarioCadastroOrigem;
-    private JLabel lblItinerarioCadastroDestino;
-    private JButton btnItinerarioCadastrar;
-    private JButton btnItinerarioCadastroLimpa;
-    private JComboBox cboItinerarioCadastroOrigem;
-    private JComboBox cboItinerarioCadastroOrigemOculto;
-    private JComboBox cboItinerarioCadastroDestino;
-    private JComboBox cboItinerarioCadastroDestinoOculto;
-    //alteracao
-    private JComboBox cboItinerarioAlteracaoIdItinerario;
-    private JComboBox cboItinerarioAlteracaoIdItinerarioOculto;
-    private JComboBox cboItinerarioAlteracaoOrigem;
-    private JComboBox cboItinerarioAlteracaoOrigemOculto;
-    private JComboBox cboItinerarioAlteracaoDestino;
-    private JComboBox cboItinerarioAlteracaoDestinoOculto;
-    private JLabel lblItinerarioAlteracaoOrigemDestino;
-    private JLabel lblItinerarioAlteracaoOrigem;
-    private JLabel lblItinerarioAlteracaoDestino;
-    private JButton btnItinerarioAlterar;
-    //remocao
-    private JComboBox cboItinerarioRemocaoIdItinerario;
-    private JComboBox cboItinerarioRemocaoIdItinerarioOculto;
-    private JLabel lblItinerarioRemocaoOrigemDestino;
-    private JButton btnItinerarioRemover;
+    private DaoRota daoRota;
+    private DaoHorario daoHorario;
+    private DaoRotaItinerario daoRotaItinerario;
+    private ArrayList<Integer> arrayIdOnibus;
+    private ArrayList<Integer> arrayIdMotorista;
+    private ArrayList<Itinerario> arrayItinerario;
+    private ArrayList<Rota> arrayRotaAtual;
+    private ArrayList<Rota> arrayRotasAddicionadas;
+    private ArrayList<RotaItinerario> arrayRotaItinerario;
+    private ArrayList<Horario> arrayHorario;
+    private ArrayList<String> arrayMinuto;
+    private ArrayList<String> arrayHora;
+    private int selectedCboIndexItinerario;
+    private int ordemRota = 0;
+    private int rowIndexSelected;
+    private Font fontePadrao;
+    private GridLayout gridLayout2_4;
+    //JTextFields
+    private JTextField txtItinerarioOrigem;
+    private JTextField txtItinerarioSaida;
+    private JTextField txtItinerarioPreco;
+    //Jpanel
+    private JPanel pnlItinerarioRotas;
+    private JPanel pnlItinarioLista;
+    private JPanel pnlItinerario;
+    private JPanel pnlItinerarioDias;
+    //JLbabels
+    private JLabel lblItinerario;
+    private JLabel lblItinerarioHoraSaida;
+    private JLabel lblItinerarioTipoOnibus;
+    private JLabel lblItinerarioOrigem;
+    private JLabel lblItinerarioDestino;
+    private JLabel lblItinerarioSaida;
+    private JLabel lblItinerarioPreco;
+    private JLabel lblItinerarioMotorista;
+    //JButtons
+    private JButton btnItinerarioAddRota;
+    private JButton btnItinerarioConfirma;
+    private JButton btnItinerarioCancela;
+    private JButton btnItinerarioAlterarRota;
+    //ComboBoxes
+    private JComboBox cboItinerario;
+    private JComboBox cboItinerarioMotorista;
+    private JComboBox cboItinerarioDestino;
+    private JComboBox cboItinerarioMin;
+    private JComboBox cboItinerarioHora;
+    private JComboBox cboItinerarioOnibus;
+    //CheckBox
+    private JCheckBox chBxSegundaFeira;
+    private JCheckBox chBxTercaFeira;
+    private JCheckBox chBxQuartaFeira;
+    private JCheckBox chBxQuintaFeira;
+    private JCheckBox chBxSextaFeira;
+    private JCheckBox chBxSabado;
+    private JCheckBox chBxDomingo;
+    private JCheckBox chBxFeriados;
 }

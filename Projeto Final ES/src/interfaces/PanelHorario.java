@@ -1,5 +1,6 @@
 package interfaces;
 
+import dao.DaoCidade;
 import dao.DaoHorario;
 import entidades.RotaItinerario;
 import entidades.Horario;
@@ -40,60 +41,31 @@ import javax.swing.table.DefaultTableModel;
 import dao.DaoMotorista;
 import dao.DaoOnibus;
 import dao.DaoRotaItinerario;
+import entidades.Cidade;
 import entidades.Itinerario;
 import entidades.Motorista;
 import entidades.Onibus;
 import entidades.Rota;
 
-public class PanelHorario extends JFrame {
+public class PanelHorario extends JPanel {
 
-    public PanelHorario() {
-        //abrir com aparencia "Nimbus"
-        try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public JPanel inserirPnlItinerario() {
         format = NumberFormat.getNumberInstance();
         format.setMinimumIntegerDigits(2);
-        initComponents();
-    }
-
-    private void initComponents() {
-        this.setTitle("SISTEMA DE COMPRAS DE PASSAGENS DE ONIBUS");
-        this.setMinimumSize(new Dimension(900, 700));
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        //this.setExtendedState(Principal.MAXIMIZED_BOTH); //abrir tela maximizada
-        this.setLayout(null);
-
         gridLayout2_4 = new GridLayout(2, 4);
         fontePadrao = new Font("Segoe UI", 1, 14);
-
-
-        inserirPnlItinerario();
-
-
-        add(pnlItinerario);
-        // pack();
-
-
-
-    }
-
-    private void inserirPnlItinerario() {
+        
         pnlItinerario = new JPanel();
         pnlItinerario.setSize(695, 590);
-        //panel.setBounds(200, 100, 695,695);
         pnlItinerario.setPreferredSize(new Dimension(885, 650));
-        pnlItinerario.setBorder(BorderFactory.createTitledBorder(null, " CADASTRO ITINERARIO ", TitledBorder.CENTER, TitledBorder.TOP, fontePadrao));
+        pnlItinerario.setBorder(BorderFactory.createTitledBorder(null, " ASSOCIAR HORARIOS ", TitledBorder.CENTER, TitledBorder.TOP, fontePadrao));
         pnlItinerario.setBackground(new Color(240, 240, 240));
         pnlItinerario.setLayout(null);
         pnlItinerario.setOpaque(true);
-
+        pnlItinerario.setVisible(false);
 
         lblItinerario = new JLabel();
         lblItinerario.setText("Selecione o Itinerario:");
-        lblItinerario.setFont(fontePadrao);
         lblItinerario.setBounds(27, 50, 155, 20);
 
         cboItinerario = new JComboBox(new String[]{"Selecione"});
@@ -107,33 +79,26 @@ public class PanelHorario extends JFrame {
         cboItinerarioMin.setBounds(603, 45, 60, 30);
         cboItinerarioMin.setEnabled(false);
 
-
-
         cboItinerarioOnibus = new JComboBox();
         cboItinerarioOnibus.setBounds(187, 90, 200, 30);
         cboItinerarioOnibus.setEnabled(false);
 
         lblItinerarioHoraSaida = new JLabel("Horario de saida:");
-        lblItinerarioHoraSaida.setFont(fontePadrao);
         lblItinerarioHoraSaida.setBounds(414, 45, 120, 30);
 
         lblItinerarioTipoOnibus = new JLabel("Selecione o onibus:");
-        lblItinerarioTipoOnibus.setFont(fontePadrao);
         lblItinerarioTipoOnibus.setBounds(27, 95, 155, 20);
 
         btnItinerarioConfirma = new JButton("Confirma");
         btnItinerarioConfirma.setBounds(400, 535, 100, 30);
-        btnItinerarioConfirma.setFont(fontePadrao);
         btnItinerarioConfirma.setEnabled(false);
 
         btnItinerarioCancela = new JButton("Cancela");
         btnItinerarioCancela.setBounds(550, 535, 100, 30);
-        btnItinerarioCancela.setFont(fontePadrao);
 
 
         btnItinerarioAlterarRota = new JButton("Alterar Rota");
         btnItinerarioAlterarRota.setBounds(450, 480, 150, 30);
-        btnItinerarioAlterarRota.setFont(fontePadrao);
         btnItinerarioAlterarRota.setEnabled(false);
 
         arrayRotaAtual = new ArrayList<Rota>();
@@ -332,7 +297,7 @@ public class PanelHorario extends JFrame {
             }
         });
 
-
+        return pnlItinerario;
 
     }
 
@@ -389,39 +354,31 @@ public class PanelHorario extends JFrame {
         pnlItinerarioRotas.setLayout(null);
 
         lblItinerarioOrigem = new JLabel("Origem:");
-        lblItinerarioOrigem.setFont(fontePadrao);
         lblItinerarioOrigem.setBounds(30, 43, 70, 20);
 
 
         lblItinerarioDestino = new JLabel("Destino:");
-        lblItinerarioDestino.setFont(fontePadrao);
         lblItinerarioDestino.setBounds(30, 93, 70, 20);
 
         lblItinerarioSaida = new JLabel("Saida:");
-        lblItinerarioSaida.setFont(fontePadrao);
         lblItinerarioSaida.setBounds(30, 143, 70, 20);
 
         lblItinerarioPreco = new JLabel("Preco:");
-        lblItinerarioPreco.setFont(fontePadrao);
         lblItinerarioPreco.setBounds(30, 193, 70, 20);
 
         lblItinerarioMotorista = new JLabel("Motorista:");
-        lblItinerarioMotorista.setFont(fontePadrao);
         lblItinerarioMotorista.setBounds(30, 243, 75, 20);
 
         txtItinerarioOrigem = new JTextField();
-        txtItinerarioOrigem.setFont(fontePadrao);
         txtItinerarioOrigem.setBounds(150, 40, 180, 30);
         txtItinerarioOrigem.setEnabled(false);
 
 
         txtItinerarioSaida = new JTextField();
-        txtItinerarioSaida.setFont(fontePadrao);
         txtItinerarioSaida.setBounds(150, 140, 180, 30);
         txtItinerarioSaida.setEnabled(false);
 
         txtItinerarioPreco = new JTextField();
-        txtItinerarioPreco.setFont(fontePadrao);
         txtItinerarioPreco.setBounds(150, 190, 180, 30);
         txtItinerarioPreco.setEnabled(false);
 
@@ -441,7 +398,6 @@ public class PanelHorario extends JFrame {
 
         btnItinerarioAddRota = new JButton("Adicionar Rota");
         btnItinerarioAddRota.setBounds(150, 290, 180, 30);
-        btnItinerarioAddRota.setFont(fontePadrao);
         btnItinerarioAddRota.setEnabled(false);
 
 
@@ -499,7 +455,12 @@ public class PanelHorario extends JFrame {
                         ordemRota = (arrayRotaItinerario.get(arrayRotaItinerario.size() - 1).getRotaitinerarioOrdem()) + 1; //somando um a ordem anterior
                         idRotaItinerario = (arrayRotaItinerario.get(arrayRotaItinerario.size() - 1).getRotaItinerarioId()) + 1; //somando um ao id anterior          		
                     }
-                    arrayRotaItinerario.add(new RotaItinerario(idRotaItinerario, idRota, idItinerario, ordemRota));
+                    RotaItinerario RI = new RotaItinerario();
+                    RI.setRotaItinerarioId(idRotaItinerario);
+                    RI.setRotaitinerario_rotaId(idRota);
+                    RI.setRotaitinerario_itinerarioId(idItinerario);
+                    RI.setRotaitinerarioOrdem(ordemRota);
+                    arrayRotaItinerario.add(RI);
                     // Nao esquecer de zerar ordem quando finalizar a insercao
 
 
@@ -508,7 +469,11 @@ public class PanelHorario extends JFrame {
                         btnItinerarioConfirma.setEnabled(true);
                     }
                     int idCidadeOrigemAux = arrayRotaAtual.get(cboItinerarioDestino.getSelectedIndex() - 1).getRota_cidadeDestinoId(); //salvando id da nova cidade Origem
-                    txtItinerarioOrigem.setText(daoItinerario.consultaCidade(String.valueOf(idCidadeOrigemAux))); //atualizando txt origem
+                    DaoCidade daoCidade = new DaoCidade();
+                    Cidade cidade = new Cidade();
+                    cidade.setId(idCidadeOrigemAux);
+                    cidade = daoCidade.consultaCidade(cidade);
+                    txtItinerarioOrigem.setText(cidade.getNome()); //atualizando txt origem
                     carregaComboDestino(idCidadeOrigemAux); //remotando comboDestino
 
                     tableRotas.setVisible(true);
@@ -706,9 +671,10 @@ public class PanelHorario extends JFrame {
 
     }
 
-    private void carregaComboItinerario() {
+    public void carregaComboItinerario() {
         daoItinerario = new DaoItinerario();
         arrayItinerario = daoItinerario.consultarTodosItinerarios();
+
         cboItinerario.removeAllItems();
         cboItinerario.addItem("Selecione");
         for (int i = 0; i < arrayItinerario.size(); i++) {
@@ -717,7 +683,6 @@ public class PanelHorario extends JFrame {
     }
 
     private void carregaComboMinuto() {//SALVAR IDS
-
 
         arrayMinuto = new ArrayList<String>();
         for (int i = 0; i < 60; i += 5) {
@@ -911,7 +876,7 @@ public class PanelHorario extends JFrame {
     private JButton btnItinerarioAddRota;
     private JButton btnItinerarioConfirma;
     private JButton btnItinerarioCancela;
-    private JButton btnItinerarioAlterarRota;   
+    private JButton btnItinerarioAlterarRota;
     //ComboBoxes
     private JComboBox cboItinerario;
     private JComboBox cboItinerarioMotorista;
