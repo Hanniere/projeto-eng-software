@@ -1,0 +1,28 @@
+Comprovante de Compra
+
+
+Assento:      24
+Nome Passageiro: 1
+RG Passageiro: 5
+
+
+Assento:      28
+Nome Passageiro: 1
+RG Passageiro: 4
+
+
+Assento:      32
+Nome Passageiro: 1
+RG Passageiro: 2
+
+
+Assento:      23
+Nome Passageiro: 1
+RG Passageiro: 3
+
+
+Assento:      27
+Nome Passageiro: 1
+RG Passageiro: 1
+
+
