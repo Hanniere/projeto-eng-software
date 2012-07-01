@@ -1,5 +1,6 @@
 package interfaces;
 
+import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -268,9 +269,7 @@ public class PanelItinerarioRota extends JPanel {
         btnItinerarioCadastrar = new JButton("Cadastrar");
         btnItinerarioCadastroLimpa = new JButton("Limpar Campos");
         cboItinerarioCadastroOrigem = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioCadastroOrigemOculto = new JComboBox(new String[]{"Selecione"});
         cboItinerarioCadastroDestino = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioCadastroDestinoOculto = new JComboBox(new String[]{"Selecione"});
 
         lblItinerarioCadastroOrigem.setPreferredSize(new Dimension(70, 30));
         lblItinerarioCadastroDestino.setPreferredSize(new Dimension(70, 30));
@@ -296,11 +295,8 @@ public class PanelItinerarioRota extends JPanel {
         lblItinerarioAlteracaoDestino = new JLabel("Destino:");
         btnItinerarioAlterar = new JButton("Alterar");
         cboItinerarioAlteracaoIdItinerario = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioAlteracaoIdItinerarioOculto = new JComboBox(new String[]{"Selecione"});
         cboItinerarioAlteracaoOrigem = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioAlteracaoOrigemOculto = new JComboBox(new String[]{"Selecione"});
         cboItinerarioAlteracaoDestino = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioAlteracaoDestinoOculto = new JComboBox(new String[]{"Selecione"});
 
         btnItinerarioAlterar.setPreferredSize(new Dimension(100, 32));
         cboItinerarioAlteracaoIdItinerario.setPreferredSize(new Dimension(222, 30));
@@ -311,7 +307,6 @@ public class PanelItinerarioRota extends JPanel {
         lblItinerarioAlteracaoOrigemDestino.setPreferredSize(new Dimension(70, 30));
         lblItinerarioAlteracaoDestino.setPreferredSize(new Dimension(70, 30));
 
-        cboItinerarioAlteracaoIdItinerarioOculto.setVisible(false);
         pnlItinerarioAlteracao.add(lblItinerarioAlteracaoOrigemDestino);
         pnlItinerarioAlteracao.add(cboItinerarioAlteracaoIdItinerario);
         pnlItinerarioAlteracao.add(lblItinerarioAlteracaoOrigem);
@@ -325,7 +320,6 @@ public class PanelItinerarioRota extends JPanel {
         lblItinerarioRemocaoOrigemDestino = new JLabel("Itinerario:");
         JLabel lblItinerarioRemocaoAux = new JLabel("");
         cboItinerarioRemocaoIdItinerario = new JComboBox(new String[]{"Selecione"});
-        cboItinerarioRemocaoIdItinerarioOculto = new JComboBox(new String[]{"Selecione"});
         btnItinerarioRemover = new JButton("Remover");
 
         cboItinerarioRemocaoIdItinerario.setPreferredSize(new Dimension(222, 30));
@@ -334,7 +328,6 @@ public class PanelItinerarioRota extends JPanel {
 
         btnItinerarioRemover.setPreferredSize(new Dimension(100, 32));
 
-        cboItinerarioRemocaoIdItinerarioOculto.setVisible(false);
         pnlItinerarioRemocao.add(lblItinerarioRemocaoOrigemDestino);
         pnlItinerarioRemocao.add(cboItinerarioRemocaoIdItinerario);
         pnlItinerarioRemocao.add(lblItinerarioRemocaoAux);
@@ -429,7 +422,14 @@ public class PanelItinerarioRota extends JPanel {
     }
 
     public void carregaCombosCidade() {
-        ArrayList<Cidade> arraylist = daoCidade.consultarTodasCidades();
+        arrayListCidade = new ArrayList<Cidade>();
+        arrayListCidade = daoCidade.consultarTodasCidades();
+        for(int j= 0; j< arrayListCidade.size();j++){
+            System.out.println(arrayListCidade.get(j).getId()+ " Cidade:" +arrayListCidade.get(j).getNome());
+        }
+        cont++;
+        System.out.println(cont+"\n");
+        
         /* Rota */
 
         //cadastro
@@ -459,41 +459,29 @@ public class PanelItinerarioRota extends JPanel {
         cboItinerarioCadastroOrigem.addItem("Selecione");
         cboItinerarioCadastroDestino.removeAllItems();
         cboItinerarioCadastroDestino.addItem("Selecione");
-        cboItinerarioCadastroOrigemOculto.removeAllItems();
-        cboItinerarioCadastroOrigemOculto.addItem("Selecione");
-        cboItinerarioCadastroDestinoOculto.removeAllItems();
-        cboItinerarioCadastroDestinoOculto.addItem("Selecione");
 
         //alteracao
         cboItinerarioAlteracaoOrigem.removeAllItems();
         cboItinerarioAlteracaoOrigem.addItem("Selecione");
         cboItinerarioAlteracaoDestino.removeAllItems();
         cboItinerarioAlteracaoDestino.addItem("Selecione");
-        cboItinerarioAlteracaoOrigemOculto.removeAllItems();
-        cboItinerarioAlteracaoOrigemOculto.addItem("Selecione");
-        cboItinerarioAlteracaoDestinoOculto.removeAllItems();
-        cboItinerarioAlteracaoDestinoOculto.addItem("Selecione");
 
-        for (int i = 0; i < arraylist.size(); i++) {
+        for (int i = 0; i < arrayListCidade.size(); i++) {
             /* Rota */
-            cboRotaCadastroOrigem.addItem(arraylist.get(i).getNome());
-            cboRotaCadastroOrigemOculto.addItem(arraylist.get(i).getId());
-            cboRotaCadastroDestino.addItem(arraylist.get(i).getNome());
-            cboRotaCadastroDestinoOculto.addItem(arraylist.get(i).getId());
-            cboRotaAlteracaoOrigem.addItem(arraylist.get(i).getNome());
-            cboRotaAlteracaoDestino.addItem(arraylist.get(i).getNome());
-            cboRotaAlteracaoOrigemOculto.addItem(arraylist.get(i).getId());
-            cboRotaAlteracaoDestinoOculto.addItem(arraylist.get(i).getId());
+            cboRotaCadastroOrigem.addItem(arrayListCidade.get(i).getNome());
+            cboRotaCadastroOrigemOculto.addItem(arrayListCidade.get(i).getId());
+            cboRotaCadastroDestino.addItem(arrayListCidade.get(i).getNome());
+            cboRotaCadastroDestinoOculto.addItem(arrayListCidade.get(i).getId());
+            cboRotaAlteracaoOrigem.addItem(arrayListCidade.get(i).getNome());
+            cboRotaAlteracaoDestino.addItem(arrayListCidade.get(i).getNome());
+            cboRotaAlteracaoOrigemOculto.addItem(arrayListCidade.get(i).getId());
+            cboRotaAlteracaoDestinoOculto.addItem(arrayListCidade.get(i).getId());
 
             /* Itinerario */
-            cboItinerarioCadastroOrigem.addItem(arraylist.get(i).getNome());
-            cboItinerarioCadastroOrigemOculto.addItem(arraylist.get(i).getId());
-            cboItinerarioCadastroDestino.addItem(arraylist.get(i).getNome());
-            cboItinerarioCadastroDestinoOculto.addItem(arraylist.get(i).getId());
-            cboItinerarioAlteracaoOrigem.addItem(arraylist.get(i).getNome());
-            cboItinerarioAlteracaoDestino.addItem(arraylist.get(i).getNome());
-            cboItinerarioAlteracaoOrigemOculto.addItem(arraylist.get(i).getId());
-            cboItinerarioAlteracaoDestinoOculto.addItem(arraylist.get(i).getId());
+            cboItinerarioCadastroOrigem.addItem(arrayListCidade.get(i).getNome());
+            cboItinerarioCadastroDestino.addItem(arrayListCidade.get(i).getNome());
+            cboItinerarioAlteracaoOrigem.addItem(arrayListCidade.get(i).getNome());
+            cboItinerarioAlteracaoDestino.addItem(arrayListCidade.get(i).getNome());
         }
 
     }
@@ -520,28 +508,23 @@ public class PanelItinerarioRota extends JPanel {
     }
 
     public void carregaCombosItinerario() {
-        ArrayList<Itinerario> arraylistItinerarios = daoItinerario.consultarTodosItinerarios2();
+        arraylistItinerarios = new ArrayList<Itinerario>();     
+        arraylistItinerarios = daoItinerario.consultarTodosItinerarios2();
+
         //alteracao
         cboItinerarioAlteracaoIdItinerario.removeAllItems();
         cboItinerarioAlteracaoIdItinerario.addItem("Selecione");
-        cboItinerarioAlteracaoIdItinerarioOculto.removeAllItems();
-        cboItinerarioAlteracaoIdItinerarioOculto.addItem("Selecione");
         //remocao
         cboItinerarioRemocaoIdItinerario.removeAllItems();
         cboItinerarioRemocaoIdItinerario.addItem("Selecione");
-        cboItinerarioRemocaoIdItinerarioOculto.removeAllItems();
-        cboItinerarioRemocaoIdItinerarioOculto.addItem("Selecione");
         for (int i = 0; i < arraylistItinerarios.size(); i++) {
             cboItinerarioAlteracaoIdItinerario.addItem(arraylistItinerarios.get(i).getItinerario_cidadeOrigem() + " - " + arraylistItinerarios.get(i).getItinerario_cidadeDestino());
             cboItinerarioRemocaoIdItinerario.addItem(arraylistItinerarios.get(i).getItinerario_cidadeOrigem() + " - " + arraylistItinerarios.get(i).getItinerario_cidadeDestino());
-            cboItinerarioAlteracaoIdItinerarioOculto.addItem(arraylistItinerarios.get(i).getId());
-            cboItinerarioRemocaoIdItinerarioOculto.addItem(arraylistItinerarios.get(i).getId());
         }
-
     }
 
     /* Rota */
-    /* Cadastro */
+        /* Cadastro */
     private void btnRotaCadastrarClick(ActionEvent evt) {
         if (cboRotaCadastroOrigem.getSelectedItem().equals("Selecione")) {
             JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
@@ -611,7 +594,7 @@ public class PanelItinerarioRota extends JPanel {
         }
     }
 
-    /* Alteracao */
+        /* Alteracao */
     private void btnRotaAlterarClick(ActionEvent evt) {
         if (cboRotaAlteracaoIdRota.getSelectedItem().equals("Selecione")) {
             JOptionPane.showMessageDialog(null, "Selecione uma Rota.");
@@ -690,7 +673,7 @@ public class PanelItinerarioRota extends JPanel {
         }
     }
 
-    /* Remocao */
+        /* Remocao */
     private void btnRotaRemoverClick(ActionEvent evt) {
         int confirma = 0;
         if (cboRotaRemocaoIdRota.getSelectedItem().equals("Selecione")) {
@@ -736,7 +719,8 @@ public class PanelItinerarioRota extends JPanel {
     }
 
     /* Itinerario */
-    /* Cadastro */
+    
+        /* Cadastro */
     private void btnItinerarioCadastrarClick(ActionEvent evt) {
         if (cboItinerarioCadastroOrigem.getSelectedItem().equals("Selecione")) {
             JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
@@ -745,8 +729,8 @@ public class PanelItinerarioRota extends JPanel {
             JOptionPane.showMessageDialog(null, "Selecione um Destino.");
             cboItinerarioCadastroDestino.requestFocus();
         } else {
-            itinerario.setItinerario_cidadeOrigemId(Integer.parseInt(String.valueOf(cboItinerarioCadastroOrigemOculto.getSelectedItem())));
-            itinerario.setItinerario_cidadeDestinoId(Integer.parseInt(String.valueOf(cboItinerarioCadastroDestinoOculto.getSelectedItem())));
+            itinerario.setItinerario_cidadeOrigemId(arrayListCidade.get(cboItinerarioCadastroOrigem.getSelectedIndex()-1).getId());
+            itinerario.setItinerario_cidadeDestinoId(arrayListCidade.get(cboItinerarioCadastroDestino.getSelectedIndex()-1).getId());
             int verifica = daoItinerario.cadastrarItinerario(itinerario);
             if (verifica == 0) {
                 JOptionPane.showMessageDialog(null, "Itinerario cadastrado com sucesso!");
@@ -756,11 +740,6 @@ public class PanelItinerarioRota extends JPanel {
                 carregaCombosItinerario();
                 cboItinerarioCadastroOrigem.requestFocus();
             } else if (verifica == 1) {
-                JOptionPane.showMessageDialog(null, "Itinerario ja existente.");
-                cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
-                cboItinerarioCadastroDestino.setSelectedItem("Selecione");
-                cboItinerarioCadastroOrigem.requestFocus();
-            } else if (verifica == 2) {
                 JOptionPane.showMessageDialog(null, "Selecione um Destino diferente da Origem.");
                 cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
                 cboItinerarioCadastroDestino.setSelectedItem("Selecione");
@@ -771,16 +750,14 @@ public class PanelItinerarioRota extends JPanel {
 
     private void btnItinerarioCadastroLimpaClick(ActionEvent evt) {
         cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
-        cboItinerarioCadastroOrigemOculto.setSelectedItem("Selecione");
         cboItinerarioCadastroDestino.setSelectedItem("Selecione");
-        cboItinerarioCadastroDestinoOculto.setSelectedItem("Selecione");
         cboItinerarioCadastroOrigem.requestFocus();
     }
 
     private void cboItinerarioCadastroOrigemClick(ItemEvent evt) {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboItinerarioCadastroOrigem.getSelectedItem().equals("Selecione"))) {
-                cboItinerarioCadastroOrigemOculto.setSelectedIndex(cboItinerarioCadastroOrigem.getSelectedIndex());
+                //cboItinerarioCadastroOrigemOculto.setSelectedIndex(cboItinerarioCadastroOrigem.getSelectedIndex());
             } else {
                 cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
                 cboItinerarioCadastroDestino.setSelectedItem("Selecione");
@@ -791,7 +768,7 @@ public class PanelItinerarioRota extends JPanel {
     private void cboItinerarioCadastroDestinoClick(ItemEvent evt) {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboItinerarioCadastroDestino.getSelectedItem().equals("Selecione"))) {
-                cboItinerarioCadastroDestinoOculto.setSelectedIndex(cboItinerarioCadastroDestino.getSelectedIndex());
+                //cboItinerarioCadastroDestinoOculto.setSelectedIndex(cboItinerarioCadastroDestino.getSelectedIndex());
             } else {
                 cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
                 cboItinerarioCadastroDestino.setSelectedItem("Selecione");
@@ -799,7 +776,7 @@ public class PanelItinerarioRota extends JPanel {
         }
     }
 
-    /* Alteracao */
+        /* Alteracao */
     private void btnItinerarioAlterarClick(ActionEvent evt) {
         if (cboItinerarioAlteracaoIdItinerario.getSelectedItem().equals("Selecione")) {
             JOptionPane.showMessageDialog(null, "Selecione um Itiner�rio.");
@@ -811,27 +788,22 @@ public class PanelItinerarioRota extends JPanel {
             JOptionPane.showMessageDialog(null, "Selecione um Destino.");
             cboItinerarioAlteracaoDestino.requestFocus();
         } else {
-            itinerario.setId(Integer.parseInt(String.valueOf(cboItinerarioAlteracaoIdItinerarioOculto.getSelectedItem())));
-            itinerario.setItinerario_cidadeOrigemId(Integer.parseInt(String.valueOf(cboItinerarioAlteracaoOrigemOculto.getSelectedItem())));
-            itinerario.setItinerario_cidadeDestinoId(Integer.parseInt(String.valueOf(cboItinerarioAlteracaoDestinoOculto.getSelectedItem())));
+            itinerario.setId(arraylistItinerarios.get(cboItinerarioAlteracaoIdItinerario.getSelectedIndex()-1).getId());
+            itinerario.setItinerario_cidadeOrigemId(arrayListCidade.get(cboItinerarioAlteracaoOrigem.getSelectedIndex()-1).getId());
+            itinerario.setItinerario_cidadeDestinoId(arrayListCidade.get(cboItinerarioAlteracaoDestino.getSelectedIndex()-1).getId());
             int verifica = daoItinerario.alterarItinerario(itinerario);
             if (verifica == 0) {
                 JOptionPane.showMessageDialog(null, "Itinerario alterado com sucesso!");
             } else if (verifica == 1) {
-                JOptionPane.showMessageDialog(null, "Itinerario ja existente!");
-            } else if (verifica == 2) {
                 JOptionPane.showMessageDialog(null, "Nao foi possivel alterar esse Itinerario pois ela pertence a uma viagem!");
-            } else if (verifica == 3) {
+            } else if (verifica == 2) {
                 JOptionPane.showMessageDialog(null, "Selecione um  Destino diferente da Origem!");
             }
             carregaCombosCidade();
             carregaCombosItinerario();
             cboItinerarioAlteracaoIdItinerario.setSelectedItem("Selecione");
-            cboItinerarioAlteracaoIdItinerarioOculto.setSelectedItem("Selecione");
             cboItinerarioAlteracaoOrigem.setSelectedItem("Selecione");
-            cboItinerarioAlteracaoOrigemOculto.setSelectedItem("Selecione");
             cboItinerarioAlteracaoDestino.setSelectedItem("Selecione");
-            cboItinerarioAlteracaoDestinoOculto.setSelectedItem("Selecione");
             cboItinerarioAlteracaoIdItinerario.requestFocus();
         }
     }
@@ -839,18 +811,21 @@ public class PanelItinerarioRota extends JPanel {
     private void cboItinerarioAlteracaoIdItinerarioClick(ItemEvent evt) {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboItinerarioAlteracaoIdItinerario.getSelectedItem().equals("Selecione"))) {
-                cboItinerarioAlteracaoIdItinerarioOculto.setSelectedIndex(cboItinerarioAlteracaoIdItinerario.getSelectedIndex());
-                itinerario.setId(Integer.parseInt(String.valueOf(cboItinerarioAlteracaoIdItinerarioOculto.getSelectedItem())));
-                Itinerario aux = daoItinerario.consultaItinerario(itinerario);
-                cboItinerarioAlteracaoOrigemOculto.setSelectedItem(aux.getItinerario_cidadeOrigemId());
-                cboItinerarioAlteracaoDestinoOculto.setSelectedItem(aux.getItinerario_cidadeDestinoId());
-                cboItinerarioAlteracaoOrigem.setSelectedIndex(cboItinerarioAlteracaoOrigemOculto.getSelectedIndex());
-                cboItinerarioAlteracaoDestino.setSelectedIndex(cboItinerarioAlteracaoDestinoOculto.getSelectedIndex());
+                itinerario.setId(arraylistItinerarios.get(cboItinerarioAlteracaoIdItinerario.getSelectedIndex()-1).getId());
+                Itinerario alterarItinerario = daoItinerario.consultaItinerario(itinerario);
+                for(int i=0; i< arrayListCidade.size();i++){
+                    if(alterarItinerario.getItinerario_cidadeOrigemId()== arrayListCidade.get(i).getId()){
+                        cboItinerarioAlteracaoOrigem.setSelectedIndex(i+1);
+                    }   
+                }
+                for(int i=0; i< arrayListCidade.size();i++){
+                    if(alterarItinerario.getItinerario_cidadeDestinoId()== arrayListCidade.get(i).getId()){
+                        cboItinerarioAlteracaoDestino.setSelectedIndex(i+1);
+                    }
+                }
             } else {
                 cboItinerarioAlteracaoOrigem.setSelectedItem("Selecione");
-                cboItinerarioAlteracaoOrigemOculto.setSelectedItem("Selecione");
                 cboItinerarioAlteracaoDestino.setSelectedItem("Selecione");
-                cboItinerarioAlteracaoDestinoOculto.setSelectedItem("Selecione");
             }
         }
     }
@@ -858,7 +833,6 @@ public class PanelItinerarioRota extends JPanel {
     private void cboItinerarioAlteracaoOrigemClick(ItemEvent evt) {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboItinerarioAlteracaoOrigem.getSelectedItem().equals("Selecione"))) {
-                cboItinerarioAlteracaoOrigemOculto.setSelectedIndex(cboItinerarioAlteracaoOrigem.getSelectedIndex());
             }
         }
     }
@@ -866,12 +840,12 @@ public class PanelItinerarioRota extends JPanel {
     private void cboItinerarioAlteracaoDestinoClick(ItemEvent evt) {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboItinerarioAlteracaoDestino.getSelectedItem().equals("Selecione"))) {
-                cboItinerarioAlteracaoDestinoOculto.setSelectedIndex(cboItinerarioAlteracaoDestino.getSelectedIndex());
+                //cboItinerarioAlteracaoDestinoOculto.setSelectedIndex(cboItinerarioAlteracaoDestino.getSelectedIndex());
             }
         }
     }
 
-    /* Remocao */
+        /* Remocao */
     private void btnItinerarioRemoverClick(ActionEvent evt) {
         int confirma = 0;
         if (cboItinerarioRemocaoIdItinerario.getSelectedItem().equals("Selecione")) {
@@ -880,7 +854,7 @@ public class PanelItinerarioRota extends JPanel {
         } else {
             confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
             if (confirma == JOptionPane.YES_OPTION) {
-                itinerario.setId(Integer.parseInt(String.valueOf(cboItinerarioRemocaoIdItinerarioOculto.getSelectedItem())));
+                itinerario.setId(arraylistItinerarios.get(cboItinerarioRemocaoIdItinerario.getSelectedIndex()-1).getId());
                 boolean verifica = daoItinerario.removerItinerario(itinerario);
                 if (verifica) {
                     JOptionPane.showMessageDialog(null, "Itinerario removido com sucesso!");
@@ -888,11 +862,9 @@ public class PanelItinerarioRota extends JPanel {
                     JOptionPane.showMessageDialog(null, "Nao foi possivel remover o itinerario. Ele pertence a uma viagem.");
                 }
                 cboItinerarioRemocaoIdItinerario.setSelectedItem("Selecione");
-                cboItinerarioRemocaoIdItinerarioOculto.setSelectedItem("Selecione");
                 cboItinerarioRemocaoIdItinerario.requestFocus();
             } else {
                 cboItinerarioRemocaoIdItinerario.setSelectedItem("Selecione");
-                cboItinerarioRemocaoIdItinerarioOculto.setSelectedItem("Selecione");
                 cboItinerarioRemocaoIdItinerario.requestFocus();
             }
             carregaCombosCidade();
@@ -903,15 +875,18 @@ public class PanelItinerarioRota extends JPanel {
     private void cboItinerarioRemocaoIdItinerarioClick(ItemEvent evt) {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboItinerarioRemocaoIdItinerario.getSelectedItem().equals("Selecione"))) {
-                cboItinerarioRemocaoIdItinerarioOculto.setSelectedIndex(cboItinerarioRemocaoIdItinerario.getSelectedIndex());
-                itinerario.setId(Integer.parseInt(String.valueOf(cboItinerarioRemocaoIdItinerarioOculto.getSelectedItem())));
+                //cboItinerarioRemocaoIdItinerarioOculto.setSelectedIndex(cboItinerarioRemocaoIdItinerario.getSelectedIndex());
+                //itinerario.setId(Integer.parseInt(String.valueOf(cboItinerarioRemocaoIdItinerarioOculto.getSelectedItem())));
+                itinerario.setId(arraylistItinerarios.get(cboItinerarioRemocaoIdItinerario.getSelectedIndex()-1).getId());
                 itinerario = daoItinerario.consultaItinerario(itinerario);
-            } else {
-                cboItinerarioRemocaoIdItinerarioOculto.setSelectedIndex(cboItinerarioRemocaoIdItinerario.getSelectedIndex());
             }
         }
     }
+    
+    
     //------- Geral
+    int cont=0;
+    ArrayList<Cidade> arrayListCidade;
     private Font fontePadrao;
     private FlowLayout layoutRight;
     private Rota rota;
@@ -920,6 +895,7 @@ public class PanelItinerarioRota extends JPanel {
     private DaoRota daoRota;
     private DaoItinerario daoItinerario;
     private JPanel pnlRotaItinerario;
+    
     //------- Rota
     private JPanel pnlRotaCadastro;
     private JPanel pnlRotaAlteracao;
@@ -955,33 +931,31 @@ public class PanelItinerarioRota extends JPanel {
     private JLabel lblRotaRemocaoDuracao;
     private JButton btnRotaRemover;
     private JLabel lblRotaRemocaoDuracaoR;
+    
     //------- Itinerario
+    ArrayList<Itinerario> arraylistItinerarios;
     private JPanel pnlItinerarioCadastro;
     private JPanel pnlItinerarioAlteracao;
     private JPanel pnlItinerarioRemocao;
+    
     //cadastro
     private JLabel lblItinerarioCadastroOrigem;
     private JLabel lblItinerarioCadastroDestino;
     private JButton btnItinerarioCadastrar;
     private JButton btnItinerarioCadastroLimpa;
     private JComboBox cboItinerarioCadastroOrigem;
-    private JComboBox cboItinerarioCadastroOrigemOculto;
     private JComboBox cboItinerarioCadastroDestino;
-    private JComboBox cboItinerarioCadastroDestinoOculto;
+    
     //alteracao
     private JComboBox cboItinerarioAlteracaoIdItinerario;
-    private JComboBox cboItinerarioAlteracaoIdItinerarioOculto;
     private JComboBox cboItinerarioAlteracaoOrigem;
-    private JComboBox cboItinerarioAlteracaoOrigemOculto;
     private JComboBox cboItinerarioAlteracaoDestino;
-    private JComboBox cboItinerarioAlteracaoDestinoOculto;
     private JLabel lblItinerarioAlteracaoOrigemDestino;
     private JLabel lblItinerarioAlteracaoOrigem;
     private JLabel lblItinerarioAlteracaoDestino;
     private JButton btnItinerarioAlterar;
     //remocao
     private JComboBox cboItinerarioRemocaoIdItinerario;
-    private JComboBox cboItinerarioRemocaoIdItinerarioOculto;
     private JLabel lblItinerarioRemocaoOrigemDestino;
     private JButton btnItinerarioRemover;
 }

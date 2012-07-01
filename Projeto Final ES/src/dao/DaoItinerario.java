@@ -18,16 +18,12 @@ public class DaoItinerario {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "SELECT * FROM Itinerario WHERE Itinerario_CidadeOrigem = " + itinerario.getItinerario_cidadeOrigemId() + " AND Itinerario_CidadeDestino = " + itinerario.getItinerario_cidadeDestinoId();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                return 1;
-            }
+            System.out.println("Origem: "+itinerario.getItinerario_cidadeOrigemId() + "\n Destino:" + itinerario.getItinerario_cidadeDestinoId());
             if (itinerario.getItinerario_cidadeOrigemId() != itinerario.getItinerario_cidadeDestinoId()) {
-                sql = "INSERT INTO Itinerario VALUES (0, " + itinerario.getItinerario_cidadeOrigemId() + ", " + itinerario.getItinerario_cidadeDestinoId() + ")";
+                String sql = "INSERT INTO Itinerario VALUES (0, " + itinerario.getItinerario_cidadeOrigemId() + ", " + itinerario.getItinerario_cidadeDestinoId() + ")";
                 stmt.executeUpdate(sql);
             } else {
-                return 2;
+                return 1;
             }
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -45,21 +41,17 @@ public class DaoItinerario {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "SELECT * FROM Itinerario WHERE Itinerario_CidadeOrigem = " + itinerario.getItinerario_cidadeOrigemId() + " AND Itinerario_CidadeDestino = " + itinerario.getItinerario_cidadeDestinoId();
+            System.out.println(itinerario.getId());
+            String sql = "SELECT * FROM RotaItinerario WHERE RotaItinerario_ItinerarioId = " + itinerario.getId();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 return 1;
-            }
-            sql = "SELECT * FROM RotaItinerario WHERE RotaItinerario_ItinerarioId = " + itinerario.getId();
-            rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                return 2;
             }
             if (itinerario.getItinerario_cidadeOrigemId() != itinerario.getItinerario_cidadeDestinoId()) {
                 sql = "UPDATE Itinerario SET Itinerario_CidadeOrigem = " + itinerario.getItinerario_cidadeOrigemId() + ", Itinerario_CidadeDestino = " + itinerario.getItinerario_cidadeDestinoId() + " WHERE ItinerarioId = " + itinerario.getId();
                 stmt.executeUpdate(sql);
             } else {
-                return 3;
+                return 2;
             }
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
