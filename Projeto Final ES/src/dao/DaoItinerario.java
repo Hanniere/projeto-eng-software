@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import entidades.Itinerario;
+import entidades.Rota;
 import util.BancoDados;
 
 public class DaoItinerario {
@@ -144,6 +145,42 @@ public class DaoItinerario {
 
         return arrayList;
     }
+    
+        public ArrayList<Itinerario> consultarTodosItinerariosSemRotas() {
+        ArrayList<Itinerario> arrayList = new ArrayList<Itinerario>();
+        BancoDados banco = new BancoDados();
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            String sql = "select * from Itinerario where itinerarioId"
+                    + " not in (select distinct rotaitinerario_itinerarioid from RotaItinerario)";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) { // criando arrayList de itinerario
+                Itinerario itinerario = new Itinerario();
+                itinerario.setId(rs.getInt("itinerarioId"));
+                itinerario.setItinerario_cidadeOrigemId(rs.getInt("itinerario_cidadeOrigem"));
+                itinerario.setItinerario_cidadeDestinoId(rs.getInt("itinerario_cidadeDestino"));
+                DaoCidade daoCidade = new DaoCidade();
+                Cidade cidade = new Cidade();
+                cidade.setId(rs.getInt("itinerario_cidadeOrigem"));
+                cidade = daoCidade.consultaCidade(cidade);
+                itinerario.setItinerario_cidadeOrigem(cidade.getNome());
+                cidade.setId(rs.getInt("itinerario_cidadeDestino"));
+                cidade = daoCidade.consultaCidade(cidade);
+                itinerario.setItinerario_cidadeDestino(cidade.getNome());
+                arrayList.add(itinerario);
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Não foi possivel carregar o driver.");
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+        }
+
+        return arrayList;
+    }
 
     public ArrayList<Itinerario> consultarTodosItinerarios2() {
         ArrayList<Itinerario> arrayList = new ArrayList<Itinerario>();
@@ -165,6 +202,36 @@ public class DaoItinerario {
                 Itinerario.setItinerario_cidadeOrigem(rs.getString("origem.CidadeNome"));
                 Itinerario.setItinerario_cidadeDestino(rs.getString("destino.CidadeNome"));
                 arrayList.add(Itinerario);
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Não foi possivel carregar o driver.");
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+        }
+        return arrayList;
+    }
+    
+        public ArrayList<Rota> consultarRotasdoItinerario(Itinerario itinerario) {
+        ArrayList<Rota> arrayList = new ArrayList<Rota>();
+        BancoDados banco = new BancoDados();
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT origem.cidadeNome, destino.cidadeNome FROM RotaItinerario"
+                    + " INNER JOIN Rota ON (rotaId = RotaItinerario_RotaId)"
+                    + " INNER JOIN Cidade origem ON (origem.cidadeId = Rota_CidadeOrigem)"
+                    + " INNER JOIN Cidade destino ON (destino.cidadeId = Rota_CidadeDestino) WHERE RotaItinerario_ItinerarioId = 3 "
+                    + "GROUP BY origem.CidadeNome,destino.CidadeNome ORDER BY RotaItinerarioOrdem;";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Rota rota = new Rota();
+                rota.setRota_cidadeOrigem(rs.getString("origem.CidadeNome"));
+                rota.setRota_cidadeDestino(rs.getString("destino.CidadeNome"));
+
+                arrayList.add(rota);
             }
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
