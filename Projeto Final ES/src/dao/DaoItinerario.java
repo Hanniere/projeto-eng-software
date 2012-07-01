@@ -224,7 +224,7 @@ public class DaoItinerario {
                     + " INNER JOIN Rota ON (rotaId = RotaItinerario_RotaId)"
                     + " INNER JOIN Cidade origem ON (origem.cidadeId = Rota_CidadeOrigem)"
                     + " INNER JOIN Cidade destino ON (destino.cidadeId = Rota_CidadeDestino) WHERE RotaItinerario_ItinerarioId ="+itinerario.getId()
-                    + "GROUP BY origem.CidadeNome,destino.CidadeNome ORDER BY RotaItinerarioOrdem;";
+                    + " GROUP BY origem.CidadeNome,destino.CidadeNome ORDER BY RotaItinerarioOrdem;";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Rota rota = new Rota();
