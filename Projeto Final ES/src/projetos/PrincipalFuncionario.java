@@ -30,10 +30,10 @@ public class PrincipalFuncionario extends JFrame {
 
         menuPanel = new PanelMenu();
         inserirPnlLogin();
-        //pnlEntrar.setVisible(false);
+        pnlEntrar.setVisible(false);
 
         pnlMenu = menuPanel.inserirPnlMenu();
-        pnlMenu.setVisible(false);
+        //pnlMenu.setVisible(false);
 
         //setJMenuBar(menuPanel.inserirBarraMenu(0));
 
