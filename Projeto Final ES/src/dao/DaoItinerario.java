@@ -89,6 +89,31 @@ public class DaoItinerario {
         return true;
     }
 
+    public boolean removerRotaItinerario(Itinerario itinerario) {
+        BancoDados banco = new BancoDados();
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT * FROM Horario WHERE Horario_RotaItinerarioId IN (SELECT * FROM RotaItinerario WHERE RotaItinerario_ItinerarioId ="+itinerario.getId()+")" ;
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                return false;
+            }
+            sql = "DELETE FROM RotaItinerario WHERE RotaItinerario_ItinerarioId =" + itinerario.getId();
+            stmt.executeUpdate(sql);
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Não foi possivel carregar o driver.");
+            ex.printStackTrace();
+            return false;
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
     public Itinerario consultaItinerario(Itinerario itinerario) {
         Itinerario dadosRota = new Itinerario();
         BancoDados banco = new BancoDados();

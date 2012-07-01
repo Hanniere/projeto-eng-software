@@ -45,10 +45,6 @@ public class PanelItinerarioRota extends JPanel {
         inserePnlRota();
         inserePnlItinerario();
 
-        carregaCombosCidade();
-        carregaCombosRota();
-        carregaCombosItinerario();
-
         pnlRotaItinerario.add(pnlRotaCadastro);
         pnlRotaItinerario.add(pnlItinerarioCadastro);
         pnlRotaItinerario.add(pnlRotaAlteracao);
@@ -58,15 +54,20 @@ public class PanelItinerarioRota extends JPanel {
 
         carregaCombosCidade();
         carregaCombosRota();
+        carregaCombosItinerario();
+        carregaCombosHora();
+        carregaCombosMinuto();
 
         return pnlRotaItinerario;
     }
 
     public void inserePnlRota() {
+        /* Instacia dos Panel de Rota(Cadastro,Alterar,Remover)*/
         pnlRotaCadastro = new JPanel(layoutRight);
         pnlRotaAlteracao = new JPanel(layoutRight);
         pnlRotaRemocao = new JPanel(layoutRight);
 
+        /* Formatação dos Panel de Rota(Cadastro,Alterar,Remover)*/
         pnlRotaCadastro.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)), " Cadastro Rota ", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, fontePadrao));
         pnlRotaAlteracao.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)), " Alteracao Rota ", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, fontePadrao));
         pnlRotaRemocao.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)), " Remocao Rota ", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.TOP, fontePadrao));
@@ -79,7 +80,8 @@ public class PanelItinerarioRota extends JPanel {
         pnlRotaAlteracao.setPreferredSize(new Dimension(320, 210));
         pnlRotaRemocao.setPreferredSize(new Dimension(320, 140));
 
-        //cadastro
+        //Instancia de Lbl, TxtField, ComboBox - Cadastro
+        JLabel lblAux = new JLabel("");
         lblRotaCadastroOrigem = new JLabel("Origem:");
         lblRotaCadastroDestino = new JLabel("Destino:");
         lblRotaCadastroDuracao = new JLabel("Duracao:");
@@ -90,7 +92,11 @@ public class PanelItinerarioRota extends JPanel {
         txtRotaCadastroDuracao = new JTextField("", 19);
         cboRotaCadastroOrigemOculto = new JComboBox(new String[]{"Selecione"});
         cboRotaCadastroDestinoOculto = new JComboBox(new String[]{"Selecione"});
+        cboRotaCadastroDuracaoHora = new JComboBox(new String[]{"-"});;
+        cboRotaCadastroDuracaoMinuto = new JComboBox(new String[]{"-"});;
 
+        /* Determinar tamanho do Lbl, TxtField, ComboBox - Cadastro */
+        lblAux.setPreferredSize(new Dimension(110,30));
         lblRotaCadastroOrigem.setPreferredSize(new Dimension(70, 30));
         lblRotaCadastroDestino.setPreferredSize(new Dimension(70, 30));
         lblRotaCadastroDuracao.setPreferredSize(new Dimension(70, 30));
@@ -98,17 +104,23 @@ public class PanelItinerarioRota extends JPanel {
         btnRotaCadastroLimpa.setPreferredSize(new Dimension(125, 32));
         cboRotaCadastroOrigem.setPreferredSize(new Dimension(222, 30));
         cboRotaCadastroDestino.setPreferredSize(new Dimension(222, 30));
+        cboRotaCadastroDuracaoHora.setPreferredSize(new Dimension(50,30));
+        cboRotaCadastroDuracaoMinuto.setPreferredSize(new Dimension(50,30));
 
+        /* Inserir no Panel os Lbl, TxtField, ComboBox - Cadastro */
         pnlRotaCadastro.add(lblRotaCadastroOrigem);
         pnlRotaCadastro.add(cboRotaCadastroOrigem);
         pnlRotaCadastro.add(lblRotaCadastroDestino);
         pnlRotaCadastro.add(cboRotaCadastroDestino);
         pnlRotaCadastro.add(lblRotaCadastroDuracao);
-        pnlRotaCadastro.add(txtRotaCadastroDuracao);
+        pnlRotaCadastro.add(cboRotaCadastroDuracaoHora);
+        pnlRotaCadastro.add(cboRotaCadastroDuracaoMinuto);
+        pnlRotaCadastro.add(lblAux);
         pnlRotaCadastro.add(btnRotaCadastroLimpa);
         pnlRotaCadastro.add(btnRotaCadastrar);
 
-        //alteracao
+        //Instancia de Lbl, TxtField, ComboBox - Alteracao
+        JLabel lblAux2 = new JLabel("");
         lblRotaAlteracaoDuracao = new JLabel("Duracao:");
         lblRotaAlteracaoOrigem = new JLabel("Origem:");
         lblRotaAlteracaoRota = new JLabel("Rota:");
@@ -120,8 +132,11 @@ public class PanelItinerarioRota extends JPanel {
         cboRotaAlteracaoDestino = new JComboBox(new String[]{"Selecione"});
         cboRotaAlteracaoOrigemOculto = new JComboBox(new String[]{"Selecione"});
         cboRotaAlteracaoDestinoOculto = new JComboBox(new String[]{"Selecione"});
-        txtRotaAlteracaoDuracao = new JTextField("", 18);
+        cboRotaAlteracaoDuracaoHora = new JComboBox(new String[]{"-"});
+        cboRotaAlteracaoDuracaoMinuto = new JComboBox(new String[]{"-"});
 
+        /* Determinar tamanho do Lbl, TxtField, ComboBox - Alterar */
+        lblAux2.setPreferredSize(new Dimension(110,30));
         lblRotaAlteracaoDuracao.setPreferredSize(new Dimension(70, 30));
         btnRotaAlterar.setPreferredSize(new Dimension(100, 32));
         cboRotaAlteracaoIdRota.setPreferredSize(new Dimension(222, 30));
@@ -130,7 +145,10 @@ public class PanelItinerarioRota extends JPanel {
         lblRotaAlteracaoOrigem.setPreferredSize(new Dimension(70, 30));
         lblRotaAlteracaoRota.setPreferredSize(new Dimension(70, 30));
         lblRotaAlteracaoDestino.setPreferredSize(new Dimension(70, 30));
+        cboRotaAlteracaoDuracaoHora.setPreferredSize(new Dimension(50,30));
+        cboRotaAlteracaoDuracaoMinuto.setPreferredSize(new Dimension(50,30));
 
+        /* Inserir no Panel os Lbl, TxtField, ComboBox - Alterar */
         cboRotaAlteracaoIdRotaOculto.setVisible(false);
         pnlRotaAlteracao.add(lblRotaAlteracaoRota);
         pnlRotaAlteracao.add(cboRotaAlteracaoIdRota);
@@ -139,10 +157,12 @@ public class PanelItinerarioRota extends JPanel {
         pnlRotaAlteracao.add(lblRotaAlteracaoDestino);
         pnlRotaAlteracao.add(cboRotaAlteracaoDestino);
         pnlRotaAlteracao.add(lblRotaAlteracaoDuracao);
-        pnlRotaAlteracao.add(txtRotaAlteracaoDuracao);
+        pnlRotaAlteracao.add(cboRotaAlteracaoDuracaoHora);
+        pnlRotaAlteracao.add(cboRotaAlteracaoDuracaoMinuto);
+        pnlRotaAlteracao.add(lblAux2);
         pnlRotaAlteracao.add(btnRotaAlterar);
 
-        //remocao
+        //Instancia de Lbl, TxtField, ComboBox - Remoção
         lblRotaRemocaoOrigemDestino = new JLabel("Rota:");
         lblRotaRemocaoDuracao = new JLabel("Duracao:");
         cboRotaRemocaoIdRota = new JComboBox(new String[]{"Selecione"});
@@ -150,12 +170,14 @@ public class PanelItinerarioRota extends JPanel {
         lblRotaRemocaoDuracaoR = new JLabel();
         btnRotaRemover = new JButton("Remover");
 
+        /* Determinar tamanho do Lbl, TxtField, ComboBox - Remover */
         cboRotaRemocaoIdRota.setPreferredSize(new Dimension(222, 30));
         lblRotaRemocaoOrigemDestino.setPreferredSize(new Dimension(70, 30));
         lblRotaRemocaoDuracao.setPreferredSize(new Dimension(70, 30));
         lblRotaRemocaoDuracaoR.setPreferredSize(new Dimension(222, 30));
         btnRotaRemover.setPreferredSize(new Dimension(100, 32));
 
+        /* Inserir no Panel os Lbl, TxtField, ComboBox - Remover */
         cboRotaRemocaoIdRotaOculto.setVisible(false);
         pnlRotaRemocao.add(lblRotaRemocaoOrigemDestino);
         pnlRotaRemocao.add(cboRotaRemocaoIdRota);
@@ -421,6 +443,42 @@ public class PanelItinerarioRota extends JPanel {
         cboRotaCadastroOrigem.requestFocus();
     }
 
+    public void carregaCombosHora() {
+
+        //Cadastro
+        cboRotaCadastroDuracaoHora.removeAllItems();
+        cboRotaCadastroDuracaoHora.addItem("-");
+        
+        /* Alteracao*/
+        cboRotaAlteracaoDuracaoHora.removeAllItems();
+        cboRotaAlteracaoDuracaoHora.addItem("-");
+
+        for (int i = 0; i < 24; i++) {
+            /* Cadastro */
+            cboRotaCadastroDuracaoHora.addItem(i);
+            /* ALterar */
+            cboRotaAlteracaoDuracaoHora.addItem(i);
+        }
+
+    }
+    
+    public void carregaCombosMinuto(){
+        //cadastro
+        cboRotaCadastroDuracaoMinuto.removeAllItems();
+        cboRotaCadastroDuracaoMinuto.addItem("-");
+
+        /*alteracao */
+        cboRotaAlteracaoDuracaoMinuto.removeAllItems();
+        cboRotaAlteracaoDuracaoMinuto.addItem("-");
+        
+
+        for (int i = 0; i < 60; i++) {
+            /* Cadastro */
+            cboRotaCadastroDuracaoMinuto.addItem(i);
+            /* ALterar */
+            cboRotaAlteracaoDuracaoMinuto.addItem(i);
+        }
+    }
     public void carregaCombosCidade() {
         arrayListCidade = new ArrayList<Cidade>();
         arrayListCidade = daoCidade.consultarTodasCidades();
@@ -605,12 +663,14 @@ public class PanelItinerarioRota extends JPanel {
         } else if (cboRotaAlteracaoDestino.getSelectedItem().equals("Selecione")) {
             JOptionPane.showMessageDialog(null, "Selecione um Destino.");
             cboRotaAlteracaoDestino.requestFocus();
-        } else if (txtRotaAlteracaoDuracao.getText().equals("")) {
+        } else if (cboRotaAlteracaoDuracaoHora.getSelectedItem().equals("-")||cboRotaAlteracaoDuracaoMinuto.getSelectedItem().equals("-")) {
             JOptionPane.showMessageDialog(null, "Digite a Duracao da Rota.");
-            txtRotaAlteracaoDuracao.requestFocus();
+            cboRotaAlteracaoDuracaoHora.requestFocus();
         } else {
             rota.setId(Integer.parseInt(String.valueOf(cboRotaAlteracaoIdRotaOculto.getSelectedItem())));
-            rota.setRotaDuracao(txtRotaAlteracaoDuracao.getText());
+            int horaEmMinutos = Integer.parseInt(String.valueOf(cboRotaAlteracaoDuracaoHora.getSelectedItem()))*60;
+            int minuto = Integer.parseInt(String.valueOf(cboRotaAlteracaoDuracaoMinuto.getSelectedItem()));
+            rota.setRotaDuracao(String.valueOf(horaEmMinutos+minuto));
             rota.setRota_cidadeOrigemId(Integer.parseInt(String.valueOf(cboRotaAlteracaoOrigemOculto.getSelectedItem())));
             rota.setRota_cidadeDestinoId(Integer.parseInt(String.valueOf(cboRotaAlteracaoDestinoOculto.getSelectedItem())));
             int verifica = daoRota.alterarRota(rota);
@@ -623,9 +683,10 @@ public class PanelItinerarioRota extends JPanel {
             } else if (verifica == 3) {
                 JOptionPane.showMessageDialog(null, "Selecione um Destino diferente da Origem!");
             }
-            txtRotaAlteracaoDuracao.setText("");
             carregaCombosCidade();
             carregaCombosRota();
+            carregaCombosHora();
+            carregaCombosMinuto();
             cboRotaAlteracaoIdRota.setSelectedItem("Selecione");
             cboRotaAlteracaoIdRotaOculto.setSelectedItem("Selecione");
             cboRotaAlteracaoOrigem.setSelectedItem("Selecione");
@@ -642,13 +703,18 @@ public class PanelItinerarioRota extends JPanel {
                 cboRotaAlteracaoIdRotaOculto.setSelectedIndex(cboRotaAlteracaoIdRota.getSelectedIndex());
                 rota.setId(Integer.parseInt(String.valueOf(cboRotaAlteracaoIdRotaOculto.getSelectedItem())));
                 Rota aux = daoRota.consultaRota(rota);
-                txtRotaAlteracaoDuracao.setText(aux.getRotaDuracao());
+                int hora, minuto;
+                hora = (Integer.parseInt(aux.getRotaDuracao())/60);
+                minuto = Integer.parseInt(aux.getRotaDuracao()) - (hora*60);
+                cboRotaAlteracaoDuracaoHora.setSelectedItem(hora);
+                cboRotaAlteracaoDuracaoMinuto.setSelectedItem(minuto);
                 cboRotaAlteracaoOrigemOculto.setSelectedItem(aux.getRota_cidadeOrigemId());
                 cboRotaAlteracaoDestinoOculto.setSelectedItem(aux.getRota_cidadeDestinoId());
                 cboRotaAlteracaoOrigem.setSelectedIndex(cboRotaAlteracaoOrigemOculto.getSelectedIndex());
                 cboRotaAlteracaoDestino.setSelectedIndex(cboRotaAlteracaoDestinoOculto.getSelectedIndex());
             } else {
-                txtRotaAlteracaoDuracao.setText("");
+                cboRotaAlteracaoDuracaoHora.setSelectedItem("-");
+                cboRotaAlteracaoDuracaoMinuto.setSelectedItem("-");
                 cboRotaAlteracaoOrigem.setSelectedItem("Selecione");
                 cboRotaAlteracaoDestino.setSelectedItem("Selecione");
                 cboRotaAlteracaoOrigemOculto.setSelectedItem("Selecione");
@@ -907,6 +973,8 @@ public class PanelItinerarioRota extends JPanel {
     private JButton btnRotaCadastrar;
     private JButton btnRotaCadastroLimpa;
     private JTextField txtRotaCadastroDuracao;
+    private JComboBox cboRotaCadastroDuracaoHora;
+    private JComboBox cboRotaCadastroDuracaoMinuto;
     private JComboBox cboRotaCadastroOrigem;
     private JComboBox cboRotaCadastroDestino;
     private JComboBox cboRotaCadastroOrigemOculto;
@@ -923,7 +991,8 @@ public class PanelItinerarioRota extends JPanel {
     private JLabel lblRotaAlteracaoDestino;
     private JLabel lblRotaAlteracaoDuracao;
     private JButton btnRotaAlterar;
-    private JTextField txtRotaAlteracaoDuracao;
+    private JComboBox cboRotaAlteracaoDuracaoHora;
+    private JComboBox cboRotaAlteracaoDuracaoMinuto;
     //remocao
     private JComboBox cboRotaRemocaoIdRota;
     private JComboBox cboRotaRemocaoIdRotaOculto;
