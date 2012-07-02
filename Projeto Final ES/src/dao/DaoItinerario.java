@@ -95,7 +95,7 @@ public class DaoItinerario {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "SELECT * FROM Horario WHERE Horario_RotaItinerarioId IN (SELECT * FROM RotaItinerario WHERE RotaItinerario_ItinerarioId ="+itinerario.getId()+")" ;
+            String sql = "SELECT * FROM Horario WHERE Horario_RotaItinerarioId IN (SELECT RotaItinerarioId FROM RotaItinerario WHERE RotaItinerario_ItinerarioId ="+itinerario.getId()+")" ;
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 return false;

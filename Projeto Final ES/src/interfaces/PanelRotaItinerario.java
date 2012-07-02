@@ -49,8 +49,10 @@ public class PanelRotaItinerario extends JPanel {
 
         pnlItinerario.add(pnlCadastro);
         pnlItinerario.add(pnlRemocao);
-
-        carregaComboItinerario();
+        daoRotaItinerario = new DaoRotaItinerario();
+        daoItinerario = new DaoItinerario();
+        carregaComboItinerarioCadastro();
+        carregaComboItinerarioRemocao();
 
         cboItinerarioCadastro.addItemListener(new ItemListener() {
 
@@ -87,12 +89,13 @@ public class PanelRotaItinerario extends JPanel {
             @Override
             public void actionPerformed(ActionEvent evt) {
 
-                daoRotaItinerario = new DaoRotaItinerario();
                 for (int i = 0; i < arrayRotaItinerarioCadastro.size(); i++) {
                     daoRotaItinerario.cadastrarNovoRotaItinerario(arrayRotaItinerarioCadastro.get(i));
                 }
                 ordemRota = 0;
                 reinicia();
+                carregaComboItinerarioRemocao();
+                carregaComboItinerarioCadastro();
             }
         });
 
@@ -197,7 +200,6 @@ public class PanelRotaItinerario extends JPanel {
                     JOptionPane.showMessageDialog(null, "Selecione um destino!");
                     cboCadastroDestino.requestFocus();
                 } else {
-                    int idRotaItinerario = 1;
                     int idRota = arrayRotaAtualCadastro.get(cboCadastroDestino.getSelectedIndex() - 1).getId();
                     Rota rotaAux = arrayRotaAtualCadastro.get(cboCadastroDestino.getSelectedIndex() - 1);
                     arrayRotasAddicionadasCadastro.add(rotaAux); //salvando Array de rotas Para possivel utilizacao
@@ -206,11 +208,9 @@ public class PanelRotaItinerario extends JPanel {
                     if (arrayRotaItinerarioCadastro.isEmpty()) {
                         ordemRota++;
                     } else {
-                        ordemRota = (arrayRotaItinerarioCadastro.get(arrayRotaItinerarioCadastro.size() - 1).getRotaitinerarioOrdem()) + 1; //somando um a ordem anterior
-                        idRotaItinerario = (arrayRotaItinerarioCadastro.get(arrayRotaItinerarioCadastro.size() - 1).getRotaItinerarioId()) + 1; //somando um ao id anterior          		
+                        ordemRota = (arrayRotaItinerarioCadastro.get(arrayRotaItinerarioCadastro.size() - 1).getRotaitinerarioOrdem()) + 1; //somando um a ordem anterior        		
                     }
                     RotaItinerario RI = new RotaItinerario();
-                    RI.setRotaItinerarioId(idRotaItinerario);
                     RI.setRotaitinerario_rotaId(idRota);
                     RI.setRotaitinerario_itinerarioId(idItinerario);
                     RI.setRotaitinerarioOrdem(ordemRota);
@@ -329,16 +329,66 @@ public class PanelRotaItinerario extends JPanel {
         pnlRemocaoCampos.add(btnRemover);
         pnlRemocao.add(pnlRemocaoCampos);
         pnlRemocao.add(pnlRemocaoLista);
+        
+        btnRemover.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                daoItinerario.removerRotaItinerario(arrayItinerarioRemocao.get(selectIndexItinerarioRemover));
+                carregaComboItinerarioCadastro();
+                carregaComboItinerarioRemocao();
+                tbmRemocao.getDataVector().removeAllElements();
+                tbmRemocao.fireTableDataChanged();
+                
+            }
+        });
+        
+        cboItinerarioRemocao.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    
+                    if (!(cboItinerarioRemocao.getSelectedItem().equals("Selecione"))) {
+                        ArrayList<Rota> rotaAuxList = new ArrayList<Rota>();
+                        selectIndexItinerarioRemover = cboItinerarioRemocao.getSelectedIndex() - 1;
+                        rotaAuxList = daoItinerario.consultarRotasdoItinerario(arrayItinerarioRemocao.get(selectIndexItinerarioRemover));
+                        tbmRemocao.getDataVector().removeAllElements();
+                        tbmRemocao.fireTableDataChanged();
+                        for (int i = 0; i < rotaAuxList.size(); i++) {
+                            tbmRemocao.addRow(new Object[]{rotaAuxList.get(i).getRota_cidadeOrigem(), rotaAuxList.get(i).getRota_cidadeDestino()});
+                        }
+                        tableRotasRemocao.setVisible(true);
+//                        cboItinerarioCadastro.setEnabled(false);
+//                        cboCadastroDestino.setEnabled(true);
+//                        btnCadastroAddRota.setEnabled(true);
+
+                    }
+                }
+            }
+        });
+
+
+        
     }
 
-    public void carregaComboItinerario() {
-        daoItinerario = new DaoItinerario();
-        arrayItinerario = daoItinerario.consultarTodosItinerarios();
+    public void carregaComboItinerarioCadastro() {
+        arrayItinerario = daoItinerario.consultarTodosItinerariosSemRotas();
 
         cboItinerarioCadastro.removeAllItems();
         cboItinerarioCadastro.addItem("Selecione");
         for (int i = 0; i < arrayItinerario.size(); i++) {
             cboItinerarioCadastro.addItem(arrayItinerario.get(i).getItinerario_cidadeOrigem() + " - " + arrayItinerario.get(i).getItinerario_cidadeDestino());
+        }
+    }
+    
+    public void carregaComboItinerarioRemocao() {
+        arrayItinerarioRemocao = new ArrayList<Itinerario>();
+        arrayItinerarioRemocao = daoRotaItinerario.consultarItinerariosCadastrados();
+        cboItinerarioRemocao.removeAllItems();
+        cboItinerarioRemocao.addItem("Selecione");
+        for (int i = 0; i < arrayItinerarioRemocao.size(); i++) {
+            cboItinerarioRemocao.addItem(arrayItinerarioRemocao.get(i).getItinerario_cidadeOrigem() + " - " + arrayItinerarioRemocao.get(i).getItinerario_cidadeDestino());
         }
     }
 
@@ -385,11 +435,13 @@ public class PanelRotaItinerario extends JPanel {
     private DaoItinerario daoItinerario;
     private DaoRota daoRota;
     private DaoRotaItinerario daoRotaItinerario;
+    private ArrayList<Itinerario> arrayItinerarioRemocao;
     private ArrayList<Itinerario> arrayItinerario;
     private ArrayList<Rota> arrayRotaAtualCadastro;
     private ArrayList<Rota> arrayRotasAddicionadasCadastro;
     private ArrayList<RotaItinerario> arrayRotaItinerarioCadastro;
     private int selectedCboIndexItinerario;
+    private int selectIndexItinerarioRemover;
     private int ordemRota = 0;
     private int rowIndexSelected;
     private int qtdeCliquesTabela = 0;

@@ -334,7 +334,7 @@ public class PanelMenu extends JPanel {
         pnlFuncionario.setVisible(false);
         pnlHorario.setVisible(false);
         pnlRotaItinerario.setVisible(true);
-        rotaItinerarioPanel.carregaComboItinerario();
+        rotaItinerarioPanel.carregaComboItinerarioCadastro();
     }
 
     private void btnRotaItinerarioMouseReleased(MouseEvent evt) {
