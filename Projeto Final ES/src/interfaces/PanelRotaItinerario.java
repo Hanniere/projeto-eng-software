@@ -1,12 +1,9 @@
 package interfaces;
 
-import dao.DaoCidade;
-import entidades.RotaItinerario;
-import dao.DaoItinerario;
-import dao.DaoRota;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +12,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -26,11 +24,15 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
+import dao.DaoCidade;
+import dao.DaoItinerario;
+import dao.DaoRota;
 import dao.DaoRotaItinerario;
 import entidades.Cidade;
 import entidades.Itinerario;
 import entidades.Rota;
-import java.awt.FlowLayout;
+import entidades.RotaItinerario;
 
 public class PanelRotaItinerario extends JPanel {
 
@@ -62,10 +64,17 @@ public class PanelRotaItinerario extends JPanel {
                     if (!(cboItinerarioCadastro.getSelectedItem().equals("Selecione"))) {
                         selectedCboIndexItinerario = cboItinerarioCadastro.getSelectedIndex() - 1;
                         carregaComboDestino(arrayItinerario.get(selectedCboIndexItinerario).getItinerario_cidadeOrigemId()); //carregando destinos alcancaveis da cidade selecionada
-                        txtCadastroOrigem.setText(arrayRotaAtualCadastro.get(0).getRota_cidadeOrigem()); //setando primeiramente Origem           
-                        cboItinerarioCadastro.setEnabled(false);
-                        cboCadastroDestino.setEnabled(true);
-                        btnCadastroAddRota.setEnabled(true);
+                        if (!arrayRotaAtualCadastro.isEmpty()) {
+                            txtCadastroOrigem.setText(arrayRotaAtualCadastro.get(0).getRota_cidadeOrigem()); //setando primeiramente Origem           
+                            cboItinerarioCadastro.setEnabled(false);
+                            cboCadastroDestino.setEnabled(true);
+                            btnCadastroAddRota.setEnabled(true);
+						}else{
+							JOptionPane.showMessageDialog(PanelRotaItinerario.this, "Itinerario nao possui rotas cadastradas");
+	                        txtCadastroOrigem.setText(arrayItinerario.get(selectedCboIndexItinerario).getItinerario_cidadeOrigem()); //setando primeiramente Origem           
+	                        cboCadastroDestino.setEnabled(false);
+	                        btnCadastroAddRota.setEnabled(false);
+						}
 
                     }
                 }
