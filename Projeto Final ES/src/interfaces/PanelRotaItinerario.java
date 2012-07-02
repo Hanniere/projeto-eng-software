@@ -368,10 +368,10 @@ public class PanelRotaItinerario extends JPanel {
                             tbmRemocao.addRow(new Object[]{rotaAuxList.get(i).getRota_cidadeOrigem(), rotaAuxList.get(i).getRota_cidadeDestino()});
                         }
                         tableRotasRemocao.setVisible(true);
-//                        cboItinerarioCadastro.setEnabled(false);
-//                        cboCadastroDestino.setEnabled(true);
-//                        btnCadastroAddRota.setEnabled(true);
-
+                    }
+                    else{
+                        tbmRemocao.getDataVector().removeAllElements();
+                        tbmRemocao.fireTableDataChanged();
                     }
                 }
             }
