@@ -25,26 +25,26 @@ public class PanelMenu extends JPanel {
         btnMotorista = new JLabel();
         btnCidade = new JLabel();
         btnEstado = new JLabel();
-        btnConsulta = new JLabel();
-        btnHorario = new JLabel();
         btnRotaItinerario = new JLabel();
+        btnHorario = new JLabel();
+        btnItinerarioRota = new JLabel();
 
         btnOnibus.setToolTipText("Onibus");
         btnMotorista.setToolTipText("Motoristas");
         btnCidade.setToolTipText("Cidades");
         btnEstado.setToolTipText("Estados");
-        btnConsulta.setToolTipText("Consultas");
+        btnRotaItinerario.setToolTipText("Associar Rotas a Itinerarios");
         btnHorario.setToolTipText("Horarios");
-        btnRotaItinerario.setToolTipText("Rotas/Itinerarios");
+        btnItinerarioRota.setToolTipText("Rotas/Itinerarios");
 
         String local = System.getProperty("user.dir"); //pega diretorio do projeto
         btnOnibus.setIcon(new ImageIcon(local + "/src/imagens/bt_onibus75m.png"));
         btnMotorista.setIcon(new ImageIcon(local + "/src/imagens/bt_motorista75m.png"));
         btnCidade.setIcon(new ImageIcon(local + "/src/imagens/bt_cidade75m.png"));
         btnEstado.setIcon(new ImageIcon(local + "/src/imagens/bt_estados75m.png"));
-        btnConsulta.setIcon(new ImageIcon(local + "/src/imagens/bt_lupa75m.png"));
+        btnRotaItinerario.setIcon(new ImageIcon(local + "/src/imagens/bt_lupa75m.png"));
         btnHorario.setIcon(new ImageIcon(local + "/src/imagens/bt_itinerario75m.png"));
-        btnRotaItinerario.setIcon(new ImageIcon(local + "/src/imagens/bt_rota75m.png"));
+        btnItinerarioRota.setIcon(new ImageIcon(local + "/src/imagens/bt_rota75m.png"));
 
         homePanel = new PanelHome();
         onibusPanel = new PanelOnibus();
@@ -100,11 +100,11 @@ public class PanelMenu extends JPanel {
             }
         });
 
-        btnConsulta.addMouseListener(new MouseAdapter() {
+        btnRotaItinerario.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseReleased(MouseEvent evt) {
-                btnConsultaMouseReleased(evt);
+                btnRotaItinerarioMouseReleased(evt);
             }
         });
 
@@ -116,20 +116,20 @@ public class PanelMenu extends JPanel {
             }
         });
 
-        btnRotaItinerario.addMouseListener(new MouseAdapter() {
+        btnItinerarioRota.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseReleased(MouseEvent evt) {
-                btnRotaItinerarioMouseReleased(evt);
+                btnItinerarioRotaMouseReleased(evt);
             }
         });
 
         GroupLayout pnlMenuLayout = new javax.swing.GroupLayout(pnlMenu);
         pnlMenu.setLayout(pnlMenuLayout);
         pnlMenuLayout.setHorizontalGroup(
-                pnlMenuLayout.createParallelGroup().addGroup(pnlMenuLayout.createSequentialGroup().addGap(28, 28, 28).addGroup(pnlMenuLayout.createParallelGroup().addComponent(btnConsulta, 73, 73, 73).addComponent(btnRotaItinerario, 73, 73, 73).addComponent(btnHorario, 73, 73, 73).addComponent(btnCidade, 73, 73, 73).addComponent(btnEstado, 73, 73, 73).addComponent(btnMotorista, 73, 73, 73).addComponent(btnOnibus, 73, 73, 73)).addGap(28, 28, 28).addComponent(separadorMenu, 2, 2, 2).addGap(28, 28, 28).addComponent(pnlHome, 695, 695, 695).addComponent(pnlOnibus, 695, 695, 695).addComponent(pnlMotorista, 695, 695, 695).addComponent(pnlEstado, 695, 695, 695).addComponent(pnlCidade, 695, 695, 695).addComponent(pnlConsulta, 695, 695, 695).addComponent(pnlItinerarioRota, 695, 695, 695).addComponent(pnlHorario, 695, 695, 695).addComponent(pnlRotaItinerario, 695, 695, 695).addContainerGap(29, 29)));
+                pnlMenuLayout.createParallelGroup().addGroup(pnlMenuLayout.createSequentialGroup().addGap(28, 28, 28).addGroup(pnlMenuLayout.createParallelGroup().addComponent(btnHorario, 73, 73, 73).addComponent(btnRotaItinerario, 73, 73, 73).addComponent(btnItinerarioRota, 73, 73, 73).addComponent(btnCidade, 73, 73, 73).addComponent(btnEstado, 73, 73, 73).addComponent(btnMotorista, 73, 73, 73).addComponent(btnOnibus, 73, 73, 73)).addGap(28, 28, 28).addComponent(separadorMenu, 2, 2, 2).addGap(28, 28, 28).addComponent(pnlHome, 695, 695, 695).addComponent(pnlOnibus, 695, 695, 695).addComponent(pnlMotorista, 695, 695, 695).addComponent(pnlEstado, 695, 695, 695).addComponent(pnlCidade, 695, 695, 695).addComponent(pnlConsulta, 695, 695, 695).addComponent(pnlItinerarioRota, 695, 695, 695).addComponent(pnlHorario, 695, 695, 695).addComponent(pnlRotaItinerario, 695, 695, 695).addComponent(pnlFuncionario, 695, 695, 695).addContainerGap(29, 29)));
         pnlMenuLayout.setVerticalGroup(
-                pnlMenuLayout.createParallelGroup().addGroup(pnlMenuLayout.createSequentialGroup().addGap(28, 28, 28).addGroup(pnlMenuLayout.createParallelGroup().addComponent(pnlHome, 590, 590, 590).addComponent(pnlOnibus, 590, 590, 590).addComponent(pnlMotorista, 590, 590, 590).addComponent(pnlEstado, 590, 590, 590).addComponent(pnlCidade, 590, 590, 590).addComponent(pnlConsulta, 590, 590, 590).addComponent(pnlHorario, 590, 590, 590).addComponent(pnlRotaItinerario, 590, 590, 590).addComponent(pnlItinerarioRota, 590, 590, 590).addGroup(pnlMenuLayout.createSequentialGroup().addComponent(btnOnibus, 73, 73, 73).addGap(12, 12, 12).addComponent(btnMotorista, 73, 73, 73).addGap(12, 12, 12).addComponent(btnEstado, 73, 73, 73).addGap(12, 12, 12).addComponent(btnCidade, 73, 73, 73).addGap(12, 12, 12).addComponent(btnRotaItinerario, 73, 73, 73).addGap(12, 12, 12).addComponent(btnHorario, 73, 73, 73).addGap(12, 12, 12).addComponent(btnConsulta, 73, 73, 73).addGap(7, 7, 7)).addComponent(separadorMenu, 590, 590, 590)).addContainerGap(31, 31)));
+                pnlMenuLayout.createParallelGroup().addGroup(pnlMenuLayout.createSequentialGroup().addGap(28, 28, 28).addGroup(pnlMenuLayout.createParallelGroup().addComponent(pnlHome, 590, 590, 590).addComponent(pnlOnibus, 590, 590, 590).addComponent(pnlMotorista, 590, 590, 590).addComponent(pnlEstado, 590, 590, 590).addComponent(pnlCidade, 590, 590, 590).addComponent(pnlConsulta, 590, 590, 590).addComponent(pnlHorario, 590, 590, 590).addComponent(pnlRotaItinerario, 590, 590, 590).addComponent(pnlItinerarioRota, 590, 590, 590).addComponent(pnlFuncionario, 590, 590, 590).addGroup(pnlMenuLayout.createSequentialGroup().addComponent(btnOnibus, 73, 73, 73).addGap(12, 12, 12).addComponent(btnMotorista, 73, 73, 73).addGap(12, 12, 12).addComponent(btnEstado, 73, 73, 73).addGap(12, 12, 12).addComponent(btnCidade, 73, 73, 73).addGap(12, 12, 12).addComponent(btnItinerarioRota, 73, 73, 73).addGap(12, 12, 12).addComponent(btnRotaItinerario, 73, 73, 73).addGap(12, 12, 12).addComponent(btnHorario, 73, 73, 73).addGap(7, 7, 7)).addComponent(separadorMenu, 590, 590, 590)).addContainerGap(31, 31)));
 
         return pnlMenu;
     }
@@ -138,9 +138,12 @@ public class PanelMenu extends JPanel {
         //barra de menu
         menuPrincipal = new JMenuBar();
         menuHome = new JMenu("Inicio");
+        menuConsultas = new JMenu("Consultas");
         menuSair = new JMenu("Sair");
         menuBackup = new JMenu("Backup");
 
+        menuConsultasConsultar = new JMenuItem("Consultar");
+        
         menuBackupFazerBackup = new JMenuItem("Fazer Backup");
 
         menuHomeHome = new JMenuItem("Pagina Inicial");
@@ -149,13 +152,16 @@ public class PanelMenu extends JPanel {
         menuSairFecharPrograma = new JMenuItem("Fechar Programa");
 
         menuHome.add(menuHomeHome);
-
+        
+        menuConsultas.add(menuConsultasConsultar);
+        
         menuBackup.add(menuBackupFazerBackup);
 
         //menuSair.add(menuSairUsuario);
         menuSair.add(menuSairFecharPrograma);
 
         menuPrincipal.add(menuHome);
+        menuPrincipal.add(menuConsultas);
         if (acesso == 1) {
             menuFuncionario = new JMenu("Funcionario");
 
@@ -215,6 +221,14 @@ public class PanelMenu extends JPanel {
                 menuHomeHomeClick(evt);
             }
         });
+        
+        menuConsultasConsultar.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                menuConsultasConsultarClick(evt);
+            }
+        });
 
         menuBackupFazerBackup.addActionListener(new ActionListener() {
 
@@ -255,6 +269,7 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(false);
         pnlConsulta.setVisible(false);
         pnlItinerarioRota.setVisible(false);
+        pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(false);
         pnlHorario.setVisible(false);
         onibusPanel.focusTxtPrincipal();
@@ -270,6 +285,7 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(false);
         pnlConsulta.setVisible(false);
         pnlItinerarioRota.setVisible(false);
+        pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(false);
         pnlHorario.setVisible(false);
         motoristaPanel.focusTxtPrincipal();
@@ -285,6 +301,7 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(true);
         pnlConsulta.setVisible(false);
         pnlItinerarioRota.setVisible(false);
+        pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(false);
         pnlHorario.setVisible(false);
         estadoPanel.focusTxtPrincipal();
@@ -300,6 +317,7 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(false);
         pnlConsulta.setVisible(false);
         pnlItinerarioRota.setVisible(false);
+        pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(false);
         pnlHorario.setVisible(false);
         cidadePanel.focusTxtPrincipal();
@@ -309,16 +327,17 @@ public class PanelMenu extends JPanel {
         cidadePanel.carregaCombosEstado(6);
     }
 
-    private void btnConsultaMouseReleased(MouseEvent evt) {
+    private void btnRotaItinerarioMouseReleased(MouseEvent evt) {
         pnlHome.setVisible(false);
         pnlOnibus.setVisible(false);
         pnlMotorista.setVisible(false);
         pnlCidade.setVisible(false);
         pnlEstado.setVisible(false);
-        pnlConsulta.setVisible(true);
+        pnlConsulta.setVisible(false);
         pnlItinerarioRota.setVisible(false);
-        pnlHorario.setVisible(false);
+        pnlRotaItinerario.setVisible(true);
         pnlFuncionario.setVisible(false);
+        pnlHorario.setVisible(false);
         consultaPanel.carregaCombosOnibus();
         consultaPanel.focusCboPrincipal();
     }
@@ -331,13 +350,13 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(false);
         pnlConsulta.setVisible(false);
         pnlItinerarioRota.setVisible(false);
+        pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(false);
-        pnlHorario.setVisible(false);
-        pnlRotaItinerario.setVisible(true);
+        pnlHorario.setVisible(true);
         rotaItinerarioPanel.carregaComboItinerarioCadastro();
     }
 
-    private void btnRotaItinerarioMouseReleased(MouseEvent evt) {
+    private void btnItinerarioRotaMouseReleased(MouseEvent evt) {
         pnlHome.setVisible(false);
         pnlOnibus.setVisible(false);
         pnlMotorista.setVisible(false);
@@ -345,8 +364,9 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(false);
         pnlConsulta.setVisible(false);
         pnlItinerarioRota.setVisible(true);
-        pnlHorario.setVisible(false);
+        pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(false);
+        pnlHorario.setVisible(false);
     }
 
     private void menuHomeHomeClick(ActionEvent evt) {
@@ -357,7 +377,22 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(false);
         pnlConsulta.setVisible(false);
         pnlItinerarioRota.setVisible(false);
+        pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(false);
+        pnlHorario.setVisible(false);
+    }
+
+    private void menuConsultasConsultarClick(ActionEvent evt) {
+        pnlHome.setVisible(false);
+        pnlOnibus.setVisible(false);
+        pnlMotorista.setVisible(false);
+        pnlCidade.setVisible(false);
+        pnlEstado.setVisible(false);
+        pnlConsulta.setVisible(true);
+        pnlItinerarioRota.setVisible(false);
+        pnlRotaItinerario.setVisible(false);
+        pnlFuncionario.setVisible(false);
+        pnlHorario.setVisible(false);
     }
 
     private void menuFuncionarioCadastroClick(ActionEvent evt) {
@@ -368,7 +403,9 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(false);
         pnlConsulta.setVisible(false);
         pnlItinerarioRota.setVisible(false);
+        pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(true);
+        pnlHorario.setVisible(false);
         funcionarioPanel.carregaCombosFuncionario();
         funcionarioPanel.focusTxtCadastro();
     }
@@ -381,7 +418,9 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(false);
         pnlConsulta.setVisible(false);
         pnlItinerarioRota.setVisible(false);
+        pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(true);
+        pnlHorario.setVisible(false);
         funcionarioPanel.carregaCombosFuncionario();
         funcionarioPanel.focusTxtAlteracao();
     }
@@ -394,7 +433,9 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(false);
         pnlConsulta.setVisible(false);
         pnlItinerarioRota.setVisible(false);
+        pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(true);
+        pnlHorario.setVisible(false);
         funcionarioPanel.carregaCombosFuncionario();
         funcionarioPanel.focusTxtRemocao();
     }
@@ -407,7 +448,9 @@ public class PanelMenu extends JPanel {
         pnlEstado.setVisible(false);
         pnlConsulta.setVisible(false);
         pnlItinerarioRota.setVisible(false);
+        pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(true);
+        pnlHorario.setVisible(false);
         funcionarioPanel.carregaCombosFuncionario();
         funcionarioPanel.focusTxtConsulta();
     }
@@ -429,6 +472,7 @@ public class PanelMenu extends JPanel {
     private void menuSairFecharProgramaClick(ActionEvent evt) {
         System.exit(0);
     }
+    
     private PanelHome homePanel;
     private PanelOnibus onibusPanel;
     private PanelMotorista motoristaPanel;
@@ -456,11 +500,12 @@ public class PanelMenu extends JPanel {
     private JLabel btnMotorista;
     private JLabel btnCidade;
     private JLabel btnEstado;
-    private JLabel btnConsulta;
-    private JLabel btnHorario;
     private JLabel btnRotaItinerario;
+    private JLabel btnHorario;
+    private JLabel btnItinerarioRota;
     //------- Barra de Menu
     private JMenu menuHome;
+    private JMenu menuConsultas;
     private JMenu menuFuncionario;
     private JMenu menuBackup;
     private JMenu menuSair;
@@ -469,6 +514,7 @@ public class PanelMenu extends JPanel {
     private JMenuItem menuFuncionarioAlteracao;
     private JMenuItem menuFuncionarioRemocao;
     private JMenuItem menuFuncionarioConsulta;
+    private JMenuItem menuConsultasConsultar;
     private JMenuItem menuBackupFazerBackup;
     private JMenuItem menuHomeHome;
     private JMenuItem menuSairFecharPrograma;

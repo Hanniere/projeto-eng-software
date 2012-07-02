@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import util.BancoDados;
-import entidades.Rota;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
@@ -37,8 +36,8 @@ public boolean cadastrarNovoHorario(Horario horario){
         return true;
     }
 
-    public ArrayList<Rota> consultarTodosHorarios(int id) {
-        ArrayList<Rota> arrayList = new ArrayList<Rota>();
+    public ArrayList<ArrayList<String>> consultarTodosHorarios(int id) {
+        ArrayList<ArrayList<String>> matriz = new ArrayList<ArrayList<String>>();        
         BancoDados banco = new BancoDados();
         try {
             Class.forName(banco.getDriver());
@@ -55,10 +54,13 @@ public boolean cadastrarNovoHorario(Horario horario){
                     + "ORDER BY RotaItinerarioOrdem";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                Rota rota = new Rota();
-                rota.setRota_cidadeOrigem(rs.getString("origem.cidadeNome"));
-                rota.setRota_cidadeDestino(rs.getString("destino.cidadeNome"));
-                arrayList.add(rota);
+                ArrayList<String> array = new ArrayList<String>();
+                array.add(rs.getString("origem.cidadeNome"));
+                array.add(rs.getString("destino.cidadeNome"));
+                array.add(rs.getString("HorarioPreco"));
+                array.add(rs.getString("HorarioSaida"));
+                array.add(rs.getString("HorarioChegada"));
+                matriz.add(array);
             }
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -69,6 +71,6 @@ public boolean cadastrarNovoHorario(Horario horario){
             ex.printStackTrace();
 
         }
-        return arrayList;
+        return matriz;
     }
 }

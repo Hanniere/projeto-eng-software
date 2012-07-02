@@ -1,9 +1,5 @@
 package interfaces;
 
-import dao.DaoHorario;
-import dao.DaoRotaItinerario;
-import entidades.Horario;
-import entidades.RotaItinerario;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -821,11 +817,11 @@ public class PanelConsulta {
             System.out.println(cboConsultaHorariosIdOculto.getSelectedItem());
             if (!(cboConsultaHorarios.getSelectedItem().equals("Selecione"))) {
                 int id = Integer.parseInt(String.valueOf(cboConsultaHorariosIdOculto.getSelectedItem()));
-                ArrayList<Rota> rota = daoHorario.consultarTodosHorarios(id);
+                ArrayList<ArrayList<String>> rota = daoHorario.consultarTodosHorarios(id);
                 for(int i=0;i<rota.size();i++){
-                    System.out.print(rota.get(i).getRota_cidadeOrigem() + " - ");
+                    //System.out.print(rota.get(i).getRota_cidadeOrigem() + " - ");
                 }
-                System.out.println(rota.get(rota.size()-1).getRota_cidadeDestino());
+               // System.out.println(rota.get(rota.size()-1).getRota_cidadeDestino());
             } else {
                 listConsultaHorario.removeAll();
             }
