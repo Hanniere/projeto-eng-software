@@ -479,6 +479,7 @@ public class PanelItinerarioRota extends JPanel {
             cboRotaAlteracaoDuracaoMinuto.addItem(i);
         }
     }
+    
     public void carregaCombosCidade() {
         arrayListCidade = new ArrayList<Cidade>();
         arrayListCidade = daoCidade.consultarTodasCidades();
@@ -590,9 +591,9 @@ public class PanelItinerarioRota extends JPanel {
         } else if (cboRotaCadastroDestino.getSelectedItem().equals("Selecione")) {
             JOptionPane.showMessageDialog(null, "Selecione um Destino.");
             cboRotaCadastroDestino.requestFocus();
-        } else if (txtRotaCadastroDuracao.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Digite uma Duracao.");
-            txtRotaCadastroDuracao.requestFocus();
+        } else if (cboRotaAlteracaoDuracaoHora.getSelectedItem().equals("-")||cboRotaAlteracaoDuracaoMinuto.getSelectedItem().equals("-")) {
+            JOptionPane.showMessageDialog(null, "Selecione a Duracao da Rota.");
+            cboRotaAlteracaoDuracaoHora.requestFocus();
         } else {
             rota.setRotaDuracao(txtRotaCadastroDuracao.getText());
             rota.setRota_cidadeOrigemId(Integer.parseInt(String.valueOf(cboRotaCadastroOrigemOculto.getSelectedItem())));
@@ -664,7 +665,7 @@ public class PanelItinerarioRota extends JPanel {
             JOptionPane.showMessageDialog(null, "Selecione um Destino.");
             cboRotaAlteracaoDestino.requestFocus();
         } else if (cboRotaAlteracaoDuracaoHora.getSelectedItem().equals("-")||cboRotaAlteracaoDuracaoMinuto.getSelectedItem().equals("-")) {
-            JOptionPane.showMessageDialog(null, "Digite a Duracao da Rota.");
+            JOptionPane.showMessageDialog(null, "Selecione a Duracao da Rota.");
             cboRotaAlteracaoDuracaoHora.requestFocus();
         } else {
             rota.setId(Integer.parseInt(String.valueOf(cboRotaAlteracaoIdRotaOculto.getSelectedItem())));
