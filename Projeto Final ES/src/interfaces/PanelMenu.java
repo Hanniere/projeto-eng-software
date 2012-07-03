@@ -10,6 +10,7 @@ import java.text.ParseException;
 import javax.swing.*;
 
 import projetos.PrincipalFuncionario;
+import util.Backup;
 
 public class PanelMenu extends JPanel {
 
@@ -456,11 +457,13 @@ public class PanelMenu extends JPanel {
     }
 
     private void menuBackupFazerBackupClick(ActionEvent evt) {
-        JFileChooser salvarComo = new JFileChooser();
+        Backup teste = new Backup();
+        teste.CriarBackup();
+        /*JFileChooser salvarComo = new JFileChooser();
         salvarComo.showSaveDialog(this);
         File caminhoBackup = salvarComo.getSelectedFile();
         System.out.println(caminhoBackup);
-        //http://javafree.uol.com.br/topic-2499-Copiar-arquivos.html
+        http://javafree.uol.com.br/topic-2499-Copiar-arquivos.html*/
     }
 
     private void menuSairUsuarioClick(ActionEvent evt) throws ParseException {
