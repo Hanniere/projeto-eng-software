@@ -111,7 +111,11 @@ public class PanelRotaItinerario extends JPanel {
         return pnlItinerario;
 
     }
-
+    
+    public void focusCboPrincipal(){
+        cboItinerarioCadastro.requestFocus();
+    }
+            
     private void inserirPnlCadastro() {
         pnlCadastro = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 10));
         pnlCadastro.setPreferredSize(new Dimension(650, 290));

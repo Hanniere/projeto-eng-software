@@ -301,7 +301,7 @@ public class PanelHorario extends JPanel {
         return pnlHorario;
 
     }
-
+    
     private void inserirPnlCadastro() {
         pnlCadastro = new JPanel(null);
         pnlCadastro.setBounds(27, 90, 645, 480);
