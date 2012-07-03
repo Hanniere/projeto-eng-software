@@ -35,7 +35,7 @@ public class PrincipalFuncionario extends JFrame {
         pnlMenu = menuPanel.inserirPnlMenu();
         //pnlMenu.setVisible(false);
 
-        //setJMenuBar(menuPanel.inserirBarraMenu(0));
+        setJMenuBar(menuPanel.inserirBarraMenu(1));
 
         //montagem no frame
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
