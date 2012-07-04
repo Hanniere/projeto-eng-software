@@ -67,7 +67,7 @@ CREATE TABLE Motorista(
 );
 
 CREATE TABLE Horario(
-	HorarioId INT AUTO_INCREMENT NOT NULL,
+	HorarioId INT NOT NULL,
 	HorarioDiaId INT NOT NULL,
 	Horario_RotaItinerarioId INT NOT NULL,
 	HorarioSaida VARCHAR(8) NOT NULL,
