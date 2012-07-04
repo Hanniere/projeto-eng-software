@@ -1,10 +1,5 @@
 package interfaces;
 
-import dao.DaoItinerario;
-import dao.DaoRotaItinerario;
-import entidades.Horario;
-import entidades.Itinerario;
-import entidades.Rota;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -16,19 +11,27 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
+import dao.*;
+import entidades.*;
+
 public class PanelHorario extends JPanel {
 
-    public JPanel inserirPnlHorario() {
+    
+	
+
+	public JPanel inserirPnlHorario() {
         format = NumberFormat.getNumberInstance();
         format.setMinimumIntegerDigits(2);
         gridLayout2_4 = new GridLayout(2, 4);
@@ -80,12 +83,9 @@ public class PanelHorario extends JPanel {
         pnlHorario.add(pnlRemocao);
 
         carregaComboItinerario();
-        carregaComboMotorista();
-        carregaComboOnibus();
-        carregaComboMinuto();
-        carregaComboHora();
 
         daoItinerario = new DaoItinerario();
+        daoItinerarioMotorista = new DaoMotorista();
 
         cboItinerario.addItemListener(new ItemListener() {
 
@@ -106,13 +106,13 @@ public class PanelHorario extends JPanel {
                                 arrayAuxPnlCadastro.get(i).add(new JLabel("Parada " + (i + 1) + ": " + rotasItinerario.get(i).getRota_cidadeDestino()));
                                 arrayAuxPnlCadastro.get(i).add(new JLabel());
                                 arrayAuxPnlCadastro.get(i).add(new JLabel("Horario Saida:   X (inserir)"));
-                                arrayAuxPnlCadastro.get(i).add(new JLabel("Preço: "));
+                                arrayAuxPnlCadastro.get(i).add(new JLabel("Preco: "));
                                 arrayAuxPnlCadastro.get(i).add(new JTextField("", 8));
                                 arrayAuxPnlCadastro.get(i).add(new JLabel("Motorista: "));
                                 arrayAuxPnlCadastro.get(i).add(new JComboBox(new String[]{"Selecione"}));
-                                for (int j = 0; j < 7; j++) {
-                                    arrayAuxPnlCadastro.get(i).getComponent(j).setEnabled(false);
-                                }
+//                                for (int j = 0; j < 7; j++) {
+//                                    arrayAuxPnl.get(i).getComponent(j).setEnabled(false);
+//                                }
                                 arrayAuxPnlCadastro.get(i).getComponent(0).setPreferredSize(new Dimension(200, 30));
                                 arrayAuxPnlCadastro.get(i).getComponent(1).setPreferredSize(new Dimension(300, 30));
                                 arrayAuxPnlCadastro.get(i).getComponent(2).setPreferredSize(new Dimension(150, 30));
@@ -123,6 +123,7 @@ public class PanelHorario extends JPanel {
                             }
                             listTabelaCidadesCadastro.setPreferredSize(new Dimension(610, rotasItinerario.size() * 100));
                             listTabelaCidadesCadastro.setEnabled(false);
+                            carregaComboMotorista();
                         } else {
                             listTabelaCidadesRemocao.removeAll();
                             arrayAuxPnlRemocao = new ArrayList<JPanel>();
@@ -213,24 +214,6 @@ public class PanelHorario extends JPanel {
             }
         });
 
-        cboMinCadastro.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                }
-            }
-        });
-
-        cboOnibusCadastro.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                if (evt.getStateChange() == ItemEvent.SELECTED) {
-                }
-            }
-        });
-
         btnCancelar.addActionListener(new ActionListener() {
 
             @Override
@@ -248,34 +231,6 @@ public class PanelHorario extends JPanel {
             }
         });
 
-        btnConfirmaCadastro.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-            }
-        });
-
-        btnCadastrar.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                //if(!(cboItinerario.getSelectedItem().equals("Selecione"))){
-                btnCancelar.setVisible(true);
-                pnlCadastro.setVisible(true);
-                pnlRemocao.setVisible(false);
-                cboItinerario.setSelectedItem("Selecione");
-                cboItinerario.setVisible(true);
-                lblItinerario.setVisible(true);
-                btnCadastrar.setVisible(false);
-                btnRemover.setVisible(false);
-                botaoEscolhido = 1;
-                pnlHorario.setBorder(BorderFactory.createTitledBorder(null, " ASSOCIAR HORARIOS ", TitledBorder.CENTER, TitledBorder.TOP, fontePadrao));
-                //} else {
-                //	JOptionPane.showMessageDialog(null, "Selecione um itinerario para associar horarios.");
-                //}
-
-            }
-        });
 
         btnRemover.addActionListener(new ActionListener() {
 
@@ -345,7 +300,104 @@ public class PanelHorario extends JPanel {
         pnlCadastro.add(btnConfirmaCadastro);
         pnlCadastro.add(pnlItinerarioDiasCadastro);
         pnlCadastro.add(sListTabelaCidadesCadastro);
+        carregaComboOnibus();
+        carregaComboMinuto();
+        carregaComboHora();
 
+        cboMinCadastro.addItemListener(new ItemListener() {
+
+            
+
+			@Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+	        		if (cboHoraCadastro.getSelectedIndex()==0 && flagMin==0) {
+	            		JOptionPane.showMessageDialog(PanelHorario.this, "Selecione o campo hora!");
+	            		flagMin=1;
+	            		cboMinCadastro.setSelectedIndex(0);
+					}
+	        		else if((chBxDomingoCadastro.isSelected()||chBxSegundaFeiraCadastro.isSelected()||chBxTercaFeiraCadastro.isSelected()||chBxQuartaFeiraCadastro.isSelected()
+	        				||chBxQuintaFeiraCadastro.isSelected()||chBxSextaFeiraCadastro.isSelected()||chBxSabadoCadastro.isSelected()
+	        				||chBxFeriadosCadastro.isSelected())&&flagMin==0){
+
+	        			cboHoraCadastro.setEnabled(false);
+	        			cboMinCadastro.setEnabled(false);
+	        			chBxDomingoCadastro.setEnabled(false);
+	        			chBxSegundaFeiraCadastro.setEnabled(false);
+	        			chBxTercaFeiraCadastro.setEnabled(false);
+	        			chBxQuartaFeiraCadastro.setEnabled(false);
+	        			chBxQuintaFeiraCadastro.setEnabled(false);
+	        			chBxSextaFeiraCadastro.setEnabled(false);
+	        			chBxSabadoCadastro.setEnabled(false);
+	        			chBxFeriadosCadastro.setEnabled(false);
+	        			//txtSaidaCadastro.setText(cboItinerarioHora.getSelectedItem()+":"+cboItinerarioMin.getSelectedItem());
+	        			//txtItinerarioPreco.setEnabled(true);
+	        			//cboItinerarioMotorista.setEnabled(true);
+	        			
+
+	        		}
+		            else if(flagMin==0){
+		            		JOptionPane.showMessageDialog(PanelHorario.this, "Selecione pelo menos um dia!");
+		            		flagMin=1;
+		            		cboMinCadastro.setSelectedIndex(0);
+		            		cboHoraCadastro.setSelectedIndex(0);
+		            		
+		           	} else flagMin=0;
+                }
+            }
+        });
+
+        cboOnibusCadastro.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+	            	if(!chBxDomingoCadastro.isSelected()){
+	            		
+	            	}
+	            	chBxDomingoCadastro.setEnabled(true);
+	            	chBxSegundaFeiraCadastro.setEnabled(true);
+	            	chBxTercaFeiraCadastro.setEnabled(true);
+	            	chBxQuartaFeiraCadastro.setEnabled(true);
+	            	chBxQuintaFeiraCadastro.setEnabled(true);
+	            	chBxSextaFeiraCadastro.setEnabled(true);
+	            	chBxSabadoCadastro.setEnabled(true);
+	            	chBxFeriadosCadastro.setEnabled(true);
+
+	            	cboItinerario.setEnabled(true);
+                	cboMinCadastro.setEnabled(true);
+                }
+            }
+        });
+
+        btnCadastrar.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                //if(!(cboItinerario.getSelectedItem().equals("Selecione"))){
+                btnCancelar.setVisible(true);
+                pnlCadastro.setVisible(true);
+                pnlRemocao.setVisible(false);
+                cboItinerario.setSelectedItem("Selecione");
+                cboItinerario.setVisible(true);
+                lblItinerario.setVisible(true);
+                btnCadastrar.setVisible(false);
+                btnRemover.setVisible(false);
+                botaoEscolhido = 1;
+                pnlHorario.setBorder(BorderFactory.createTitledBorder(null, " ASSOCIAR HORARIOS ", TitledBorder.CENTER, TitledBorder.TOP, fontePadrao));
+                //} else {
+                //	JOptionPane.showMessageDialog(null, "Selecione um itinerario para associar horarios.");
+                //}
+
+            }
+        });
+        
+        btnConfirmaCadastro.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+            }
+        });
     }
 
     private void inserirPnlRemocao() {
@@ -478,15 +530,59 @@ public class PanelHorario extends JPanel {
     }
 
     private void carregaComboMinuto() {//SALVAR IDS
+        
+    	arrayMinuto = new ArrayList<String>();
+    	for (int i = 0; i < 60; i+=5) {
+			arrayMinuto.add(format.format(i));
+		}
+        cboMinCadastro.removeAllItems();
+        cboMinCadastro.addItem("--");
+        for (int i = 0; i < arrayMinuto.size(); i++) {
+
+        	cboMinCadastro.addItem(arrayMinuto.get(i));
+        }
     }
 
     private void carregaComboHora() {//SALVAR IDS
+    	arrayHora = new ArrayList<String>();
+    	for (int i = 0; i < 24; i++) {
+    		arrayHora.add(format.format(i));
+		}
+    	cboHoraCadastro.removeAllItems();
+    	cboHoraCadastro.addItem("--");
+        for (int i = 0; i < arrayHora.size(); i++) {
+
+        	cboHoraCadastro.addItem(arrayHora.get(i));
+        }
     }
 
     private void carregaComboMotorista() {
+        arrayItinerarioMotoristaList = new ArrayList<Motorista>();
+        arrayItinerarioMotoristaList = daoItinerarioMotorista.consultarTodosMotoristas();
+        arrayIdMotorista = new ArrayList<Integer>();
+//        cboMotoristaCadastro.removeAllItems();
+//        cboItinerarioMotorista.addItem("Selecione");
+        for (int j = 0; j < arrayAuxPnlCadastro.size(); j++) {
+				
+	        for (int i = 0; i < arrayItinerarioMotoristaList.size(); i++) {
+	        	JComboBox jComboBoxAux = (JComboBox) arrayAuxPnlCadastro.get(j).getComponent(6);
+	        	jComboBoxAux.addItem(arrayItinerarioMotoristaList.get(i).getNome());
+	        }
+        }
     }
 
     private void carregaComboOnibus() {
+        daoItinerarioOnibus = new DaoOnibus();
+        arrayItinerarioOnibus = new ArrayList<Onibus>();
+        arrayIdOnibus = new ArrayList<Integer>();
+        arrayItinerarioOnibus = daoItinerarioOnibus.consultarTodosOnibus();
+        cboOnibusCadastro.removeAllItems();
+        cboOnibusCadastro.addItem("Selecione");
+        
+        for (int i = 0; i < arrayItinerarioOnibus.size(); i++) {
+        	arrayIdOnibus.add(arrayItinerarioOnibus.get(i).getId());
+        	cboOnibusCadastro.addItem(arrayItinerarioOnibus.get(i).getPlaca());
+        }
     }
 
     private Horario clonaHorario(Horario horario, int dia) {
@@ -535,12 +631,22 @@ public class PanelHorario extends JPanel {
         chBxSabadoCadastro.setEnabled(false);
         chBxFeriadosCadastro.setEnabled(false);
     }
+    
+    private int flagMin;
     private DaoRotaItinerario daoRotaItinerario;
     private DaoItinerario daoItinerario;
     private NumberFormat format;
-    private Font fontePadrao;
+    private Font fontePadrao;	
     private GridLayout gridLayout2_4;
+    private ArrayList<String> arrayMinuto;
+    private ArrayList<String> arrayHora;
     private ArrayList<Itinerario> arrayItinerario;
+	private DaoMotorista daoItinerarioMotorista;
+	private ArrayList<entidades.Motorista> arrayItinerarioMotoristaList;
+	private ArrayList<Integer> arrayIdMotorista;
+	private DaoOnibus daoItinerarioOnibus;
+	private ArrayList<entidades.Onibus> arrayItinerarioOnibus;
+	private ArrayList<Integer> arrayIdOnibus;
     private int botaoEscolhido;
     //Jpanel
     private JPanel pnlHorario;
