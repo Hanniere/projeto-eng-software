@@ -245,8 +245,8 @@ public class DaoItinerario {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "SELECT origem.cidadeNome, destino.cidadeNome FROM RotaItinerario"
-                    + " INNER JOIN Rota ON (rotaId = RotaItinerario_RotaId)"
+            String sql = "SELECT origem.cidadeNome, destino.cidadeNome, rota.rotaDuracao, rota.rotaId FROM RotaItinerario"
+                    + " INNER JOIN Rota rota ON (rotaId = RotaItinerario_RotaId)"
                     + " INNER JOIN Cidade origem ON (origem.cidadeId = Rota_CidadeOrigem)"
                     + " INNER JOIN Cidade destino ON (destino.cidadeId = Rota_CidadeDestino) WHERE RotaItinerario_ItinerarioId ="+itinerario.getId()
                     + " GROUP BY origem.CidadeNome,destino.CidadeNome ORDER BY RotaItinerarioOrdem;";
@@ -255,6 +255,8 @@ public class DaoItinerario {
                 Rota rota = new Rota();
                 rota.setRota_cidadeOrigem(rs.getString("origem.CidadeNome"));
                 rota.setRota_cidadeDestino(rs.getString("destino.CidadeNome"));
+                rota.setRotaDuracao(rs.getString("rota.rotaDuracao"));
+                rota.setId(Integer.parseInt(rs.getString("rota.rotaId")));
 
                 arrayList.add(rota);
             }
