@@ -55,7 +55,10 @@ public class DaoPassagem {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "SELECT distinct CidadeId, CidadeNome FROM Cidade, Rota, RotaItinerario, Horario WHERE HorarioDiaId = 1 AND Horario_RotaItinerarioId = RotaItinerarioId AND RotaItinerario_RotaId = RotaId AND Rota_CidadeOrigem = CidadeId ORDER BY CidadeNome";
+            String sql = "SELECT distinct CidadeId AS OrigemID , CidadeNome AS Origem FROM Horario"
+                            +"INNER JOIN RotaItinerario ON(Horario_RotaItinerarioId = RotaItinerarioId)"
+                            +"INNER JOIN Rota ON(RotaItinerario_RotaId = RotaId)"
+                            +"INNER JOIN Cidade ON(Rota_CidadeOrigem = CidadeId)";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Cidade cidade = new Cidade();
