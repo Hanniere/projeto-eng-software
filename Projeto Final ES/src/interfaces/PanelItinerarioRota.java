@@ -595,17 +595,21 @@ public class PanelItinerarioRota extends JPanel {
             JOptionPane.showMessageDialog(null, "Selecione a Duracao da Rota.");
             cboRotaAlteracaoDuracaoHora.requestFocus();
         } else {
-            rota.setRotaDuracao(txtRotaCadastroDuracao.getText());
+            int hora, total;
+            hora = (Integer.parseInt(String.valueOf(cboRotaCadastroDuracaoHora.getSelectedItem()))* 60);
+            total = hora + Integer.parseInt(String.valueOf(cboRotaCadastroDuracaoMinuto.getSelectedItem())) ;
+            rota.setRotaDuracao(String.valueOf(total));
             rota.setRota_cidadeOrigemId(Integer.parseInt(String.valueOf(cboRotaCadastroOrigemOculto.getSelectedItem())));
             rota.setRota_cidadeDestinoId(Integer.parseInt(String.valueOf(cboRotaCadastroDestinoOculto.getSelectedItem())));
             int verifica = daoRota.cadastrarRota(rota);
             if (verifica == 0) {
                 JOptionPane.showMessageDialog(null, "Rota cadastrada com sucesso!");
-                txtRotaCadastroDuracao.setText("");
                 cboRotaCadastroOrigem.setSelectedItem("Selecione");
                 cboRotaCadastroDestino.setSelectedItem("Selecione");
                 carregaCombosCidade();
                 carregaCombosRota();
+                carregaCombosHora();
+                carregaCombosMinuto();
                 cboRotaCadastroOrigem.requestFocus();
             } else if (verifica == 1) {
                 JOptionPane.showMessageDialog(null, "Rota ja existente.");
