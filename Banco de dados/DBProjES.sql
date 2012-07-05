@@ -75,6 +75,7 @@ CREATE TABLE Horario(
 	HorarioPreco DECIMAL(12,2) NOT NULL,
 	Horario_MotoristaId INT NOT NULL,
 	Horario_OnibusId INT NOT NULL,
+	Horario_usado INT NOT NULL,
 	PRIMARY KEY(HorarioId, HorarioDiaId),
 	FOREIGN KEY(Horario_RotaItinerarioId) REFERENCES RotaItinerario(RotaItinerarioId),
 	FOREIGN KEY(Horario_MotoristaId) REFERENCES Motorista(MotoristaId),
