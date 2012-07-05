@@ -25,7 +25,7 @@ public boolean cadastrarNovoHorario(Horario horario, int itinerarioId){
             		"and Horario_RotaItinerarioId IN " +
             		"(select RotaItinerarioId from rotaitinerario where RotaItinerario_ItinerarioId = "+itinerarioId+")"; 
             ResultSet rs = stmt.executeQuery(sql2);
-            if(rs.first()) {//Se existir first, então já existe no BD
+            if(rs.first()) {//Se existir first, entï¿½o jï¿½ existe no BD
             	String sq13 ="update horario set HorarioPreco = "+horario.getHorarioPreco()+"" +
             			" , Horario_MotoristaId = "+horario.getHorario_MotoristaId()+"" +
             			" , Horario_OnibusId = "+horario.getHorario_OnibusId()+"" +
@@ -36,12 +36,12 @@ public boolean cadastrarNovoHorario(Horario horario, int itinerarioId){
             	stmt.executeUpdate(sq13);
             } else {
             	System.out.println("INSERINDO HORARIO");
-//                String sql = "insert into Horario (HorarioDiaId, Horario_RotaItinerarioId, HorarioSaida, HorarioChegada, HorarioPreco," +
-//                		" Horario_MotoristaId, Horario_OnibusId)" +
-//                		" VALUES ( '"+horario.getHorarioDiaId()+"','"+horario.getHorario_RotaItinerarioId()+
-//                		"','"+horario.getHorarioSaida()+"','"+horario.getHorarioChegada()+"','"+horario.getHorarioPreco()+
-//                		"','"+horario.getHorario_MotoristaId()+"','"+horario.getHorario_OnibusId()+"')";
-//                stmt.executeUpdate(sql);
+                String sql = "insert into Horario (HorarioDiaId, Horario_RotaItinerarioId, HorarioSaida, HorarioChegada, HorarioPreco," +
+                		" Horario_MotoristaId, Horario_OnibusId, Horario_usado)" +
+                		" VALUES ( '"+horario.getHorarioDiaId()+"','"+horario.getHorario_RotaItinerarioId()+
+                		"','"+horario.getHorarioSaida()+"','"+horario.getHorarioChegada()+"','"+horario.getHorarioPreco()+
+                		"','"+horario.getHorario_MotoristaId()+"','"+horario.getHorario_OnibusId()+"', 1)";
+                stmt.executeUpdate(sql);
             }
             rs.close();
             stmt.close();
