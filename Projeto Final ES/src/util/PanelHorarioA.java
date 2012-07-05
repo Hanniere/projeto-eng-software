@@ -161,41 +161,42 @@ public class PanelHorarioA extends JPanel {
             @Override
             public void itemStateChanged(ItemEvent evt) {
                 if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    if (cboItinerarioHora.getSelectedIndex() == 0 && flagMin == 0) {
-                        JOptionPane.showMessageDialog(pnlItinerario, "Selecione o campo hora!");
-                        flagMin = 1;
-                        cboItinerarioMin.setSelectedIndex(0);
-                    } else if ((chBxDomingo.isSelected() || chBxSegundaFeira.isSelected() || chBxTercaFeira.isSelected() || chBxQuartaFeira.isSelected()
-                            || chBxQuintaFeira.isSelected() || chBxSextaFeira.isSelected() || chBxSabado.isSelected()
-                            || chBxFeriados.isSelected()) && flagMin == 0) {
+                	if(cboItinerarioMin.getSelectedIndex()!=0){
+	                    if (cboItinerarioHora.getSelectedIndex() == 0 && flagMin == 0) {
+	                        JOptionPane.showMessageDialog(pnlItinerario, "Selecione o campo hora!");
+	                        flagMin = 1;
+	                        cboItinerarioMin.setSelectedIndex(0);
+	                    } else if ((chBxDomingo.isSelected() || chBxSegundaFeira.isSelected() || chBxTercaFeira.isSelected() || chBxQuartaFeira.isSelected()
+	                            || chBxQuintaFeira.isSelected() || chBxSextaFeira.isSelected() || chBxSabado.isSelected()
+	                            || chBxFeriados.isSelected()) && flagMin == 0) {
+	
+	                        cboItinerarioHora.setEnabled(false);
+	                        cboItinerarioMin.setEnabled(false);
+	                        txtItinerarioSaida.setText(cboItinerarioHora.getSelectedItem() + ":" + cboItinerarioMin.getSelectedItem());
+	                        chBxDomingo.setEnabled(false);
+	                        chBxSegundaFeira.setEnabled(false);
+	                        chBxTercaFeira.setEnabled(false);
+	                        chBxQuartaFeira.setEnabled(false);
+	                        chBxQuintaFeira.setEnabled(false);
+	                        chBxSextaFeira.setEnabled(false);
+	                        chBxSabado.setEnabled(false);
+	                        chBxFeriados.setEnabled(false);
+	                        txtItinerarioPreco.setEnabled(true);
+	                        cboItinerarioDestino.setEnabled(true);
+	                        cboItinerarioMotorista.setEnabled(true);
+	                        btnItinerarioAddRota.setEnabled(true);
+	
+	                    } else if (flagMin == 0) {
+	                        JOptionPane.showMessageDialog(pnlItinerario, "Selecione pelo menos um dia!");
+	                        flagMin = 1;
+	                        cboItinerarioMin.setSelectedIndex(0);
+	                        cboItinerarioHora.setSelectedIndex(0);
+	
+	                    } else {
+	                        flagMin = 0;
+	                    }
 
-                        cboItinerarioHora.setEnabled(false);
-                        cboItinerarioMin.setEnabled(false);
-                        txtItinerarioSaida.setText(cboItinerarioHora.getSelectedItem() + ":" + cboItinerarioMin.getSelectedItem());
-                        chBxDomingo.setEnabled(false);
-                        chBxSegundaFeira.setEnabled(false);
-                        chBxTercaFeira.setEnabled(false);
-                        chBxQuartaFeira.setEnabled(false);
-                        chBxQuintaFeira.setEnabled(false);
-                        chBxSextaFeira.setEnabled(false);
-                        chBxSabado.setEnabled(false);
-                        chBxFeriados.setEnabled(false);
-                        txtItinerarioPreco.setEnabled(true);
-                        cboItinerarioDestino.setEnabled(true);
-                        cboItinerarioMotorista.setEnabled(true);
-                        btnItinerarioAddRota.setEnabled(true);
-
-                    } else if (flagMin == 0) {
-                        JOptionPane.showMessageDialog(pnlItinerario, "Selecione pelo menos um dia!");
-                        flagMin = 1;
-                        cboItinerarioMin.setSelectedIndex(0);
-                        cboItinerarioHora.setSelectedIndex(0);
-
-                    } else {
-                        flagMin = 0;
-                    }
-
-
+                	}
                 }
             }
         });
@@ -291,7 +292,7 @@ public class PanelHorarioA extends JPanel {
                     daoRotaItinerario.cadastrarNovoRotaItinerario(arrayRotaItinerario.get(i));
                 }
                 for (int j = 0; j < arrayHorario.size(); j++) {
-                    daoHorario.cadastrarNovoHorario(arrayHorario.get(j));
+                    //daoHorario.cadastrarNovoHorario(arrayHorario.get(j));
                 }
                 ordemRota = 0;
                 reinicia();

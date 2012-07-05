@@ -248,6 +248,7 @@ public class PanelHorario extends JPanel {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //if(!(cboItinerario.getSelectedItem().equals("Selecione"))){
+            	daoHorario = new DaoHorario();
                 btnCancelar.setVisible(true);
                 pnlCadastro.setVisible(true);
                 pnlRemocao.setVisible(false);
@@ -270,6 +271,7 @@ public class PanelHorario extends JPanel {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 //if(!(cboItinerario.getSelectedItem().equals("Selecione"))){
+            	daoHorario = new DaoHorario();
                 btnCancelar.setVisible(true);
                 pnlCadastro.setVisible(false);
                 pnlRemocao.setVisible(true);
@@ -342,38 +344,45 @@ public class PanelHorario extends JPanel {
             @Override
             public void itemStateChanged(ItemEvent evt) {
                 if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    if (cboHoraCadastro.getSelectedIndex() == 0 && flagMin == 0) {
-                        JOptionPane.showMessageDialog(PanelHorario.this, "Selecione o campo hora!");
-                        flagMin = 1;
-                        cboMinCadastro.setSelectedIndex(0);
-                    } else if ((chBxDomingoCadastro.isSelected() || chBxSegundaFeiraCadastro.isSelected() || chBxTercaFeiraCadastro.isSelected() || chBxQuartaFeiraCadastro.isSelected()
-                            || chBxQuintaFeiraCadastro.isSelected() || chBxSextaFeiraCadastro.isSelected() || chBxSabadoCadastro.isSelected()
-                            || chBxFeriadosCadastro.isSelected()) && flagMin == 0) {
 
-                        cboHoraCadastro.setEnabled(false);
-                        cboMinCadastro.setEnabled(false);
-                        chBxDomingoCadastro.setEnabled(false);
-                        chBxSegundaFeiraCadastro.setEnabled(false);
-                        chBxTercaFeiraCadastro.setEnabled(false);
-                        chBxQuartaFeiraCadastro.setEnabled(false);
-                        chBxQuintaFeiraCadastro.setEnabled(false);
-                        chBxSextaFeiraCadastro.setEnabled(false);
-                        chBxSabadoCadastro.setEnabled(false);
-                        chBxFeriadosCadastro.setEnabled(false);
-                        cboOnibusCadastro.setEnabled(true);
-
-
-                    } else if (flagMin == 0) {
-                        JOptionPane.showMessageDialog(PanelHorario.this, "Selecione pelo menos um dia!");
-                        flagMin = 1;
-                        cboMinCadastro.setSelectedIndex(0);
-                        cboHoraCadastro.setSelectedIndex(0);
-
-                    } else {
-                        flagMin = 0;
-                    }
-                }
-            }
+	                    if (cboHoraCadastro.getSelectedIndex() == 0 && flagMin == 0) {
+	                        JOptionPane.showMessageDialog(PanelHorario.this, "Selecione o campo hora!");
+	                        flagMin = 1;
+	                        cboMinCadastro.setSelectedIndex(0);
+	                    } else if ((chBxDomingoCadastro.isSelected() || chBxSegundaFeiraCadastro.isSelected() || chBxTercaFeiraCadastro.isSelected() || chBxQuartaFeiraCadastro.isSelected()
+	                    		|| chBxQuintaFeiraCadastro.isSelected() || chBxSextaFeiraCadastro.isSelected() || chBxSabadoCadastro.isSelected()
+	                    		|| chBxFeriadosCadastro.isSelected()) && flagMin == 0) {
+	                    	
+	
+	                    	if (verificaHorarios()) {
+	                        	cboHoraCadastro.setEnabled(false);
+	                        	cboMinCadastro.setEnabled(false);
+	                        	chBxDomingoCadastro.setEnabled(false);
+	                        	chBxSegundaFeiraCadastro.setEnabled(false);
+	                        	chBxTercaFeiraCadastro.setEnabled(false);
+	                        	chBxQuartaFeiraCadastro.setEnabled(false);
+	                        	chBxQuintaFeiraCadastro.setEnabled(false);
+	                        	chBxSextaFeiraCadastro.setEnabled(false);
+	                        	chBxSabadoCadastro.setEnabled(false);
+	                        	chBxFeriadosCadastro.setEnabled(false);
+	                        	cboOnibusCadastro.setEnabled(true);
+							}
+	                    	
+	
+	
+	
+	                    } else if (flagMin == 0) {
+	                        JOptionPane.showMessageDialog(PanelHorario.this, "Selecione pelo menos um dia!");
+	                        flagMin = 1;
+	                        cboMinCadastro.setSelectedIndex(0);
+	                        cboHoraCadastro.setSelectedIndex(0);
+	
+	                    } else {
+	                        flagMin = 0;
+	                    }
+	                }
+	            }
+            
         });
 
         cboOnibusCadastro.addItemListener(new ItemListener() {
@@ -399,16 +408,14 @@ public class PanelHorario extends JPanel {
 
 
         btnConfirmaCadastro.addActionListener(new ActionListener() {
-
+        	
             @Override
             public void actionPerformed(ActionEvent evt) {
+            	
+
             	if (valida()) {
-                    arrayHorario = new ArrayList<Horario>();
-                    daoHorario = new DaoHorario();
-                	ArrayList<Horario> horarioIgual = new ArrayList<Horario>();
-                	horarioIgual = daoHorario.consultarTodosHorariosItinerario(arrayRotaItinerario.get(0).getRotaitinerario_itinerarioId());
-                    System.out.println(horarioIgual.size());
-                	criaHorarios(horarioIgual);
+                   arrayHorario = new ArrayList<Horario>();
+                   cadastrarHorarios();
 				}
             }
         });
@@ -629,7 +636,7 @@ public class PanelHorario extends JPanel {
 
     }
 
-    private void criaHorarios(ArrayList<Horario> horarioIgual) {
+    private void cadastrarHorarios() {
     	///////////////////////////////////////////////////////////////////
         for (int i = 0; i < arrayAuxPnlCadastro.size(); i++) {//para cada linha
             Horario horario = new Horario();
@@ -679,6 +686,36 @@ public class PanelHorario extends JPanel {
             if (chBxFeriadosCadastro.isSelected()) {
                 arrayHorario.add(clonaHorario(horario, 8));
             }
+            
+        }
+        for (int i = 0; i < arrayHorario.size(); i++) {
+            System.out.println("Dia:" + arrayHorario.get(i).getHorarioDiaId());
+            System.out.println("Preco:" + arrayHorario.get(i).getHorarioPreco());
+            System.out.println("Horario saida: " + arrayHorario.get(i).getHorarioSaida());
+            System.out.println("Horario Chegada: " + arrayHorario.get(i).getHorarioChegada());
+            System.out.println("RotaItinerario:" + arrayHorario.get(i).getHorario_RotaItinerarioId());
+            System.out.println("Quantidade tabela horario:" + arrayHorario.size());
+            System.out.println("---------------------------------------------------------");
+        }
+        for (int i = 0; i < arrayHorario.size(); i++) {
+			daoHorario.cadastrarNovoHorario(arrayHorario.get(i), arrayRotaItinerario.get(0).getRotaitinerario_itinerarioId());
+		}
+        
+    }
+
+    private void updateHorarios(){
+        for (int i = 0; i < arrayAuxPnlCadastro.size(); i++) {//para cada linha
+            JTextField txtPreco = (JTextField) arrayAuxPnlCadastro.get(i).getComponent(4);
+            JComboBox cboMotorista = (JComboBox) arrayAuxPnlCadastro.get(i).getComponent(6);           
+            int idMotorista = arrayMotorista.get(cboMotorista.getSelectedIndex() - 1).getId();
+            int idOnibus = arrayOnibus.get(cboOnibusCadastro.getSelectedIndex() - 1).getId();
+            
+            
+//            update horario set HorarioPreco = PRECO and Horario_MotoristaId = MOTORISTA_ID and Horario_OnibusId = ONIBUS_ID and Horario_usado = 1 where
+//            	    HorarioDiaId = DIA_DA_SEMANA and 
+//            	    HorarioSaida = '15:00:00' and 
+//            	    Horario_RotaItinerarioId = x
+
         }
         for (int i = 0; i < arrayHorario.size(); i++) {
             System.out.println("Dia:" + arrayHorario.get(i).getHorarioDiaId());
@@ -688,10 +725,7 @@ public class PanelHorario extends JPanel {
             System.out.println("Quantidade tabela horario:" + arrayHorario.size());
             System.out.println("---------------------------------------------------------");
         }
-        verificaHorarios(arrayHorario,horarioIgual);
-        
     }
-
     private Horario clonaHorario(Horario horario, int dia) {
         Horario novoHorario = new Horario();
         novoHorario.setHorario_MotoristaId(horario.getHorario_MotoristaId());
@@ -717,14 +751,57 @@ public class PanelHorario extends JPanel {
 	   }
 	   return true;
    }
-   public void verificaHorarios(ArrayList<Horario> horarioCriado, ArrayList<Horario> horarioAchado){
-	   if(!horarioAchado.isEmpty()){
-		   for (int i = 0; i < horarioCriado.size(); i++) {
-//			   if(horarioCriado.get(i).getHorarioDiaId()){
-//				   
-//			   }
-		   }
+   public Boolean verificaHorarios(){
+	   String dias = new String();
+       if (chBxDomingoCadastro.isSelected()) {
+          dias = dias.concat("1");
+       }
+       if (chBxSegundaFeiraCadastro.isSelected()) {
+    	   dias = dias.concat("2");
+
+       }
+       if (chBxTercaFeiraCadastro.isSelected()) {
+    	   dias = dias.concat("3");
+       }
+       if (chBxQuartaFeiraCadastro.isSelected()) {
+    	   dias = dias.concat("4");
+       }
+       if (chBxQuintaFeiraCadastro.isSelected()) {
+    	   dias = dias.concat("5");
+       }
+       if (chBxSextaFeiraCadastro.isSelected()) {
+    	   dias = dias.concat("6");
+       }
+       if (chBxSabadoCadastro.isSelected()) {
+    	   dias = dias.concat("7");
+       }
+       if (chBxFeriadosCadastro.isSelected()) {
+    	   dias = dias.concat("8");
+       }
+       if(dias.length()>1){
+    	   String aux = new String();
+           for (int i = 0; i < dias.length(); i++) {
+        	   aux=aux.concat(dias.substring(i, i+1));
+        	   if(i<dias.length()-1)
+        		   aux= aux.concat(", ");
+           }
+           dias = aux;
+       }
+	   
+	   ArrayList<Horario> horariosUtilizados ;
+	   int idItinerario = arrayRotaItinerario.get(0).getRotaitinerario_itinerarioId();
+	   String horaSaida = (String) cboHoraCadastro.getSelectedItem()+":"+(String) cboMinCadastro.getSelectedItem()+":00";
+	   horariosUtilizados = daoHorario.verificaHorarioItinerario(idItinerario,1,dias,horaSaida);
+	   System.out.println("TAMANHOOOOOO: "+horariosUtilizados.size());
+	   if(!horariosUtilizados.isEmpty()){
+		   JOptionPane.showMessageDialog(PanelHorario.this, "Horario de saida ja existe nos dias selecionados");
+		   return false;
 	   }
+	   return true;
+   }
+   
+   public void verificaHorarioSaida(ArrayList<Horario> horarioCriado){
+	   
    }
    
     public void reinicia() {
