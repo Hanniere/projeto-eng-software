@@ -55,10 +55,10 @@ public class DaoPassagem {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "SELECT distinct CidadeId, CidadeNome FROM Horario"
-                            +" INNER JOIN RotaItinerario ON(Horario_RotaItinerarioId = RotaItinerarioId)"
-                            +" INNER JOIN Rota ON(RotaItinerario_RotaId = RotaId)"
-                            +" INNER JOIN Cidade ON(Rota_CidadeOrigem = CidadeId)";
+            String sql = "SELECT distinct CidadeId , CidadeNome FROM Horario"
+                            + " INNER JOIN RotaItinerario ON ( Horario_RotaItinerarioId = RotaItinerarioId )"
+                            + " INNER JOIN Rota ON ( RotaItinerario_RotaId = RotaId )"
+                            + " INNER JOIN Cidade ON ( Rota_CidadeOrigem = CidadeId )";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Cidade cidade = new Cidade();
@@ -161,11 +161,16 @@ public class DaoPassagem {
     public ArrayList<Integer> consultaPoltronasCompradas(int horarioId, String dataCompra) {
         ArrayList<Integer> arraylist = new ArrayList<Integer>();
         BancoDados banco = new BancoDados();
+        System.out.println("HORARIO ID: " + horarioId + "      DataCompra: " + dataCompra);
+   
+        System.out.println("Comparacao com 2/1/2012: " + dataCompra.compareTo("2/1/2012") );
+       
         try {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "SELECT PassagemNumAssentoComprado FROM Passagem where Passagem_HorarioId = " + horarioId;
+            String sql = "SET @data =" + dataCompra + "";
+            sql = "SELECT P.PassagemNumAssentoComprado FROM Passagem P WHERE ( Passagem_HorarioId = '" + horarioId + "' ) AND ( STRCMP(P.passagemData , '" + dataCompra + "' ) = 0 )" ;
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 arraylist.add(rs.getInt("PassagemNumAssentoComprado"));
@@ -174,22 +179,31 @@ public class DaoPassagem {
             rs = stmt.executeQuery(sql);
             rs.next();
             int IdOnibus = rs.getInt("horario_onibusId");
-            //String horarioSaidaTime = rs.getString("horarioSaida");
-            //String horarioChegadaTime = rs.getString("horarioChegada");
+            String horarioSaida = rs.getString("horarioSaida");
+            String horarioChegada = rs.getString("horarioChegada");
             //DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
             Time horarioSaidaTime = Time.valueOf(rs.getString("horarioSaida")); //pegando horario de saida do TXT na primeira vez
             Time horarioChegadaTime = Time.valueOf(rs.getString("horarioChegada"));
             Calendar calAux = Calendar.getInstance();
             Calendar calAux1 = Calendar.getInstance();
+            sql = "SET @hS =" + horarioSaida + "";
+            sql = "SET @hC =" + horarioChegada + "";
+            System.out.println("Horario Saida: " + horarioSaida + "     Horario Chegada: " + horarioChegada);
             calAux.setTime(horarioSaidaTime);
             calAux1.setTime(horarioChegadaTime);
             //se calAux é maior retorna 1, se nao retorna -1 e se for igual retorna 0
             System.out.println("Maior retorna 1, menor retorna -1: " + calAux.compareTo(calAux1));
-            //calAux.add(Calendar.MINUTE, 30); //somando a duração (em minutos)para obter horario de chegada
-            sql = "SELECT P.PassagemNumAssentoComprado FROM Passagem P, Horario H"
-                    + " WHERE P.passagemData = '" + dataCompra + "'"
-                    + " AND H.horario_onibusId = " + IdOnibus
-                    + " AND (H.horarioChegada > '" + horarioSaidaTime + "' OR H.horarioSaida < '" + horarioChegadaTime + "')";
+            calAux.add(Calendar.MINUTE, 30); //somando a duração (em minutos)para obter horario de chegada
+            sql = "SELECT P.PassagemNumAssentoComprado FROM Passagem P, Horario H "
+                    + " WHERE ( STRCMP(P.passagemData, '"+ dataCompra + "') = 0 ) "
+                    + " AND ( H.horario_onibusId = " + IdOnibus + " ) "
+                    //+ " AND ( P.Passagem_HorarioId = '" + horarioId + "' ) "
+                    + " AND("
+                    + "      ( ( STRCMP(H.horarioChegada,'"+horarioSaida+"') = 1 ) AND  ( (STRCMP(H.horarioSaida,'"+horarioSaida+"')= -1) OR (STRCMP(H.horarioSaida,'"+horarioSaida+"')= 0) )  "
+                    + "         ) OR ( "
+                    + "         ( ( STRCMP(H.horarioChegada,'"+horarioChegada+"') = -1) OR (STRCMP(H.horarioChegada,'"+horarioChegada+"') = 0) ) AND ( (STRCMP('"+horarioSaida+"',H.horarioSaida)= -1) OR (STRCMP('"+horarioSaida+"',H.horarioSaida)= 0) )  "
+                    + "         )"
+                    + "    )"; 
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 arraylist.add(rs.getInt("PassagemNumAssentoComprado"));
