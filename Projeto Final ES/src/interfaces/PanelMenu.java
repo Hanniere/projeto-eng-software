@@ -5,11 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.text.ParseException;
 import javax.swing.*;
 
 import projetos.PrincipalFuncionario;
 import util.Backup;
+import util.Restore;
 
 public class PanelMenu extends JPanel {
 
@@ -475,8 +477,9 @@ public class PanelMenu extends JPanel {
         http://javafree.uol.com.br/topic-2499-Copiar-arquivos.html*/
     }
 
-    private void menuBackupRestaurarBackupClick(ActionEvent evt) {
-    
+    private void menuBackupRestaurarBackupClick(ActionEvent evt){
+        Restore r = new Restore();
+        r.RestaurarBackup();
     }
     
     private void menuSairUsuarioClick(ActionEvent evt) throws ParseException {
