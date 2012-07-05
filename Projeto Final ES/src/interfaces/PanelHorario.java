@@ -99,7 +99,9 @@ public class PanelHorario extends JPanel {
                             Itinerario itinerario = new Itinerario();
                             itinerario.setId(arrayItinerario.get(cboItinerario.getSelectedIndex() - 1).getId());
                             rotasItinerario = new ArrayList<Rota>();
+                            arrayRotaItinerario = new ArrayList<RotaItinerario>();
                             rotasItinerario = daoItinerario.consultarRotasdoItinerario(itinerario);
+                        	arrayRotaItinerario = daoItinerario.consultarRotaItinerariodoItinerario(itinerario);
                             for (int i = 0; i < rotasItinerario.size(); i++) {
                                 arrayAuxPnlCadastro.add(new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0)));
                                 arrayAuxPnlCadastro.get(i).setPreferredSize(new Dimension(600, 100));
@@ -400,8 +402,14 @@ public class PanelHorario extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                arrayHorario = new ArrayList<Horario>();
-                criaHorarios();
+            	if (valida()) {
+                    arrayHorario = new ArrayList<Horario>();
+                    daoHorario = new DaoHorario();
+                	ArrayList<Horario> horarioIgual = new ArrayList<Horario>();
+                	horarioIgual = daoHorario.consultarTodosHorariosItinerario(arrayRotaItinerario.get(0).getRotaitinerario_itinerarioId());
+                    System.out.println(horarioIgual.size());
+                	criaHorarios(horarioIgual);
+				}
             }
         });
     }
@@ -621,7 +629,8 @@ public class PanelHorario extends JPanel {
 
     }
 
-    private void criaHorarios() {
+    private void criaHorarios(ArrayList<Horario> horarioIgual) {
+    	///////////////////////////////////////////////////////////////////
         for (int i = 0; i < arrayAuxPnlCadastro.size(); i++) {//para cada linha
             Horario horario = new Horario();
 
@@ -637,8 +646,8 @@ public class PanelHorario extends JPanel {
             Double preco = Double.parseDouble(txtPreco.getText());
             int idMotorista = arrayMotorista.get(cboMotorista.getSelectedIndex() - 1).getId();
             int idOnibus = arrayOnibus.get(cboOnibusCadastro.getSelectedIndex() - 1).getId();
-
-            horario.setHorario_RotaItinerarioId(1);
+            
+            horario.setHorario_RotaItinerarioId(arrayRotaItinerario.get(i).getRotaItinerarioId());
             horario.setHorarioSaida(timeSaida.toString());
             horario.setHorarioChegada(horarioChegada);
             horario.setHorarioPreco(preco);
@@ -675,10 +684,12 @@ public class PanelHorario extends JPanel {
             System.out.println("Dia:" + arrayHorario.get(i).getHorarioDiaId());
             System.out.println("Horario saida: " + arrayHorario.get(i).getHorarioSaida());
             System.out.println("Horario Chegada: " + arrayHorario.get(i).getHorarioChegada());
-            System.out.println("Rota:" + arrayHorario.get(i).getHorario_RotaItinerarioId());
+            System.out.println("RotaItinerario:" + arrayHorario.get(i).getHorario_RotaItinerarioId());
             System.out.println("Quantidade tabela horario:" + arrayHorario.size());
             System.out.println("---------------------------------------------------------");
         }
+        verificaHorarios(arrayHorario,horarioIgual);
+        
     }
 
     private Horario clonaHorario(Horario horario, int dia) {
@@ -694,9 +705,28 @@ public class PanelHorario extends JPanel {
         return novoHorario;
     }
 
-//   public Boolean valida(){
-//	   return;
-//   }
+   public Boolean valida(){
+	   for (int i = 0; i < arrayAuxPnlCadastro.size(); i++) {
+           JTextField txtPreco = (JTextField) arrayAuxPnlCadastro.get(i).getComponent(4);
+           JComboBox cboMotorista = (JComboBox) arrayAuxPnlCadastro.get(i).getComponent(6);
+           
+           if (txtPreco.getText()==null||cboMotorista.getSelectedIndex()==0) {
+        	   JOptionPane.showMessageDialog(PanelHorario.this, "Preencha os campos");
+        	   return false;
+           }
+	   }
+	   return true;
+   }
+   public void verificaHorarios(ArrayList<Horario> horarioCriado, ArrayList<Horario> horarioAchado){
+	   if(!horarioAchado.isEmpty()){
+		   for (int i = 0; i < horarioCriado.size(); i++) {
+//			   if(horarioCriado.get(i).getHorarioDiaId()){
+//				   
+//			   }
+		   }
+	   }
+   }
+   
     public void reinicia() {
 
         cboItinerario.setEnabled(true);
@@ -735,6 +765,7 @@ public class PanelHorario extends JPanel {
     }
     DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
     private int flagMin = 0;
+    private DaoHorario daoHorario;
     private DaoRotaItinerario daoRotaItinerario;
     private DaoItinerario daoItinerario;
     private NumberFormat format;
@@ -745,12 +776,11 @@ public class PanelHorario extends JPanel {
     private ArrayList<String> arrayHora;
     private ArrayList<Itinerario> arrayItinerario;
     private ArrayList<Horario> arrayHorario;
+    private ArrayList<RotaItinerario> arrayRotaItinerario;
     private DaoMotorista daoItinerarioMotorista;
     private ArrayList<Motorista> arrayMotorista;
-    private ArrayList<Integer> arrayIdMotorista;
     private DaoOnibus daoItinerarioOnibus;
     private ArrayList<Onibus> arrayOnibus;
-    private ArrayList<Integer> arrayIdOnibus;
     private int botaoEscolhido;
     //Jpanel
     private JPanel pnlHorario;

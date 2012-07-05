@@ -10,6 +10,7 @@ public class Horario implements Cloneable {
     private double HorarioPreco; //DECIMAL NOT NULL,
     private int Horario_MotoristaId;
     private int Horario_OnibusId;
+    private int Horario_usado;
 
     public Horario(int horarioId, int horarioDiaId,
             int horario_RotaItinerarioId, String horarioSaida,
@@ -92,4 +93,17 @@ public class Horario implements Cloneable {
     public void setHorario_OnibusId(int horario_OnibusId) {
         Horario_OnibusId = horario_OnibusId;
     }
+
+	public int getHorario_usado() {
+		return Horario_usado;
+	}
+
+	public void setHorario_usado(int horario_usado) {
+		Horario_usado = horario_usado;
+	}
+
+	public void setHorarioDiaId(int horarioDiaId) {
+		HorarioDiaId = horarioDiaId;
+	}
+   
 }

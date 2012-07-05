@@ -73,4 +73,42 @@ public boolean cadastrarNovoHorario(Horario horario){
         }
         return matriz;
     }
+    public ArrayList<Horario> consultarTodosHorariosItinerario(int id) {
+        ArrayList<Horario> arrayHorario = new ArrayList<Horario>();        
+        BancoDados banco = new BancoDados();
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT horario_RotaItinerarioId, horarioId, horarioDiaId, horarioSaida, horarioChegada, horarioPreco, horario_MotoristaId, horario_OnibusId, horario_usado "
+                    + "FROM Horario H, RotaItinerario Ri, Itinerario I "
+                    + "WHERE H.Horario_RotaItinerarioId = Ri.RotaItinerarioId "
+                    + "AND Ri.RotaItinerario_ItinerarioId = I.ItinerarioId "
+                    + "AND I.ItinerarioId = " + id +" "
+                    + "ORDER BY Ri.RotaItinerarioOrdem";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Horario horario = new Horario();
+                horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
+                horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
+                horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
+                horario.setHorarioSaida(rs.getString("horarioSaida"));
+                horario.setHorarioChegada(rs.getString("horarioChegada"));
+                horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
+                horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
+                horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
+                horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
+                arrayHorario.add(horario);
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Não foi possivel carregar o driver.");
+            ex.printStackTrace();
+
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+
+        }
+        return arrayHorario;
+    }
 }

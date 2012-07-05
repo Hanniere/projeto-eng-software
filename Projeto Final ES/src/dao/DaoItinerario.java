@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import entidades.Itinerario;
 import entidades.Rota;
+import entidades.RotaItinerario;
 import util.BancoDados;
 
 public class DaoItinerario {
@@ -259,6 +260,37 @@ public class DaoItinerario {
                 rota.setId(Integer.parseInt(rs.getString("rota.rotaId")));
 
                 arrayList.add(rota);
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Não foi possivel carregar o driver.");
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+        }
+        return arrayList;
+    }
+    
+        public ArrayList<RotaItinerario> consultarRotaItinerariodoItinerario(Itinerario itinerario) {
+        ArrayList<RotaItinerario> arrayList = new ArrayList<RotaItinerario>();
+        BancoDados banco = new BancoDados();
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT rota.rotaId, rotaItinerarioId, rotaItinerarioOrdem, rotaItinerario_ItinerarioId FROM RotaItinerario"
+                    + " INNER JOIN Rota rota ON (rotaId = RotaItinerario_RotaId)"
+                    + " INNER JOIN Cidade origem ON (origem.cidadeId = Rota_CidadeOrigem)"
+                    + " INNER JOIN Cidade destino ON (destino.cidadeId = Rota_CidadeDestino) WHERE RotaItinerario_ItinerarioId ="+itinerario.getId()
+                    + " GROUP BY origem.CidadeNome,destino.CidadeNome ORDER BY RotaItinerarioOrdem;";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                RotaItinerario rotaItinerario = new RotaItinerario();
+                rotaItinerario.setRotaitinerario_rotaId(Integer.parseInt(rs.getString("rota.rotaId")));
+                rotaItinerario.setRotaItinerarioId(Integer.parseInt(rs.getString("rotaItinerarioId")));
+                rotaItinerario.setRotaitinerarioOrdem(Integer.parseInt(rs.getString("rotaItinerarioOrdem")));
+                rotaItinerario.setRotaitinerario_itinerarioId(Integer.parseInt(rs.getString("rotaItinerario_ItinerarioId")));
+                arrayList.add(rotaItinerario);
             }
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
