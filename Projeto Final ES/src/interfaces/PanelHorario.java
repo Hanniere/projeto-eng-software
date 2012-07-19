@@ -490,7 +490,7 @@ public class PanelHorario extends JPanel {
         pnlItinerarioDiasCadastro.add(chBxSextaFeiraCadastro);
         pnlItinerarioDiasCadastro.add(chBxSabadoCadastro);
         pnlItinerarioDiasCadastro.add(chBxDomingoCadastro);
-        pnlItinerarioDiasCadastro.add(chBxFeriadosCadastro);
+        //pnlItinerarioDiasCadastro.add(chBxFeriadosCadastro);
 
         chBxDomingoCadastro.setEnabled(false);
         chBxSegundaFeiraCadastro.setEnabled(false);
@@ -528,7 +528,7 @@ public class PanelHorario extends JPanel {
         pnlItinerarioDiasRemocao.add(chBxSextaFeiraRemocao);
         pnlItinerarioDiasRemocao.add(chBxSabadoRemocao);
         pnlItinerarioDiasRemocao.add(chBxDomingoRemocao);
-        pnlItinerarioDiasRemocao.add(chBxFeriadosRemocao);
+        //pnlItinerarioDiasRemocao.add(chBxFeriadosRemocao);
 
         chBxDomingoRemocao.setEnabled(false);
         chBxSegundaFeiraRemocao.setEnabled(false);

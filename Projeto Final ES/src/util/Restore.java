@@ -24,10 +24,10 @@ public class Restore {
                 String cmd = null;
                 String location = fileChooser.getSelectedFile().getAbsolutePath()+"";
                 if(System.getProperty("os.name").toUpperCase().contains("LINUX")){
-                    cmd = "/bin/sh -c mysql --user=root --password=marcela --host=localhost ProjES < \"" + location + "\"";
+                    cmd = "/bin/sh -c mysql --user=root --password=root --host=localhost ProjES < \"" + location + "\"";
                 }else{
                     if(System.getProperty("os.name").toUpperCase().contains("WINDOWS"))
-                        cmd = "cmd.exe /c \"C:\\Program Files\\MySQL\\MySQL Server 5.1\\bin\\mysql\" -hlocalhost -uroot -pmarcela ProjES < "+location;
+                        cmd = "cmd.exe /c \"C:\\Program Files (x86)\\MySQL\\MySQL Server 5.1\\bin\\mysql\" -hlocalhost -uroot -proot ProjES < "+location;
                 }
                 try {
                     Runtime.getRuntime().exec(cmd);

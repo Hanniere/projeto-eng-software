@@ -591,7 +591,7 @@ public class PanelItinerarioRota extends JPanel {
         } else if (cboRotaCadastroDestino.getSelectedItem().equals("Selecione")) {
             JOptionPane.showMessageDialog(null, "Selecione um Destino.");
             cboRotaCadastroDestino.requestFocus();
-        } else if (cboRotaAlteracaoDuracaoHora.getSelectedItem().equals("-")||cboRotaAlteracaoDuracaoMinuto.getSelectedItem().equals("-")) {
+        } else if (!cboRotaAlteracaoDuracaoHora.getSelectedItem().equals("-")||!cboRotaAlteracaoDuracaoMinuto.getSelectedItem().equals("-")) {
             JOptionPane.showMessageDialog(null, "Selecione a Duracao da Rota.");
             cboRotaAlteracaoDuracaoHora.requestFocus();
         } else {
@@ -601,6 +601,7 @@ public class PanelItinerarioRota extends JPanel {
             rota.setRotaDuracao(String.valueOf(total));
             rota.setRota_cidadeOrigemId(Integer.parseInt(String.valueOf(cboRotaCadastroOrigemOculto.getSelectedItem())));
             rota.setRota_cidadeDestinoId(Integer.parseInt(String.valueOf(cboRotaCadastroDestinoOculto.getSelectedItem())));
+            
             int verifica = daoRota.cadastrarRota(rota);
             if (verifica == 0) {
                 JOptionPane.showMessageDialog(null, "Rota cadastrada com sucesso!");

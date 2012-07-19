@@ -365,6 +365,7 @@ public class PanelMenu extends JPanel {
         pnlFuncionario.setVisible(false);
         pnlHorario.setVisible(true);
         rotaItinerarioPanel.carregaComboItinerarioCadastro();
+        horarioPanel.carregaComboItinerario();
     }
 
     private void btnItinerarioRotaMouseReleased(MouseEvent evt) {
@@ -379,6 +380,8 @@ public class PanelMenu extends JPanel {
         pnlFuncionario.setVisible(false);
         pnlHorario.setVisible(false);
         itinerarioRotaPanel.focusTxtPrincipal();
+        itinerarioRotaPanel.carregaCombosCidade();
+        itinerarioRotaPanel.carregaCombosItinerario();
     }
 
     private void menuHomeHomeClick(ActionEvent evt) {
