@@ -65,16 +65,16 @@ public class PanelRotaItinerario extends JPanel {
                         selectedCboIndexItinerario = cboItinerarioCadastro.getSelectedIndex() - 1;
                         carregaComboDestino(arrayItinerario.get(selectedCboIndexItinerario).getItinerario_cidadeOrigemId()); //carregando destinos alcancaveis da cidade selecionada
                         if (!arrayRotaAtualCadastro.isEmpty()) {
-                            txtCadastroOrigem.setText(arrayRotaAtualCadastro.get(0).getRota_cidadeOrigem()); //setando primeiramente Origem           
+                            txtCadastroOrigem.setText(arrayRotaAtualCadastro.get(0).getRota_cidadeOrigem()); //setando primeiramente Origem
                             cboItinerarioCadastro.setEnabled(false);
                             cboCadastroDestino.setEnabled(true);
                             btnCadastroAddRota.setEnabled(true);
-						}else{
-							JOptionPane.showMessageDialog(PanelRotaItinerario.this, "Itinerario nao possui rotas cadastradas");
-	                        txtCadastroOrigem.setText(arrayItinerario.get(selectedCboIndexItinerario).getItinerario_cidadeOrigem()); //setando primeiramente Origem           
-	                        cboCadastroDestino.setEnabled(false);
-	                        btnCadastroAddRota.setEnabled(false);
-						}
+                        } else {
+                            JOptionPane.showMessageDialog(PanelRotaItinerario.this, "Itinerario nao possui rotas cadastradas");
+                            txtCadastroOrigem.setText(arrayItinerario.get(selectedCboIndexItinerario).getItinerario_cidadeOrigem() ); //setando primeiramente Origem           
+                            cboCadastroDestino.setEnabled(false);
+                            btnCadastroAddRota.setEnabled(false);
+                        }
 
                     }
                 }
@@ -111,11 +111,11 @@ public class PanelRotaItinerario extends JPanel {
         return pnlItinerario;
 
     }
-    
-    public void focusCboPrincipal(){
+
+    public void focusCboPrincipal() {
         cboItinerarioCadastro.requestFocus();
     }
-            
+
     private void inserirPnlCadastro() {
         pnlCadastro = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 10));
         pnlCadastro.setPreferredSize(new Dimension(650, 290));
@@ -342,7 +342,7 @@ public class PanelRotaItinerario extends JPanel {
         pnlRemocaoCampos.add(btnRemover);
         pnlRemocao.add(pnlRemocaoCampos);
         pnlRemocao.add(pnlRemocaoLista);
-        
+
         btnRemover.addActionListener(new ActionListener() {
 
             @Override
@@ -352,16 +352,16 @@ public class PanelRotaItinerario extends JPanel {
                 carregaComboItinerarioRemocao();
                 tbmRemocao.getDataVector().removeAllElements();
                 tbmRemocao.fireTableDataChanged();
-                
+
             }
         });
-        
+
         cboItinerarioRemocao.addItemListener(new ItemListener() {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
                 if (evt.getStateChange() == ItemEvent.SELECTED) {
-                    
+
                     if (!(cboItinerarioRemocao.getSelectedItem().equals("Selecione"))) {
                         ArrayList<Rota> rotaAuxList = new ArrayList<Rota>();
                         selectIndexItinerarioRemover = cboItinerarioRemocao.getSelectedIndex() - 1;
@@ -372,8 +372,7 @@ public class PanelRotaItinerario extends JPanel {
                             tbmRemocao.addRow(new Object[]{rotaAuxList.get(i).getRota_cidadeOrigem(), rotaAuxList.get(i).getRota_cidadeDestino()});
                         }
                         tableRotasRemocao.setVisible(true);
-                    }
-                    else{
+                    } else {
                         tbmRemocao.getDataVector().removeAllElements();
                         tbmRemocao.fireTableDataChanged();
                     }
@@ -382,7 +381,7 @@ public class PanelRotaItinerario extends JPanel {
         });
 
 
-        
+
     }
 
     public void carregaComboItinerarioCadastro() {
@@ -394,7 +393,7 @@ public class PanelRotaItinerario extends JPanel {
             cboItinerarioCadastro.addItem(arrayItinerario.get(i).getItinerario_cidadeOrigem() + " - " + arrayItinerario.get(i).getItinerario_cidadeDestino());
         }
     }
-    
+
     public void carregaComboItinerarioRemocao() {
         arrayItinerarioRemocao = new ArrayList<Itinerario>();
         arrayItinerarioRemocao = daoRotaItinerario.consultarItinerariosCadastrados();

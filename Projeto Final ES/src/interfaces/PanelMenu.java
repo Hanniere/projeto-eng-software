@@ -44,7 +44,7 @@ public class PanelMenu extends JPanel {
         btnMotorista.setIcon(new ImageIcon(local + "/src/imagens/bt_motorista75m.png"));
         btnCidade.setIcon(new ImageIcon(local + "/src/imagens/bt_cidade75m.png"));
         btnEstado.setIcon(new ImageIcon(local + "/src/imagens/bt_estados75m.png"));
-        btnRotaItinerario.setIcon(new ImageIcon(local + "/src/imagens/bt_lupa75m.png"));
+        btnRotaItinerario.setIcon(new ImageIcon(local + "/src/imagens/bt_rotaItinerario75m.png"));
         btnHorario.setIcon(new ImageIcon(local + "/src/imagens/bt_itinerario75m.png"));
         btnItinerarioRota.setIcon(new ImageIcon(local + "/src/imagens/bt_rota75m.png"));
 
@@ -141,10 +141,13 @@ public class PanelMenu extends JPanel {
         menuPrincipal = new JMenuBar();
         menuHome = new JMenu("Inicio");
         menuConsultas = new JMenu("Consultas");
+        menuRelatorio = new JMenu("Relatorio");
         menuSair = new JMenu("Sair");
         menuBackup = new JMenu("Backup");
 
         menuConsultasConsultar = new JMenuItem("Consultar");
+        
+        menuRelatorioGerarRelatorio = new JMenuItem("Gerar Relatorio");
         
         menuBackupFazerBackup = new JMenuItem("Fazer Backup");
         menuBackupRestaurarBackup = new JMenuItem("Restaurar Backup");
@@ -158,6 +161,8 @@ public class PanelMenu extends JPanel {
         
         menuConsultas.add(menuConsultasConsultar);
         
+        menuRelatorio.add(menuRelatorioGerarRelatorio);
+        
         menuBackup.add(menuBackupFazerBackup);
         menuBackup.add(menuBackupRestaurarBackup);
         
@@ -166,6 +171,7 @@ public class PanelMenu extends JPanel {
 
         menuPrincipal.add(menuHome);
         menuPrincipal.add(menuConsultas);
+        menuPrincipal.add(menuRelatorio);
         if (acesso == 1) {
             menuFuncionario = new JMenu("Funcionario");
 
@@ -234,6 +240,14 @@ public class PanelMenu extends JPanel {
             }
         });
 
+        menuRelatorioGerarRelatorio.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                menuRelatorioGerarRelatorioClick(evt);
+            }
+        });
+     
         menuBackupFazerBackup.addActionListener(new ActionListener() {
 
             @Override
@@ -408,8 +422,14 @@ public class PanelMenu extends JPanel {
         pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(false);
         pnlHorario.setVisible(false);
+        consultaPanel.focusPnlPrincipal();
     }
 
+    private void menuRelatorioGerarRelatorioClick(ActionEvent evt) {
+        relatorioFrame = new PanelRelatorio();
+        relatorioFrame.setVisible(true);
+    }
+            
     private void menuFuncionarioCadastroClick(ActionEvent evt) {
         pnlHome.setVisible(false);
         pnlOnibus.setVisible(false);
@@ -505,6 +525,7 @@ public class PanelMenu extends JPanel {
     private PanelFuncionario funcionarioPanel;
     private PanelHorario horarioPanel;
     private PanelRotaItinerario rotaItinerarioPanel;
+    private PanelRelatorio relatorioFrame;
     
     private JSeparator separadorMenu;
     private JPanel pnlHome;
@@ -518,6 +539,7 @@ public class PanelMenu extends JPanel {
     private JPanel pnlHorario;
     private JPanel pnlRotaItinerario;
     private JPanel pnlMenu;
+    
     private JLabel btnOnibus;
     private JLabel btnMotorista;
     private JLabel btnCidade;
@@ -528,6 +550,7 @@ public class PanelMenu extends JPanel {
     //------- Barra de Menu
     private JMenu menuHome;
     private JMenu menuConsultas;
+    private JMenu menuRelatorio;
     private JMenu menuFuncionario;
     private JMenu menuBackup;
     private JMenu menuSair;
@@ -537,6 +560,7 @@ public class PanelMenu extends JPanel {
     private JMenuItem menuFuncionarioRemocao;
     private JMenuItem menuFuncionarioConsulta;
     private JMenuItem menuConsultasConsultar;
+    private JMenuItem menuRelatorioGerarRelatorio;
     private JMenuItem menuBackupFazerBackup;
     private JMenuItem menuBackupRestaurarBackup;
     private JMenuItem menuHomeHome;

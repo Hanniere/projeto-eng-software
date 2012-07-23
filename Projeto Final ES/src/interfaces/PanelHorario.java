@@ -105,8 +105,9 @@ public class PanelHorario extends JPanel {
                             for (int i = 0; i < rotasItinerario.size(); i++) {
                                 arrayAuxPnlCadastro.add(new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0)));
                                 arrayAuxPnlCadastro.get(i).setPreferredSize(new Dimension(600, 100));
-                                arrayAuxPnlCadastro.get(i).add(new JLabel("Parada " + (i + 1) + ": " + rotasItinerario.get(i).getRota_cidadeOrigem()));
+                                arrayAuxPnlCadastro.get(i).add(new JLabel("Trecho " + (i + 1) + ": " + rotasItinerario.get(i).getRota_cidadeOrigem() + " - " + rotasItinerario.get(i).getRota_cidadeDestino()));
                                 arrayAuxPnlCadastro.get(i).add(new JLabel());
+                                //rrayAuxPnlCadastro.get(i).add(new JLabel("Horario "));
                                 arrayAuxPnlCadastro.get(i).add(new JLabel());
                                 arrayAuxPnlCadastro.get(i).add(new JLabel("Preco: "));
                                 arrayAuxPnlCadastro.get(i).add(new JTextField("", 8));
@@ -115,8 +116,8 @@ public class PanelHorario extends JPanel {
                                 for (int j = 0; j < 7; j++) {
                                     arrayAuxPnlCadastro.get(i).getComponent(j).setEnabled(false);
                                 }
-                                arrayAuxPnlCadastro.get(i).getComponent(0).setPreferredSize(new Dimension(200, 30));
-                                arrayAuxPnlCadastro.get(i).getComponent(1).setPreferredSize(new Dimension(300, 30));
+                                arrayAuxPnlCadastro.get(i).getComponent(0).setPreferredSize(new Dimension(400, 30));
+                                arrayAuxPnlCadastro.get(i).getComponent(1).setPreferredSize(new Dimension(100, 30));
                                 arrayAuxPnlCadastro.get(i).getComponent(2).setPreferredSize(new Dimension(150, 30));
                                 arrayAuxPnlCadastro.get(i).getComponent(3).setPreferredSize(new Dimension(40, 30));
                                 arrayAuxPnlCadastro.get(i).getComponent(5).setPreferredSize(new Dimension(60, 30));
@@ -145,7 +146,7 @@ public class PanelHorario extends JPanel {
                             for (int i = 0; i < rotasItinerario.size(); i++) {
                                 arrayAuxPnlRemocao.add(new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0)));
                                 arrayAuxPnlRemocao.get(i).setPreferredSize(new Dimension(600, 100));
-                                arrayAuxPnlRemocao.get(i).add(new JLabel("Parada " + (i + 1) + ": " + rotasItinerario.get(i).getRota_cidadeOrigem()));
+                                arrayAuxPnlRemocao.get(i).add(new JLabel("Trecho " + (i + 1) + ": " + rotasItinerario.get(i).getRota_cidadeOrigem()+ " - " + rotasItinerario.get(i).getRota_cidadeDestino()));
                                 arrayAuxPnlRemocao.get(i).add(new JLabel());
                                 arrayAuxPnlRemocao.get(i).add(new JLabel("Horario Saida:   X (inserir)"));
                                 arrayAuxPnlRemocao.get(i).add(new JLabel("Preço: "));
@@ -155,8 +156,8 @@ public class PanelHorario extends JPanel {
                                 for (int j = 0; j < 7; j++) {
                                     arrayAuxPnlRemocao.get(i).getComponent(j).setEnabled(false);
                                 }
-                                arrayAuxPnlRemocao.get(i).getComponent(0).setPreferredSize(new Dimension(200, 30));
-                                arrayAuxPnlRemocao.get(i).getComponent(1).setPreferredSize(new Dimension(300, 30));
+                                arrayAuxPnlRemocao.get(i).getComponent(0).setPreferredSize(new Dimension(400, 30));
+                                arrayAuxPnlRemocao.get(i).getComponent(1).setPreferredSize(new Dimension(200, 30));
                                 arrayAuxPnlRemocao.get(i).getComponent(2).setPreferredSize(new Dimension(150, 30));
                                 arrayAuxPnlRemocao.get(i).getComponent(3).setPreferredSize(new Dimension(40, 30));
                                 arrayAuxPnlRemocao.get(i).getComponent(5).setPreferredSize(new Dimension(60, 30));

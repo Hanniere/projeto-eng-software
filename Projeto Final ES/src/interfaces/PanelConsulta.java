@@ -489,7 +489,7 @@ public class PanelConsulta {
         return pnlConsulta;
     }
 
-    public void focusCboPrincipal() {
+    public void focusPnlPrincipal() {
         rBtnRota.setSelected(true);
         pnlConsultaOnibus.setVisible(false);
         pnlConsultaMotorista.setVisible(false);

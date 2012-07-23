@@ -1,19 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * NewJFrame.java
- *
- * Created on 04/07/2012, 20:39:25
- */
 package util;
 
-/**
- *
- * @author Marcela
- */
 public class NewJFrame extends javax.swing.JFrame {
 
     /** Creates new form NewJFrame */
@@ -31,6 +17,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setType(java.awt.Window.Type.POPUP);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
