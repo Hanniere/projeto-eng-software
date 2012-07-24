@@ -158,55 +158,70 @@ public class DaoPassagem {
         return null;
     }
 
-    public ArrayList<Integer> consultaPoltronasCompradas(int horarioId, String dataCompra) {
-        ArrayList<Integer> arraylist = new ArrayList<Integer>();
+    public int DescobrirCidadeDestino (int horarioId){
         BancoDados banco = new BancoDados();
-        System.out.println("HORARIO ID: " + horarioId + "      DataCompra: " + dataCompra);
-   
-        System.out.println("Comparacao com 2/1/2012: " + dataCompra.compareTo("2/1/2012") );
-       
+        int cidadeDestino = 0;
         try {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "SET @data =" + dataCompra + "";
-            sql = "SELECT P.PassagemNumAssentoComprado FROM Passagem P WHERE ( Passagem_HorarioId = '" + horarioId + "' ) AND ( STRCMP(P.passagemData , '" + dataCompra + "' ) = 0 )" ;
+            String sql = "SELECT Rota_CidadeDestino FROM Rota, RotaItinerario, Horario WHERE RotaId = RotaItinerario_RotaId AND RotaItinerarioId = Horario_RotaItinerarioId AND HorarioId = "+ horarioId+"" ;
             ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                arraylist.add(rs.getInt("PassagemNumAssentoComprado"));
+            if(rs.next()){
+                cidadeDestino = rs.getInt("Rota_CidadeDestino");
+                System.out.println("Destino: "+cidadeDestino);
             }
-            sql = "SELECT horario_onibusId, horarioChegada, horarioSaida FROM Horario WHERE horarioId = " + horarioId;
-            rs = stmt.executeQuery(sql);
-            rs.next();
-            int IdOnibus = rs.getInt("horario_onibusId");
-            String horarioSaida = rs.getString("horarioSaida");
-            String horarioChegada = rs.getString("horarioChegada");
-            //DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
-            Time horarioSaidaTime = Time.valueOf(rs.getString("horarioSaida")); //pegando horario de saida do TXT na primeira vez
-            Time horarioChegadaTime = Time.valueOf(rs.getString("horarioChegada"));
-            Calendar calAux = Calendar.getInstance();
-            Calendar calAux1 = Calendar.getInstance();
-            sql = "SET @hS =" + horarioSaida + "";
-            sql = "SET @hC =" + horarioChegada + "";
-            System.out.println("Horario Saida: " + horarioSaida + "     Horario Chegada: " + horarioChegada);
-            calAux.setTime(horarioSaidaTime);
-            calAux1.setTime(horarioChegadaTime);
-            //se calAux é maior retorna 1, se nao retorna -1 e se for igual retorna 0
-            System.out.println("Maior retorna 1, menor retorna -1: " + calAux.compareTo(calAux1));
-            calAux.add(Calendar.MINUTE, 30); //somando a duração (em minutos)para obter horario de chegada
-            sql = "SELECT P.PassagemNumAssentoComprado FROM Passagem P, Horario H "
-                    + " WHERE ( STRCMP(P.passagemData, '"+ dataCompra + "') = 0 ) "
-                    + " AND ( H.horario_onibusId = " + IdOnibus + " ) "
-                    //+ " AND ( P.Passagem_HorarioId = '" + horarioId + "' ) "
-                    + " AND("
-                    + "      ( ( STRCMP(H.horarioChegada,'"+horarioSaida+"') = 1 ) AND  ( (STRCMP(H.horarioSaida,'"+horarioSaida+"')= -1) OR (STRCMP(H.horarioSaida,'"+horarioSaida+"')= 0) )  "
-                    + "         ) OR ( "
-                    + "         ( ( STRCMP(H.horarioChegada,'"+horarioChegada+"') = -1) OR (STRCMP(H.horarioChegada,'"+horarioChegada+"') = 0) ) AND ( (STRCMP('"+horarioSaida+"',H.horarioSaida)= -1) OR (STRCMP('"+horarioSaida+"',H.horarioSaida)= 0) )  "
-                    + "         )"
-                    + "    )"; 
-            rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                arraylist.add(rs.getInt("PassagemNumAssentoComprado"));
+        }catch (ClassNotFoundException ex) {
+            System.out.println("Nao foi possivel carregar o driver.");
+            ex.printStackTrace();
+        }catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+        }
+        return cidadeDestino;
+    }
+    
+    public ArrayList<Integer> consultaPoltronasCompradas(int horarioId, String dataCompra, int cidadeDestino) {
+        ArrayList<Integer> arraylist = new ArrayList<Integer>();
+        BancoDados banco = new BancoDados();
+                
+        int horarioIdAux = horarioId;
+        int cidadeIntermediaria = DescobrirCidadeDestino(horarioId);
+        System.out.println("Cidade Intermediaria: "+cidadeIntermediaria);
+        
+        try{
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            if( cidadeIntermediaria == cidadeDestino){
+                String sql = "SELECT PassagemNumAssentoComprado FROM Horario INNER JOIN Passagem ON (Passagem_HorarioId = HorarioId) WHERE ( STRCMP(PassagemData, '"+ dataCompra + "') = 0 ) AND ( HorarioId = " + horarioIdAux + " )";
+                ResultSet rs = stmt.executeQuery(sql);
+                while(rs.next()){
+                    arraylist.add(rs.getInt("PassagemNumAssentoComprado"));
+                }
+            }else{
+                System.out.println("Entrou no ELSE");
+                while(cidadeIntermediaria != cidadeDestino){
+                    System.out.println("Entrou no WHILE");
+                    String sql = "SELECT PassagemNumAssentoComprado FROM Horario INNER JOIN Passagem ON (Passagem_HorarioId = HorarioId)  WHERE ( STRCMP(PassagemData, '"+ dataCompra + "') = 0 ) AND ( HorarioId = " + horarioIdAux + " )";
+                    ResultSet rs = stmt.executeQuery(sql);
+                    while(rs.next()){
+                        arraylist.add(rs.getInt("PassagemNumAssentoComprado"));
+                    }
+                    for(int i =0; i<arraylist.size();i++){
+                        System.out.println("Array: "+arraylist.get(i));
+                    }
+                    System.out.println("ID Horario: "+horarioIdAux);
+                    horarioIdAux++;
+                    cidadeIntermediaria = DescobrirCidadeDestino(horarioIdAux);
+                    System.out.println("Nova cidade Intermediaria: "+cidadeIntermediaria );
+                }
+                System.out.println("Horario:" +horarioIdAux);
+                String sql = "SELECT PassagemNumAssentoComprado FROM Horario INNER JOIN Passagem ON (Passagem_HorarioId = HorarioId) WHERE ( STRCMP(PassagemData, '"+ dataCompra + "') = 0 ) AND ( HorarioId = " + horarioIdAux + " )";
+                ResultSet rs = stmt.executeQuery(sql);
+                while(rs.next()){
+                    arraylist.add(rs.getInt("PassagemNumAssentoComprado"));
+                }
             }
         } catch (ClassNotFoundException ex) {
             System.out.println("Nao foi possivel carregar o driver.");
@@ -217,4 +232,26 @@ public class DaoPassagem {
         }
         return arraylist;
     }
+        
+        
+        
+        /*ArrayList<Integer> arraylist = new ArrayList<Integer>();
+        BancoDados banco = new BancoDados();
+        System.out.println("HORARIO ID: " + horarioId + "      DataCompra: " + dataCompra);
+   
+        System.out.println("Comparacao com 2/1/2012: " + dataCompra.compareTo("2/1/2012") );
+       
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Nao foi possivel carregar o driver.");
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+        }
+        return arraylist;*/
 }

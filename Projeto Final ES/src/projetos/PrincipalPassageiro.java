@@ -40,6 +40,7 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         daoPassagem = new DaoPassagem();
         arrayCidadesOrigemId = new ArrayList<Integer>();
         arrayCidadesDestinoId = new ArrayList<Integer>();
+        arrayRotaItinerarioIdCidadeDestino = new ArrayList<Integer>();
         arrayHorariosChegada = new ArrayList<String>();
         arrayPrecos = new ArrayList<Double>();
         arrayHorariosId = new ArrayList<Integer>();
@@ -567,11 +568,12 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                 ArrayList<Cidade> cidades = daoPassagem.carregaCidadesDestino(cidade);
                 cboCompraDestino.removeAllItems();
                 cboCompraDestino.addItem("Selecione");
-                arrayCidadesDestinoId.clear();
-                arrayCidadesDestinoId.add(0);
+                arrayRotaItinerarioIdCidadeDestino.clear();
+                arrayRotaItinerarioIdCidadeDestino.add(0);
                 for (int i = 0; i < cidades.size(); i++) {
                     cboCompraDestino.addItem(cidades.get(i).getNome());
-                    arrayCidadesDestinoId.add(Integer.parseInt(cidades.get(i).getEstado()));
+                    arrayCidadesDestinoId.add(cidades.get(i).getId());
+                    arrayRotaItinerarioIdCidadeDestino.add(Integer.parseInt(cidades.get(i).getEstado()));
                 }
                 cboCompraDestino.requestFocus();
             }
@@ -610,7 +612,7 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboCompraDataAno.getSelectedItem().equals("-"))) {
                 if (!(cboCompraDataDia.getSelectedItem().equals("-")) && !(cboCompraDataMes.getSelectedItem().equals("-"))) {
-                    ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayCidadesDestinoId.get(cboCompraDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
+                    ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboCompraDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
                     cboCompraHorario.setEnabled(true);
                     cboCompraHorario.removeAllItems();
                     cboCompraHorario.addItem("Selecione");
@@ -637,7 +639,7 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboCompraDataMes.getSelectedItem().equals("-"))) {
                 if (!(cboCompraDataDia.getSelectedItem().equals("-")) && !(cboCompraDataAno.getSelectedItem().equals("-"))) {
-                    ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayCidadesDestinoId.get(cboCompraDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
+                    ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboCompraDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
                     cboCompraHorario.setEnabled(true);
                     cboCompraHorario.removeAllItems();
                     cboCompraHorario.addItem("Selecione");
@@ -663,7 +665,7 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboCompraDataDia.getSelectedItem().equals("-"))) {
                 if (!(cboCompraDataAno.getSelectedItem().equals("-")) && !(cboCompraDataMes.getSelectedItem().equals("-"))) {
-                    ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayCidadesDestinoId.get(cboCompraDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
+                    ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboCompraDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
                     cboCompraHorario.setEnabled(true);
                     cboCompraHorario.removeAllItems();
                     cboCompraHorario.addItem("Selecione");
@@ -699,7 +701,12 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                 lblCompraHorarioChegadaR.setText(arrayHorariosChegada.get(cboCompraHorario.getSelectedIndex()));
                 lblCompraHorarioPrecoR.setText(String.valueOf(arrayPrecos.get(cboCompraHorario.getSelectedIndex())));
                 arrayPoltronasOcupadas.clear();
-                arrayPoltronasOcupadas = daoPassagem.consultaPoltronasCompradas(arrayHorariosId.get(cboCompraHorario.getSelectedIndex()), (cboCompraDataDia.getSelectedItem() + "/" + cboCompraDataMes.getSelectedItem() + "/" + cboCompraDataAno.getSelectedItem()));
+                System.out.println("aaaaa");
+                for(int i=0; i<arrayCidadesDestinoId.size();i++){
+                    System.out.println(arrayCidadesDestinoId.get(i));
+                }
+                System.out.println("cidade:"+ arrayCidadesDestinoId.get(cboCompraDestino.getSelectedIndex()-1));
+                arrayPoltronasOcupadas = daoPassagem.consultaPoltronasCompradas(arrayHorariosId.get(cboCompraHorario.getSelectedIndex()), (cboCompraDataDia.getSelectedItem() + "/" + cboCompraDataMes.getSelectedItem() + "/" + cboCompraDataAno.getSelectedItem()),arrayCidadesDestinoId.get(cboCompraDestino.getSelectedIndex()-1));
                 for (int i = 0; i < arrayPoltronasOcupadas.size(); i++) {
                     System.out.println(arrayPoltronasOcupadas.get(i));
                 }
@@ -778,6 +785,7 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
     private ArrayList<Integer> arrayEscolhas;
     private ArrayList<Integer> arrayCidadesOrigemId;
     private ArrayList<Integer> arrayCidadesDestinoId;
+    private ArrayList<Integer> arrayRotaItinerarioIdCidadeDestino;
     private ArrayList<Integer> arrayHorariosId;
     private ArrayList<Integer> arrayPoltronasOcupadas;
     private ArrayList<Double> arrayPrecos;
