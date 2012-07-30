@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -82,11 +83,11 @@ public class PanelHorario extends JPanel {
         pnlHorario.add(pnlCadastro);
         pnlHorario.add(pnlRemocao);
 
-        carregaComboItinerario();
+        
 
         daoItinerario = new DaoItinerario();
         daoItinerarioMotorista = new DaoMotorista();
-
+        
         cboItinerario.addItemListener(new ItemListener() {
 
             @Override
@@ -142,6 +143,7 @@ public class PanelHorario extends JPanel {
                             arrayAuxPnlRemocao = new ArrayList<JPanel>();
                             Itinerario itinerario = new Itinerario();
                             itinerario.setId(arrayItinerario.get(cboItinerario.getSelectedIndex() - 1).getId());
+                            carregaCheckBoxDias(itinerario.getId());
                             rotasItinerario = daoItinerario.consultarRotasdoItinerario(itinerario);
                             for (int i = 0; i < rotasItinerario.size(); i++) {
                                 arrayAuxPnlRemocao.add(new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0)));
@@ -259,6 +261,7 @@ public class PanelHorario extends JPanel {
                 btnCadastro.setVisible(false);
                 btnRemover.setVisible(false);
                 botaoEscolhido = 1;
+                carregaComboItinerario();
                 pnlHorario.setBorder(BorderFactory.createTitledBorder(null, " ASSOCIAR HORARIOS ", TitledBorder.CENTER, TitledBorder.TOP, fontePadrao));
                 //} else {
                 //	JOptionPane.showMessageDialog(null, "Selecione um itinerario para associar horarios.");
@@ -282,7 +285,9 @@ public class PanelHorario extends JPanel {
                 btnCadastro.setVisible(false);
                 btnRemover.setVisible(false);
                 botaoEscolhido = 2;
+                carregaComboItinerario();
                 pnlHorario.setBorder(BorderFactory.createTitledBorder(null, " REMOVER HORARIOS ", TitledBorder.CENTER, TitledBorder.TOP, fontePadrao));
+                //carregaChecksBox();
                 //} else {
                 //JOptionPane.showMessageDialog(null, "Selecione um itinerario para remover.");
                 //}
@@ -543,7 +548,11 @@ public class PanelHorario extends JPanel {
 
     public void carregaComboItinerario() {
         daoRotaItinerario = new DaoRotaItinerario();
-        arrayItinerario = daoRotaItinerario.consultarItinerariosCadastrados();
+        if(botaoEscolhido == 1 )
+        	arrayItinerario = daoRotaItinerario.consultarItinerariosCadastrados();
+        
+        else arrayItinerario = daoItinerario.consultarTodosItinerariosComHorarios();
+        
         cboItinerario.removeAllItems();
         cboItinerario.addItem("Selecione");
         for (int i = 0; i < arrayItinerario.size(); i++) {
@@ -636,9 +645,56 @@ public class PanelHorario extends JPanel {
         }
 
     }
-
+    
+    private void carregaCheckBoxDias(int id){
+    	arrayHorarioRemocao = new ArrayList<Horario>();
+    	arrayHorarioRemocao = daoHorario.consultarTodosHorariosItinerario(id);
+    	ArrayList<Integer> listaDias = new ArrayList<Integer>();
+    	Integer diaAux;
+    	for (int i = 0; i < arrayHorarioRemocao.size(); i++) {
+    		diaAux = arrayHorarioRemocao.get(i).getHorarioDiaId();
+    		if(!listaDias.contains(diaAux)&& diaAux != 0 ){
+    			listaDias.add(diaAux);
+    		}
+		}
+    	for (int i = 0; i < listaDias.size(); i++) {
+			if(listaDias.get(i)==1){
+				chBxDomingoRemocao.setSelected(true);
+				chBxDomingoRemocao.setEnabled(true);
+			}
+			if(listaDias.get(i)==2){
+				chBxSegundaFeiraRemocao.setSelected(true);
+				chBxSegundaFeiraRemocao.setEnabled(true);
+			}
+			if(listaDias.get(i)==3){
+				chBxTercaFeiraRemocao.setSelected(true);
+				chBxTercaFeiraRemocao.setEnabled(true);
+			}
+			if(listaDias.get(i)==4){
+				chBxQuartaFeiraRemocao.setSelected(true);
+				chBxQuartaFeiraRemocao.setEnabled(true);
+			}
+			if(listaDias.get(i)==5){
+				chBxQuintaFeiraRemocao.setSelected(true);
+				chBxQuintaFeiraRemocao.setEnabled(true);
+			}
+			if(listaDias.get(i)==6){
+				chBxSextaFeiraRemocao.setSelected(true);
+				chBxSextaFeiraRemocao.setEnabled(true);
+			}
+			if(listaDias.get(i)==7){
+				chBxSabadoRemocao.setSelected(true);
+				chBxSabadoRemocao.setEnabled(true);
+			}
+			if(listaDias.get(i)==8){
+				chBxFeriadosRemocao.setSelected(true);
+				chBxFeriadosRemocao.setEnabled(true);
+			}
+		}
+    }
+    
     private void cadastrarHorarios() {
-    	///////////////////////////////////////////////////////////////////
+
         for (int i = 0; i < arrayAuxPnlCadastro.size(); i++) {//para cada linha
             Horario horario = new Horario();
 
@@ -703,30 +759,7 @@ public class PanelHorario extends JPanel {
 		}
         
     }
-
-    private void updateHorarios(){
-        for (int i = 0; i < arrayAuxPnlCadastro.size(); i++) {//para cada linha
-            JTextField txtPreco = (JTextField) arrayAuxPnlCadastro.get(i).getComponent(4);
-            JComboBox cboMotorista = (JComboBox) arrayAuxPnlCadastro.get(i).getComponent(6);           
-            int idMotorista = arrayMotorista.get(cboMotorista.getSelectedIndex() - 1).getId();
-            int idOnibus = arrayOnibus.get(cboOnibusCadastro.getSelectedIndex() - 1).getId();
-            
-            
-//            update horario set HorarioPreco = PRECO and Horario_MotoristaId = MOTORISTA_ID and Horario_OnibusId = ONIBUS_ID and Horario_usado = 1 where
-//            	    HorarioDiaId = DIA_DA_SEMANA and 
-//            	    HorarioSaida = '15:00:00' and 
-//            	    Horario_RotaItinerarioId = x
-
-        }
-        for (int i = 0; i < arrayHorario.size(); i++) {
-            System.out.println("Dia:" + arrayHorario.get(i).getHorarioDiaId());
-            System.out.println("Horario saida: " + arrayHorario.get(i).getHorarioSaida());
-            System.out.println("Horario Chegada: " + arrayHorario.get(i).getHorarioChegada());
-            System.out.println("RotaItinerario:" + arrayHorario.get(i).getHorario_RotaItinerarioId());
-            System.out.println("Quantidade tabela horario:" + arrayHorario.size());
-            System.out.println("---------------------------------------------------------");
-        }
-    }
+    
     private Horario clonaHorario(Horario horario, int dia) {
         Horario novoHorario = new Horario();
         novoHorario.setHorario_MotoristaId(horario.getHorario_MotoristaId());
@@ -740,18 +773,18 @@ public class PanelHorario extends JPanel {
         return novoHorario;
     }
 
-   public Boolean valida(){
-	   for (int i = 0; i < arrayAuxPnlCadastro.size(); i++) {
-           JTextField txtPreco = (JTextField) arrayAuxPnlCadastro.get(i).getComponent(4);
-           JComboBox cboMotorista = (JComboBox) arrayAuxPnlCadastro.get(i).getComponent(6);
-           
-           if (txtPreco.getText()==null||cboMotorista.getSelectedIndex()==0) {
-        	   JOptionPane.showMessageDialog(PanelHorario.this, "Preencha os campos");
-        	   return false;
-           }
-	   }
-	   return true;
-   }
+    public Boolean valida(){
+    	for (int i = 0; i < arrayAuxPnlCadastro.size(); i++) {
+    		JTextField txtPreco = (JTextField) arrayAuxPnlCadastro.get(i).getComponent(4);
+    		JComboBox cboMotorista = (JComboBox) arrayAuxPnlCadastro.get(i).getComponent(6);
+
+    		if (txtPreco.getText()==null||cboMotorista.getSelectedIndex()==0) {
+    			JOptionPane.showMessageDialog(PanelHorario.this, "Preencha os campos");
+    			return false;
+    		}
+    	}
+    	return true;
+    }
    public Boolean verificaHorarios(){
 	   String dias = new String();
        if (chBxDomingoCadastro.isSelected()) {
@@ -801,9 +834,6 @@ public class PanelHorario extends JPanel {
 	   return true;
    }
    
-   public void verificaHorarioSaida(ArrayList<Horario> horarioCriado){
-	   
-   }
    
     public void reinicia() {
 
@@ -854,6 +884,7 @@ public class PanelHorario extends JPanel {
     private ArrayList<String> arrayHora;
     private ArrayList<Itinerario> arrayItinerario;
     private ArrayList<Horario> arrayHorario;
+    private ArrayList<Horario> arrayHorarioRemocao;
     private ArrayList<RotaItinerario> arrayRotaItinerario;
     private DaoMotorista daoItinerarioMotorista;
     private ArrayList<Motorista> arrayMotorista;

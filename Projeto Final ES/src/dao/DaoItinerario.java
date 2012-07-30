@@ -301,4 +301,42 @@ public class DaoItinerario {
         }
         return arrayList;
     }
+        public ArrayList<Itinerario> consultarTodosItinerariosComHorarios() {
+            ArrayList<Itinerario> arrayList = new ArrayList<Itinerario>();
+            BancoDados banco = new BancoDados();
+            try {
+                Class.forName(banco.getDriver());
+                Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+                Statement stmt = conn.createStatement();
+                String sql = "SELECT I.ItinerarioId, I.Itinerario_CidadeOrigem, I.Itinerario_CidadeDestino" +
+                		" FROM Itinerario I, Horario H, RotaItinerario Ri" +
+                		" WHERE H.Horario_RotaItinerarioId = Ri.RotaItinerarioId" +
+                		" AND Ri.RotaItinerario_ItinerarioId = I.ItinerarioId" +
+                		" GROUP BY I.ItinerarioId";
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) { // criando arrayList de itinerario
+                    Itinerario itinerario = new Itinerario();
+                    itinerario.setId(rs.getInt("itinerarioId"));
+                    itinerario.setItinerario_cidadeOrigemId(rs.getInt("itinerario_cidadeOrigem"));
+                    itinerario.setItinerario_cidadeDestinoId(rs.getInt("itinerario_cidadeDestino"));
+                    DaoCidade daoCidade = new DaoCidade();
+                    Cidade cidade = new Cidade();
+                    cidade.setId(rs.getInt("itinerario_cidadeOrigem"));
+                    cidade = daoCidade.consultaCidade(cidade);
+                    itinerario.setItinerario_cidadeOrigem(cidade.getNome());
+                    cidade.setId(rs.getInt("itinerario_cidadeDestino"));
+                    cidade = daoCidade.consultaCidade(cidade);
+                    itinerario.setItinerario_cidadeDestino(cidade.getNome());
+                    arrayList.add(itinerario);
+                }
+            } catch (ClassNotFoundException ex) {
+                System.out.println("Não foi possivel carregar o driver.");
+                ex.printStackTrace();
+            } catch (SQLException ex) {
+                System.out.println("Problema com SQL.");
+                ex.printStackTrace();
+            }
+
+            return arrayList;
+        }
 }

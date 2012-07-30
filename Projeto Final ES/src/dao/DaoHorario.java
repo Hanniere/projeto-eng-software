@@ -107,6 +107,7 @@ public boolean cadastrarNovoHorario(Horario horario, int itinerarioId){
                     + "WHERE H.Horario_RotaItinerarioId = Ri.RotaItinerarioId "
                     + "AND Ri.RotaItinerario_ItinerarioId = I.ItinerarioId "
                     + "AND I.ItinerarioId = " + id +" "
+                    + "AND H.Horario_usado = 1 "
                     + "ORDER BY Ri.RotaItinerarioOrdem";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
