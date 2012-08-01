@@ -18,7 +18,6 @@ public boolean cadastrarNovoHorario(Horario horario, int itinerarioId){
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            //Ederson
             String sql2 = "select * from horario " +
             		"where HorarioDiaId IN ("+horario.getHorarioDiaId()+") " +
             		"and HorarioSaida = '"+horario.getHorarioSaida()+"' " +
@@ -45,7 +44,7 @@ public boolean cadastrarNovoHorario(Horario horario, int itinerarioId){
             }
             rs.close();
             stmt.close();
-            //\Ederson
+   
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
             ex.printStackTrace();
@@ -57,6 +56,36 @@ public boolean cadastrarNovoHorario(Horario horario, int itinerarioId){
         } 
         return true;
     }
+
+public boolean atualizarHorario(Horario horario){
+    BancoDados banco = new BancoDados();
+    try {
+        Class.forName(banco.getDriver());
+        Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+        Statement stmt = conn.createStatement();
+        
+    	String sq13 ="update horario set HorarioPreco = "+horario.getHorarioPreco()+"" +
+    			" , Horario_MotoristaId = "+horario.getHorario_MotoristaId()+"" +
+    			" , Horario_OnibusId = "+horario.getHorario_OnibusId()+"" +
+    			" , Horario_usado = "+horario.getHorario_usado()+"" +
+    			" where HorarioDiaId = "+horario.getHorarioDiaId()+"" +
+    			" and HorarioSaida = '"+horario.getHorarioSaida()+"'" +
+    			" and Horario_RotaItinerarioId = "+horario.getHorario_RotaItinerarioId()+"";
+        	stmt.executeUpdate(sq13);
+
+        stmt.close();
+  
+    } catch (ClassNotFoundException ex) {
+        System.out.println("Não foi possivel carregar o driver.");
+        ex.printStackTrace();
+        return false;
+    } catch (SQLException ex) {
+        System.out.println("Problema com SQL.");
+        ex.printStackTrace();
+        return false;
+    } 
+    return true;
+}
 
     public ArrayList<ArrayList<String>> consultarTodosHorarios(int id) {
         ArrayList<ArrayList<String>> matriz = new ArrayList<ArrayList<String>>();        
@@ -107,7 +136,6 @@ public boolean cadastrarNovoHorario(Horario horario, int itinerarioId){
                     + "WHERE H.Horario_RotaItinerarioId = Ri.RotaItinerarioId "
                     + "AND Ri.RotaItinerario_ItinerarioId = I.ItinerarioId "
                     + "AND I.ItinerarioId = " + id +" "
-                    + "AND H.Horario_usado = 1 "
                     + "ORDER BY Ri.RotaItinerarioOrdem";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -173,4 +201,43 @@ public boolean cadastrarNovoHorario(Horario horario, int itinerarioId){
         }
         return arrayHorario;
     }
+    
+    public ArrayList<Horario> consultaHorarioDeRotas(int id) {
+        ArrayList<Horario> arrayHorario = new ArrayList<Horario>();        
+        BancoDados banco = new BancoDados();
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT horario_RotaItinerarioId, horarioId, horarioDiaId, horarioSaida, horarioChegada, horarioPreco, horario_MotoristaId, horario_OnibusId, horario_usado " +
+            		"FROM Horario H, RotaItinerario Ri " +
+            		"WHERE Ri.RotaItinerarioId = H.Horario_RotaItinerarioId " +
+            		"AND Ri.RotaItinerario_ItinerarioId = "+id+" " +
+            		"GROUP BY H.Horario_RotaItinerarioId";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Horario horario = new Horario();
+                horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
+                horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
+                horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
+                horario.setHorarioSaida(rs.getString("horarioSaida"));
+                horario.setHorarioChegada(rs.getString("horarioChegada"));
+                horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
+                horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
+                horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
+                horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
+                arrayHorario.add(horario);
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Não foi possivel carregar o driver.");
+            ex.printStackTrace();
+
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+
+        }
+        return arrayHorario;
+    }
+    
 }

@@ -1,5 +1,6 @@
 package interfaces;
 
+import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -54,6 +55,7 @@ public class PanelHorario extends JPanel {
         btnRemover = new JButton("Remover Horario");
         btnRemover.setBounds(350, 40, 150, 40);
 
+
         lblItinerario = new JLabel("Itinerario:");
         lblItinerario.setBounds(27, 50, 155, 20);
 
@@ -63,6 +65,7 @@ public class PanelHorario extends JPanel {
         btnCancelar = new JButton("Cancelar");
         btnCancelar.setBounds(515, 525, 150, 40);
         btnCancelar.setVisible(false);
+        //btnCancelar.setEnabled(false);
 
         inserirPnlCadastro();
         inserirPnlRemocao();
@@ -86,7 +89,7 @@ public class PanelHorario extends JPanel {
         
 
         daoItinerario = new DaoItinerario();
-        daoItinerarioMotorista = new DaoMotorista();
+        daoMotorista = new DaoMotorista();
         
         cboItinerario.addItemListener(new ItemListener() {
 
@@ -139,6 +142,8 @@ public class PanelHorario extends JPanel {
                             chBxSabadoCadastro.setEnabled(true);
                             chBxFeriadosCadastro.setEnabled(true);
                         } else {
+                        	btnConfirmaRemocao.setEnabled(true);
+                        	Motorista motoristaAux = new Motorista();
                             listTabelaCidadesRemocao.removeAll();
                             arrayAuxPnlRemocao = new ArrayList<JPanel>();
                             Itinerario itinerario = new Itinerario();
@@ -149,12 +154,16 @@ public class PanelHorario extends JPanel {
                                 arrayAuxPnlRemocao.add(new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0)));
                                 arrayAuxPnlRemocao.get(i).setPreferredSize(new Dimension(600, 100));
                                 arrayAuxPnlRemocao.get(i).add(new JLabel("Trecho " + (i + 1) + ": " + rotasItinerario.get(i).getRota_cidadeOrigem()+ " - " + rotasItinerario.get(i).getRota_cidadeDestino()));
-                                arrayAuxPnlRemocao.get(i).add(new JLabel());
-                                arrayAuxPnlRemocao.get(i).add(new JLabel("Horario Saida:   X (inserir)"));
-                                arrayAuxPnlRemocao.get(i).add(new JLabel("Preço: "));
-                                arrayAuxPnlRemocao.get(i).add(new JTextField("", 8));
+                                arrayAuxPnlRemocao.get(i).add(new JLabel());                                
+                                arrayAuxPnlRemocao.get(i).add(new JLabel(arrayHorarioDeRotasRemocao.get(i).getHorarioSaida()));
+                                arrayAuxPnlRemocao.get(i).add(new JLabel("Preço: "));                                
+                                arrayAuxPnlRemocao.get(i).add(new JTextField(Double.toString(arrayHorarioDeRotasRemocao.get(i).getHorarioPreco()), 8));
                                 arrayAuxPnlRemocao.get(i).add(new JLabel("Motorista: "));
-                                arrayAuxPnlRemocao.get(i).add(new JComboBox(new String[]{"Selecione"}));
+                    
+                                motoristaAux.setId(arrayHorarioDeRotasRemocao.get(i).getHorario_MotoristaId());
+                                motoristaAux = daoMotorista.consultarMotorista(motoristaAux); 
+                                
+                                arrayAuxPnlRemocao.get(i).add(new JComboBox(new String[]{motoristaAux.getNome()}));
                                 for (int j = 0; j < 7; j++) {
                                     arrayAuxPnlRemocao.get(i).getComponent(j).setEnabled(false);
                                 }
@@ -422,6 +431,7 @@ public class PanelHorario extends JPanel {
             	if (valida()) {
                    arrayHorario = new ArrayList<Horario>();
                    cadastrarHorarios();
+                   JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
 				}
             }
         });
@@ -436,17 +446,6 @@ public class PanelHorario extends JPanel {
         btnConfirmaRemocao.setBounds(323, 435, 150, 40);
         btnConfirmaRemocao.setEnabled(false);
 
-        cboHoraRemocao = new JComboBox();
-        cboHoraRemocao.setBounds(203, 110, 60, 30);
-        cboHoraRemocao.setEnabled(false);
-
-        cboMinRemocao = new JComboBox();
-        cboMinRemocao.setBounds(123, 110, 60, 30);
-        cboMinRemocao.setEnabled(false);
-
-        lblHoraSaidaRemocao = new JLabel("Horario de saida:");
-        lblHoraSaidaRemocao.setBounds(0, 110, 120, 30);
-
         listTabelaCidadesRemocao = new JPanel(new FlowLayout(FlowLayout.LEFT));
         listTabelaCidadesRemocao.setPreferredSize(new Dimension(630, 260));
         sListTabelaCidadesRemocao = new JScrollPane(listTabelaCidadesRemocao);
@@ -456,15 +455,18 @@ public class PanelHorario extends JPanel {
 
         pnlRemocao.add(pnlItinerarioDiasRemocao);
         pnlRemocao.add(btnConfirmaRemocao);
-        pnlRemocao.add(lblHoraSaidaRemocao);
-        pnlRemocao.add(cboMinRemocao);
-        pnlRemocao.add(cboHoraRemocao);
+
         pnlRemocao.add(sListTabelaCidadesRemocao);
 
         btnConfirmaRemocao.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
+            	 verificaCheckBox();
+            	for (int i = 0; i <arrayHorarioRemocao.size(); i++) {
+					daoHorario.atualizarHorario(arrayHorarioRemocao.get(i));
+				}
+            	JOptionPane.showMessageDialog(null, "Alteracao realizada com sucesso");
             }
         });
     }
@@ -589,7 +591,7 @@ public class PanelHorario extends JPanel {
 
     private void carregaComboMotorista() {
         arrayMotorista = new ArrayList<Motorista>();
-        arrayMotorista = daoItinerarioMotorista.consultarTodosMotoristas();
+        arrayMotorista = daoMotorista.consultarTodosMotoristas();
 //        cboMotoristaCadastro.removeAllItems();
 //        cboItinerarioMotorista.addItem("Selecione");
         for (int j = 0; j < arrayAuxPnlCadastro.size(); j++) {
@@ -648,11 +650,15 @@ public class PanelHorario extends JPanel {
     
     private void carregaCheckBoxDias(int id){
     	arrayHorarioRemocao = new ArrayList<Horario>();
+    	arrayHorarioDeRotasRemocao = new ArrayList<Horario>();
     	arrayHorarioRemocao = daoHorario.consultarTodosHorariosItinerario(id);
+    	arrayHorarioDeRotasRemocao = daoHorario.consultaHorarioDeRotas(id);
     	ArrayList<Integer> listaDias = new ArrayList<Integer>();
     	Integer diaAux;
     	for (int i = 0; i < arrayHorarioRemocao.size(); i++) {
-    		diaAux = arrayHorarioRemocao.get(i).getHorarioDiaId();
+    		if(arrayHorarioRemocao.get(i).getHorario_usado()==1)
+    			diaAux = arrayHorarioRemocao.get(i).getHorarioDiaId();
+    		else diaAux = 0;
     		if(!listaDias.contains(diaAux)&& diaAux != 0 ){
     			listaDias.add(diaAux);
     		}
@@ -691,6 +697,47 @@ public class PanelHorario extends JPanel {
 				chBxFeriadosRemocao.setEnabled(true);
 			}
 		}
+    }
+    
+    private void verficaArrayHorario(int dia, JCheckBox chBxDiaRemocao){
+    	
+    	for (int i = 0; i < arrayHorarioRemocao.size(); i++) {
+			if(arrayHorarioRemocao.get(i).getHorarioDiaId()== dia){
+				if(chBxDiaRemocao.isSelected())
+					arrayHorarioRemocao.get(i).setHorario_usado(1);
+				
+				else arrayHorarioRemocao.get(i).setHorario_usado(0);
+			}
+		}
+    	
+    }
+    private void verificaCheckBox(){
+    	if(chBxDomingoRemocao.isEnabled()){
+    		verficaArrayHorario(1, chBxDomingoRemocao);
+    	}
+    	if(chBxSegundaFeiraRemocao.isEnabled()){
+    		verficaArrayHorario(2, chBxSegundaFeiraRemocao);    		
+    	}
+    	if(chBxTercaFeiraRemocao.isEnabled()){
+    		verficaArrayHorario(3, chBxTercaFeiraRemocao);   
+    	}
+    	if(chBxQuartaFeiraRemocao.isEnabled()){
+    		verficaArrayHorario(4, chBxQuartaFeiraRemocao);   
+    	}
+    	if(chBxQuintaFeiraRemocao.isEnabled()){
+    		verficaArrayHorario(5, chBxQuintaFeiraRemocao);   
+    	}
+    	if(chBxSextaFeiraRemocao.isEnabled()){
+    		verficaArrayHorario(6, chBxSextaFeiraRemocao);   
+    	}
+    	if(chBxSabadoRemocao.isEnabled()){
+    		verficaArrayHorario(7, chBxSabadoRemocao);   
+    	}
+    	if(chBxFeriadosRemocao.isEnabled()){
+    		verficaArrayHorario(8, chBxFeriadosRemocao);   
+    	}
+    	
+    		
     }
     
     private void cadastrarHorarios() {
@@ -870,6 +917,26 @@ public class PanelHorario extends JPanel {
         chBxSextaFeiraCadastro.setEnabled(false);
         chBxSabadoCadastro.setEnabled(false);
         chBxFeriadosCadastro.setEnabled(false);
+        //painel de remocao
+        chBxDomingoRemocao.setSelected(false);
+        chBxSegundaFeiraRemocao.setSelected(false);
+        chBxTercaFeiraRemocao.setSelected(false);
+        chBxQuartaFeiraRemocao.setSelected(false);
+        chBxQuintaFeiraRemocao.setSelected(false);
+        chBxSextaFeiraRemocao.setSelected(false);
+        chBxSabadoRemocao.setSelected(false);
+        chBxFeriadosRemocao.setSelected(false);
+        chBxDomingoRemocao.setEnabled(false);
+        chBxSegundaFeiraRemocao.setEnabled(false);
+        chBxTercaFeiraRemocao.setEnabled(false);
+        chBxQuartaFeiraRemocao.setEnabled(false);
+        chBxQuintaFeiraRemocao.setEnabled(false);
+        chBxSextaFeiraRemocao.setEnabled(false);
+        chBxSabadoRemocao.setEnabled(false);
+        chBxFeriadosRemocao.setEnabled(false);
+        btnConfirmaRemocao.setEnabled(false);
+        arrayHorarioDeRotasRemocao.clear();
+        arrayHorarioRemocao.clear();
     }
     DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
     private int flagMin = 0;
@@ -885,8 +952,9 @@ public class PanelHorario extends JPanel {
     private ArrayList<Itinerario> arrayItinerario;
     private ArrayList<Horario> arrayHorario;
     private ArrayList<Horario> arrayHorarioRemocao;
+    private ArrayList<Horario> arrayHorarioDeRotasRemocao;
     private ArrayList<RotaItinerario> arrayRotaItinerario;
-    private DaoMotorista daoItinerarioMotorista;
+    private DaoMotorista daoMotorista;
     private ArrayList<Motorista> arrayMotorista;
     private DaoOnibus daoItinerarioOnibus;
     private ArrayList<Onibus> arrayOnibus;
@@ -900,7 +968,7 @@ public class PanelHorario extends JPanel {
     //JLbabels
     private JLabel lblItinerario;
     private JLabel lblHoraSaidaCadastro;
-    private JLabel lblHoraSaidaRemocao;
+  
     private JLabel lblTipoOnibusCadastro;
     //JButtons
     private JButton btnConfirmaCadastro;
@@ -912,8 +980,6 @@ public class PanelHorario extends JPanel {
     private JComboBox cboItinerario;
     private JComboBox cboMinCadastro;
     private JComboBox cboHoraCadastro;
-    private JComboBox cboMinRemocao;
-    private JComboBox cboHoraRemocao;
     private JComboBox cboOnibusCadastro;
     //CheckBox
     private JCheckBox chBxSegundaFeiraCadastro;
