@@ -935,8 +935,6 @@ public class PanelHorario extends JPanel {
         chBxSabadoRemocao.setEnabled(false);
         chBxFeriadosRemocao.setEnabled(false);
         btnConfirmaRemocao.setEnabled(false);
-        arrayHorarioDeRotasRemocao.clear();
-        arrayHorarioRemocao.clear();
     }
     DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
     private int flagMin = 0;
