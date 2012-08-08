@@ -703,6 +703,7 @@ public class PanelConsulta {
         pnlConsultaItinerario.setVisible(false);
         pnlConsultaPassagem.setVisible(false);
         pnlConsultaHorario.setVisible(true);
+        cboConsultaHorarios.requestFocus();
         carregaCombosHorario();
     }
 
@@ -842,14 +843,13 @@ public class PanelConsulta {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             cboConsultaHorariosIdOculto.setSelectedIndex(cboConsultaHorarios.getSelectedIndex());
             System.out.println(cboConsultaHorariosIdOculto.getSelectedItem());
+            scrollPaneHorario.setVisible(false);
+            cboConsultaHorarioDia.setVisible(false);
+            lblConsultaHorarioSelecioneDia.setVisible(false);
+            cboConsultaHorarioDia.setSelectedIndex(0);
             if (!(cboConsultaHorarios.getSelectedItem().equals("Selecione"))) {
                 cboConsultaHorarioDia.setVisible(true);
                 lblConsultaHorarioSelecioneDia.setVisible(true);
-            } else {
-//                listConsultaHorario.removeAll();
-                scrollPaneHorario.setVisible(false);
-                cboConsultaHorarioDia.setVisible(false);
-                lblConsultaHorarioSelecioneDia.setVisible(false);
             }
         }
     }
@@ -857,32 +857,38 @@ public class PanelConsulta {
     private void cboConsultaHorarioDiaClick(ItemEvent evt) {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             cboConsultaHorariosIdOculto.setSelectedIndex(cboConsultaHorarios.getSelectedIndex());
-            System.out.println(cboConsultaHorariosIdOculto.getSelectedItem());
             if (!(cboConsultaHorarioDia.getSelectedItem().equals("Selecione"))) {
-                scrollPaneHorario.setVisible(true);
                 tbmHorario.getDataVector().removeAllElements();
                 tbmHorario.fireTableDataChanged();
                 tbmHorario.setColumnCount(0);
-                
                 int id = Integer.parseInt(String.valueOf(cboConsultaHorariosIdOculto.getSelectedItem()));
                 ArrayList<ArrayList<String>> rota = daoHorario.consultarTodosHorarios(id, cboConsultaHorarioDia.getSelectedIndex());
-                for (int i = 0; i < rota.size(); i++) {
-                    tbmHorario.addColumn(rota.get(i).get(0));
-                    /*int idRota = arrayRotaAtualCadastro.get(cboCadastroDestino.getSelectedIndex() - 1).getId();
-                    Rota rotaAux = arrayRotaAtualCadastro.get(cboCadastroDestino.getSelectedIndex() - 1);
-                    arrayRotasAddicionadasCadastro.add(rotaAux); //salvando Array de rotas Para possivel utilizacao
-                    tbmCadastro.addRow(new Object[]{rotaAux.getRota_cidadeOrigem(), rotaAux.getRota_cidadeDestino()});
-                     */
+                if(!rota.isEmpty()){
+                    scrollPaneHorario.setVisible(true);                
+                    int qtdeCidades = daoHorario.calculaTotalCidadesItinerario(id);
+                    for (int i = 0; i < qtdeCidades; i++) {
+                        tbmHorario.addColumn(rota.get(i).get(0));
+                    }
+                    Object add[] = new Object[qtdeCidades];
+                    int cont = 0;
+                    for (int i = 0; i < rota.size(); i++) {
+                        if (cont != qtdeCidades) {
+                            add[cont] = rota.get(i).get(3);
+                            System.out.println(add[cont]);
+                            cont++;
+                        } else {
+                            tbmHorario.addRow(add);
+                            cont = 0;
+                            i = i - 1;
+                        }
+                    }
+                    tbmHorario.addRow(add);
+                    tableHorario.setVisible(true);
+                } else {
+                    scrollPaneHorario.setVisible(false);                
+                    JOptionPane.showMessageDialog(null, "Nao existe horario cadastrado para este dia.");
+                    cboConsultaHorarioDia.requestFocus();
                 }
-                Object add[] = new Object[rota.size()];
-                for (int i = 0; i < rota.size(); i++) {
-                    add[i] = rota.get(i).get(3);
-                }
-                for (int i = 0; i < rota.size(); i++) {
-                    System.out.println("Horarios " + add[i]);
-                }
-                tbmHorario.addRow(add);
-                tableHorario.setVisible(true);
             } else {
                 scrollPaneHorario.setVisible(false);
             }
