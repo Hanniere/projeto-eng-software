@@ -56,9 +56,9 @@ public class DaoPassagem {
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
             String sql = "SELECT distinct CidadeId , CidadeNome FROM Horario"
-                            + " INNER JOIN RotaItinerario ON ( Horario_RotaItinerarioId = RotaItinerarioId )"
-                            + " INNER JOIN Rota ON ( RotaItinerario_RotaId = RotaId )"
-                            + " INNER JOIN Cidade ON ( Rota_CidadeOrigem = CidadeId )";
+                    + " INNER JOIN RotaItinerario ON ( Horario_RotaItinerarioId = RotaItinerarioId )"
+                    + " INNER JOIN Rota ON ( RotaItinerario_RotaId = RotaId )"
+                    + " INNER JOIN Cidade ON ( Rota_CidadeOrigem = CidadeId )";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Cidade cidade = new Cidade();
@@ -233,7 +233,61 @@ public class DaoPassagem {
         return arraylist;
     }
         
-        
+    public ArrayList<ArrayList<String>> consultarTodasPassagensDoDia(String data) {
+        BancoDados banco = new BancoDados();
+        ArrayList<ArrayList<String>> arraylist = new ArrayList<ArrayList<String>>();
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT P.PassagemData, P.PassagemClienteCpf, P.PassagemClienteNome,"
+                    + "P.PassagemNumAssentoComprado, H.horarioSaida, H.horarioChegada, H.horarioPreco,"
+                    + "Co.cidadeNome, Eo.estadoUF, Cd.cidadeNome, Ed.estadoUF, O.onibusPlaca, M.motoristaNome,"
+                    + " I.ItinerarioId"
+                    + " FROM Passagem P, Horario H, Onibus O, RotaItinerario RI, Itinerario I,  Rota R, Cidade Co, Cidade Cd,"
+                    + "Estado Eo, Estado Ed, Motorista M"
+                    + " WHERE PassagemData = '"+data+"'"
+                    + " AND P.passagem_HorarioId = H.horarioId"
+                    + " AND H.horario_rotaItinerarioId = RI.rotaItinerarioId"
+                    + " AND RI.rotaItinerario_rotaId = R.rotaId"
+                    + " AND RI.rotaItinerario_ItinerarioId = I.ItinerarioId"
+                    + " AND R.rota_cidadeOrigem = Co.cidadeId"
+                    + " AND Co.cidade_estadoId = Eo.estadoId"
+                    + " AND R.rota_cidadeDestino = Cd.cidadeId"
+                    + " AND Cd.cidade_estadoId = Ed.estadoId"
+                    + " AND H.horario_motoristaId = M.motoristaId"
+                    + " AND H.horario_onibusId = O.onibusId"
+                    + " ORDER BY I.ItinerarioId, P.PassagemClienteCpf, H.horarioSaida";
+
+            //String sql = "select * from Passagem where PassagemData = '" + data + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                ArrayList<String> passagem = new ArrayList<String>();
+                passagem.add(rs.getString("P.PassagemData"));
+                passagem.add(rs.getString("P.PassagemClienteCpf"));
+                passagem.add(rs.getString("P.PassagemClienteNome"));
+                passagem.add(rs.getString("P.PassagemNumAssentoComprado"));
+                passagem.add(rs.getString("H.horarioSaida"));
+                passagem.add(rs.getString("H.horarioChegada"));
+                passagem.add(rs.getString("H.horarioPreco"));
+                passagem.add(rs.getString("Co.cidadeNome"));
+                passagem.add(rs.getString("Eo.estadoUF"));
+                passagem.add(rs.getString("Cd.cidadeNome"));
+                passagem.add(rs.getString("Ed.estadoUF"));
+                passagem.add(rs.getString("O.onibusPlaca"));
+                passagem.add(rs.getString("M.motoristaNome"));
+                passagem.add(rs.getString("I.ItinerarioId"));
+                arraylist.add(passagem);
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Nao foi possivel carregar o driver.");
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+        }
+        return arraylist;
+    }    
         
         /*ArrayList<Integer> arraylist = new ArrayList<Integer>();
         BancoDados banco = new BancoDados();
