@@ -498,15 +498,16 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         String local = System.getProperty("user.dir");
         //escreve comprovante de compra
         try {
-            FileWriter f0 = new FileWriter(local + "/src/imagens/Sem T�tulo.txt");
-            f0.write("Comprovante de Compra\n\n\n");
+            FileWriter f0 = new FileWriter(local + "/src/imagens/Sem Titulo.txt");
+            String barraN = System.getProperty ("line.separator");
+            f0.write("Comprovante de Compra" + barraN + barraN + barraN);
             for (int i = 0; i < arrayAuxPnl.size(); i++) {
                 passagem = new Passagem();
                 JLabel lblAux = (JLabel) arrayAuxPnl.get(i).getComponent(0);
                 JLabel lblAuxAssento = (JLabel) arrayAuxPnl.get(i).getComponent(1);
                 passagem.setAssentoComprado(Integer.parseInt(lblAuxAssento.getText().trim()));
                 f0.write(lblAux.getText() + " ");
-                f0.write(lblAuxAssento.getText() + "\n");
+                f0.write(lblAuxAssento.getText() + barraN);
                 for (int j = 2; j < 6; j += 2) {
                     JLabel lblAux1 = (JLabel) arrayAuxPnl.get(i).getComponent(j);
                     JTextField txtAux1 = (JTextField) arrayAuxPnl.get(i).getComponent(j + 1);
@@ -517,14 +518,14 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                         passagem.setClienteRg(txtAux1.getText());
                     }
                     f0.write(lblAux1.getText() + " ");
-                    f0.write(txtAux1.getText() + "\n");
+                    f0.write(txtAux1.getText() + barraN);
                 }
-                f0.write("\n\n");
+                f0.write(barraN + barraN);
                 daoPassagem = new DaoPassagem();
                 daoPassagem.cadastrarPassagemComprada(passagem);
             }
             f0.close();
-            java.awt.Desktop.getDesktop().open(new File(local + "/src/imagens/Sem T�tulo.txt"));
+            java.awt.Desktop.getDesktop().open(new File(local + "/src/imagens/Sem Titulo.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {

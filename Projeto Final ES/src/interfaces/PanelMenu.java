@@ -3,6 +3,8 @@ package interfaces;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -58,7 +60,7 @@ public class PanelMenu extends JPanel {
         funcionarioPanel = new PanelFuncionario();
         horarioPanel = new PanelHorario();
         rotaItinerarioPanel = new PanelRotaItinerario();
-        
+
         pnlHome = homePanel.inserirPnlHome();
         pnlOnibus = onibusPanel.inserirPnlOnibus();
         pnlMotorista = motoristaPanel.inserirPnlMotorista();
@@ -69,7 +71,7 @@ public class PanelMenu extends JPanel {
         pnlFuncionario = funcionarioPanel.inserirPnlFuncionario();
         pnlHorario = horarioPanel.inserirPnlHorario();
         pnlRotaItinerario = rotaItinerarioPanel.inserirPnlItinerario();
-        
+
         btnOnibus.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -133,6 +135,12 @@ public class PanelMenu extends JPanel {
         pnlMenuLayout.setVerticalGroup(
                 pnlMenuLayout.createParallelGroup().addGroup(pnlMenuLayout.createSequentialGroup().addGap(28, 28, 28).addGroup(pnlMenuLayout.createParallelGroup().addComponent(pnlHome, 590, 590, 590).addComponent(pnlOnibus, 590, 590, 590).addComponent(pnlMotorista, 590, 590, 590).addComponent(pnlEstado, 590, 590, 590).addComponent(pnlCidade, 590, 590, 590).addComponent(pnlConsulta, 590, 590, 590).addComponent(pnlHorario, 590, 590, 590).addComponent(pnlRotaItinerario, 590, 590, 590).addComponent(pnlItinerarioRota, 590, 590, 590).addComponent(pnlFuncionario, 590, 590, 590).addGroup(pnlMenuLayout.createSequentialGroup().addComponent(btnOnibus, 73, 73, 73).addGap(12, 12, 12).addComponent(btnMotorista, 73, 73, 73).addGap(12, 12, 12).addComponent(btnEstado, 73, 73, 73).addGap(12, 12, 12).addComponent(btnCidade, 73, 73, 73).addGap(12, 12, 12).addComponent(btnItinerarioRota, 73, 73, 73).addGap(12, 12, 12).addComponent(btnRotaItinerario, 73, 73, 73).addGap(12, 12, 12).addComponent(btnHorario, 73, 73, 73).addGap(7, 7, 7)).addComponent(separadorMenu, 590, 590, 590)).addContainerGap(31, 31)));
 
+        pnlMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pnlMenuMouseClicked(evt);
+            }
+        });
         return pnlMenu;
     }
 
@@ -146,9 +154,9 @@ public class PanelMenu extends JPanel {
         menuBackup = new JMenu("Backup");
 
         menuConsultasConsultar = new JMenuItem("Consultar");
-        
+
         menuRelatorioGerarRelatorio = new JMenuItem("Gerar Relatorio");
-        
+
         menuBackupFazerBackup = new JMenuItem("Fazer Backup");
         menuBackupRestaurarBackup = new JMenuItem("Restaurar Backup");
 
@@ -158,14 +166,14 @@ public class PanelMenu extends JPanel {
         menuSairFecharPrograma = new JMenuItem("Fechar Programa");
 
         menuHome.add(menuHomeHome);
-        
+
         menuConsultas.add(menuConsultasConsultar);
-        
+
         menuRelatorio.add(menuRelatorioGerarRelatorio);
-        
+
         menuBackup.add(menuBackupFazerBackup);
         menuBackup.add(menuBackupRestaurarBackup);
-        
+
         //menuSair.add(menuSairUsuario);
         menuSair.add(menuSairFecharPrograma);
 
@@ -231,7 +239,7 @@ public class PanelMenu extends JPanel {
                 menuHomeHomeClick(evt);
             }
         });
-        
+
         menuConsultasConsultar.addActionListener(new ActionListener() {
 
             @Override
@@ -247,7 +255,7 @@ public class PanelMenu extends JPanel {
                 menuRelatorioGerarRelatorioClick(evt);
             }
         });
-     
+
         menuBackupFazerBackup.addActionListener(new ActionListener() {
 
             @Override
@@ -263,7 +271,7 @@ public class PanelMenu extends JPanel {
                 menuBackupRestaurarBackupClick(evt);
             }
         });
-        
+
         menuSairUsuario.addActionListener(new ActionListener() {
 
             @Override
@@ -429,7 +437,7 @@ public class PanelMenu extends JPanel {
         relatorioFrame = new PanelRelatorio();
         relatorioFrame.setVisible(true);
     }
-            
+
     private void menuFuncionarioCadastroClick(ActionEvent evt) {
         pnlHome.setVisible(false);
         pnlOnibus.setVisible(false);
@@ -500,11 +508,11 @@ public class PanelMenu extends JPanel {
         http://javafree.uol.com.br/topic-2499-Copiar-arquivos.html*/
     }
 
-    private void menuBackupRestaurarBackupClick(ActionEvent evt){
+    private void menuBackupRestaurarBackupClick(ActionEvent evt) {
         Restore r = new Restore();
         r.RestaurarBackup();
     }
-    
+
     private void menuSairUsuarioClick(ActionEvent evt) throws ParseException {
         pnlMenu.setVisible(false);
         PrincipalFuncionario principal = new PrincipalFuncionario();
@@ -513,6 +521,10 @@ public class PanelMenu extends JPanel {
 
     private void menuSairFecharProgramaClick(ActionEvent evt) {
         System.exit(0);
+    }
+
+    private void pnlMenuMouseClicked(java.awt.event.MouseEvent evt) {
+        relatorioFrame.setVisible(false);
     }
     
     private PanelHome homePanel;
@@ -526,7 +538,6 @@ public class PanelMenu extends JPanel {
     private PanelHorario horarioPanel;
     private PanelRotaItinerario rotaItinerarioPanel;
     private PanelRelatorio relatorioFrame;
-    
     private JSeparator separadorMenu;
     private JPanel pnlHome;
     private JPanel pnlOnibus;
@@ -539,7 +550,6 @@ public class PanelMenu extends JPanel {
     private JPanel pnlHorario;
     private JPanel pnlRotaItinerario;
     private JPanel pnlMenu;
-    
     private JLabel btnOnibus;
     private JLabel btnMotorista;
     private JLabel btnCidade;

@@ -87,7 +87,7 @@ public boolean atualizarHorario(Horario horario){
     return true;
 }
 
-    public ArrayList<ArrayList<String>> consultarTodosHorarios(int id) {
+    public ArrayList<ArrayList<String>> consultarTodosHorarios(int idRI, int dia) {
         ArrayList<ArrayList<String>> matriz = new ArrayList<ArrayList<String>>();        
         BancoDados banco = new BancoDados();
         try {
@@ -100,9 +100,8 @@ public boolean atualizarHorario(Horario horario){
                     + "INNER JOIN Rota ON (rotaId = RotaItinerario_RotaId) "
                     + "INNER JOIN Cidade origem ON (origem.cidadeId = Rota_CidadeOrigem) "
                     + "INNER JOIN Cidade destino ON (destino.cidadeId = Rota_CidadeDestino) "
-                    + "WHERE RotaItinerario_ItinerarioId = " + id + " "
-                    + "GROUP BY origem.CidadeNome,destino.CidadeNome "
-                    + "ORDER BY RotaItinerarioOrdem";
+                    + "WHERE RotaItinerario_ItinerarioId = " + idRI + " AND HorarioDiaId = " + dia + " "
+                    + "ORDER BY HorariodiaId, HorarioSaida;";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 ArrayList<String> array = new ArrayList<String>();

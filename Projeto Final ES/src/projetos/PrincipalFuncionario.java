@@ -52,7 +52,7 @@ public class PrincipalFuncionario extends JFrame {
 
         pack();
     }
-
+    
     public JPanel inserirPnlLogin() throws ParseException {
         pnlEntrar = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 155));
         pnlEntrar.setBackground(new Color(240, 240, 240));

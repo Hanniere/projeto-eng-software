@@ -1,0 +1,66 @@
+Relatorio do dia 2/1/2012
+
+
+
+Passageiro: Qwerty
+RG: 123
+Assento comprado: 34
+Viagem: Santo Andre-SP até Rezende-RJ
+Horario de Saida: 17:00:00
+Horario de Chegada: 18:00:00
+Placa do Onibus que fez esta viagem: ASF-9371
+
+
+Passageiro: Marcela
+RG: 13
+Assento comprado: 35
+Viagem: Santo Andre-SP até Rezende-RJ
+Horario de Saida: 17:00:00
+Horario de Chegada: 18:00:00
+Placa do Onibus que fez esta viagem: ASF-9371
+
+
+Passageiro: Marcela
+RG: cpf 2
+Assento comprado: 36
+Viagem: Santo Andre-SP até Rezende-RJ
+Horario de Saida: 17:00:00
+Horario de Chegada: 18:00:00
+Placa do Onibus que fez esta viagem: ASF-9371
+
+
+Passageiro: Matheus
+RG: cpf 1
+Assento comprado: 1
+Viagem: Sao Jose dos Campos-SP até Americana-SP
+Horario de Saida: 08:00:00
+Horario de Chegada: 10:15:00
+Placa do Onibus que fez esta viagem: ASF-9371
+
+
+Passageiro: Marcela
+RG: cpf 2
+Assento comprado: 10
+Viagem: Sao Jose dos Campos-SP até Santa Barbara Oeste-SP
+Horario de Saida: 08:00:00
+Horario de Chegada: 10:45:00
+Placa do Onibus que fez esta viagem: ASF-9371
+
+
+Passageiro: Victor
+RG: cpf 3
+Assento comprado: 24
+Viagem: Sao Jose dos Campos-SP até Piracicaba-SP
+Horario de Saida: 08:00:00
+Horario de Chegada: 13:30:00
+Placa do Onibus que fez esta viagem: ASF-9371
+
+
+Passageiro: Goias
+RG: cpf 4
+Assento comprado: 15
+Viagem: Americana-SP até Piracicaba-SP
+Horario de Saida: 10:30:00
+Horario de Chegada: 13:30:00
+Placa do Onibus que fez esta viagem: ASF-9371
+

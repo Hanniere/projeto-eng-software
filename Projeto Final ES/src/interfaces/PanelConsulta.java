@@ -13,6 +13,8 @@ import dao.*;
 import entidades.*;
 import dao.DaoPassagem;
 import entidades.Passagem;
+import java.awt.BorderLayout;
+import javax.swing.table.DefaultTableModel;
 
 public class PanelConsulta {
 
@@ -30,7 +32,7 @@ public class PanelConsulta {
         daoItinerario = new DaoItinerario();
         daoPassagem = new DaoPassagem();
         daoRotaItinerario = new DaoRotaItinerario();
-        
+
         daoHorario = new DaoHorario();
         daoOnibus = new DaoOnibus();
         motorista = new Motorista();
@@ -244,21 +246,38 @@ public class PanelConsulta {
 
         lblConsultaHorarioSelecione = new JLabel("Selecione o itinerario que deseja consultar horarios:");
         cboConsultaHorarios = new JComboBox(new String[]{"Selecione"});
+        lblConsultaHorarioSelecioneDia = new JLabel("Selecione o dia que deseja verificar horarios:");
+        cboConsultaHorarioDia = new JComboBox(new String[]{"Selecione", "Domingo", "Segunda-feira", "Terca-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sabado"});
         cboConsultaHorariosIdOculto = new JComboBox(new String[]{"Selecione"});
-        lblConsultaHorarioNome = new JLabel("Os horarios cadastrados sao os seguintes:");
-        listConsultaHorario = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        lblConsultaHorarioNome.setPreferredSize(new Dimension(550, 30));
         cboConsultaHorarios.setPreferredSize(new Dimension(200, 30));
+        cboConsultaHorarioDia.setPreferredSize(new Dimension(200, 30));
         cboConsultaHorariosIdOculto.setVisible(false);
-        
+
+        lblConsultaHorarioSelecioneDia.setVisible(false);
+        cboConsultaHorarioDia.setVisible(false);
+
         pnlConsultaHorario.add(lblConsultaHorarioSelecione);
         pnlConsultaHorario.add(cboConsultaHorarios);
-        pnlConsultaHorario.add(lblConsultaHorarioNome);
+        pnlConsultaHorario.add(lblConsultaHorarioSelecioneDia);
+        pnlConsultaHorario.add(cboConsultaHorarioDia);
 
-        listConsultaHorario.setPreferredSize(new Dimension(510, acumuladorConsultaHorario * 21));
-        sListConsultaHorario = new JScrollPane(listConsultaHorario);
-        sListConsultaHorario.setPreferredSize(new Dimension(520, 160));
-        pnlConsultaHorario.add(sListConsultaHorario);
+
+        tbmHorario = new DefaultTableModel() {
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int colIndex) {
+                return false; //Disallow the editing of any cell
+            }
+        };
+
+        tableHorario = new JTable(tbmHorario);
+        scrollPaneHorario = new JScrollPane(tableHorario);
+        scrollPaneHorario.setPreferredSize(new Dimension(530, 150));
+        tableHorario.setVisible(false);
+        tableHorario.setFillsViewportHeight(true);
+
+        pnlConsultaHorario.add(scrollPaneHorario, BorderLayout.CENTER);
+
 
         pnlConsultaPassagem = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
         pnlConsultaPassagem.setVisible(false);
@@ -403,6 +422,14 @@ public class PanelConsulta {
             @Override
             public void itemStateChanged(ItemEvent evt) {
                 cboConsultaHorariosClick(evt);
+            }
+        });
+
+        cboConsultaHorarioDia.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                cboConsultaHorarioDiaClick(evt);
             }
         });
 
@@ -816,18 +843,52 @@ public class PanelConsulta {
             cboConsultaHorariosIdOculto.setSelectedIndex(cboConsultaHorarios.getSelectedIndex());
             System.out.println(cboConsultaHorariosIdOculto.getSelectedItem());
             if (!(cboConsultaHorarios.getSelectedItem().equals("Selecione"))) {
-                int id = Integer.parseInt(String.valueOf(cboConsultaHorariosIdOculto.getSelectedItem()));
-                ArrayList<ArrayList<String>> rota = daoHorario.consultarTodosHorarios(id);
-                for(int i=0;i<rota.size();i++){
-                    //System.out.print(rota.get(i).getRota_cidadeOrigem() + " - ");
-                }
-               // System.out.println(rota.get(rota.size()-1).getRota_cidadeDestino());
+                cboConsultaHorarioDia.setVisible(true);
+                lblConsultaHorarioSelecioneDia.setVisible(true);
             } else {
-                listConsultaHorario.removeAll();
+//                listConsultaHorario.removeAll();
+                scrollPaneHorario.setVisible(false);
+                cboConsultaHorarioDia.setVisible(false);
+                lblConsultaHorarioSelecioneDia.setVisible(false);
             }
         }
     }
-    
+
+    private void cboConsultaHorarioDiaClick(ItemEvent evt) {
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            cboConsultaHorariosIdOculto.setSelectedIndex(cboConsultaHorarios.getSelectedIndex());
+            System.out.println(cboConsultaHorariosIdOculto.getSelectedItem());
+            if (!(cboConsultaHorarioDia.getSelectedItem().equals("Selecione"))) {
+                scrollPaneHorario.setVisible(true);
+                tbmHorario.getDataVector().removeAllElements();
+                tbmHorario.fireTableDataChanged();
+                tbmHorario.setColumnCount(0);
+                
+                int id = Integer.parseInt(String.valueOf(cboConsultaHorariosIdOculto.getSelectedItem()));
+                ArrayList<ArrayList<String>> rota = daoHorario.consultarTodosHorarios(id, cboConsultaHorarioDia.getSelectedIndex());
+                for (int i = 0; i < rota.size(); i++) {
+                    tbmHorario.addColumn(rota.get(i).get(0));
+                    /*int idRota = arrayRotaAtualCadastro.get(cboCadastroDestino.getSelectedIndex() - 1).getId();
+                    Rota rotaAux = arrayRotaAtualCadastro.get(cboCadastroDestino.getSelectedIndex() - 1);
+                    arrayRotasAddicionadasCadastro.add(rotaAux); //salvando Array de rotas Para possivel utilizacao
+                    tbmCadastro.addRow(new Object[]{rotaAux.getRota_cidadeOrigem(), rotaAux.getRota_cidadeDestino()});
+                     */
+                }
+                Object add[] = new Object[rota.size()];
+                for (int i = 0; i < rota.size(); i++) {
+                    add[i] = rota.get(i).get(3);
+                }
+                for (int i = 0; i < rota.size(); i++) {
+                    System.out.println("Horarios " + add[i]);
+                }
+                tbmHorario.addRow(add);
+                tableHorario.setVisible(true);
+            } else {
+                scrollPaneHorario.setVisible(false);
+            }
+        }
+    }
+
     private void cboConsultaPassagemDataMesClick(ItemEvent evt) {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboConsultaPassagemDataMes.getSelectedItem().equals("-"))) {
@@ -977,11 +1038,12 @@ public class PanelConsulta {
     //Horario
     private JLabel lblConsultaHorarioSelecione;
     private JComboBox cboConsultaHorarios;
+    private JLabel lblConsultaHorarioSelecioneDia;
+    private JComboBox cboConsultaHorarioDia;
     private JComboBox cboConsultaHorariosIdOculto;
-    private JLabel lblConsultaHorarioNome;
-    private int acumuladorConsultaHorario;
-    private JPanel listConsultaHorario;
-    private JScrollPane sListConsultaHorario;
+    private JTable tableHorario;
+    private DefaultTableModel tbmHorario;
+    private JScrollPane scrollPaneHorario;
     //passagem
     private JPanel pnlConsultaPassagemCampos;
     private JLabel lblConsultaPassagemSelecioneCampos;
