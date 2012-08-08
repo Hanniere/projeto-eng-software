@@ -16,6 +16,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -741,6 +742,7 @@ public class PanelHorario extends JPanel {
     }
     
     private void cadastrarHorarios() {
+    	HashSet<Integer> diasUsados = new HashSet<Integer>();
 
         for (int i = 0; i < arrayAuxPnlCadastro.size(); i++) {//para cada linha
             Horario horario = new Horario();
@@ -767,28 +769,35 @@ public class PanelHorario extends JPanel {
 
             if (chBxDomingoCadastro.isSelected()) {
                 arrayHorario.add(clonaHorario(horario, 1));
+                diasUsados.add(1);
             }
             if (chBxSegundaFeiraCadastro.isSelected()) {
                 arrayHorario.add(clonaHorario(horario, 2));
-
+                diasUsados.add(2);
             }
             if (chBxTercaFeiraCadastro.isSelected()) {
                 arrayHorario.add(clonaHorario(horario, 3));
+                diasUsados.add(3);
             }
             if (chBxQuartaFeiraCadastro.isSelected()) {
                 arrayHorario.add(clonaHorario(horario, 4));
+                diasUsados.add(4);
             }
             if (chBxQuintaFeiraCadastro.isSelected()) {
                 arrayHorario.add(clonaHorario(horario, 5));
+                diasUsados.add(5);
             }
             if (chBxSextaFeiraCadastro.isSelected()) {
                 arrayHorario.add(clonaHorario(horario, 6));
+                diasUsados.add(6);
             }
             if (chBxSabadoCadastro.isSelected()) {
                 arrayHorario.add(clonaHorario(horario, 7));
+                diasUsados.add(7);
             }
             if (chBxFeriadosCadastro.isSelected()) {
                 arrayHorario.add(clonaHorario(horario, 8));
+                diasUsados.add(8);
             }
             
         }
@@ -801,6 +810,8 @@ public class PanelHorario extends JPanel {
             System.out.println("Quantidade tabela horario:" + arrayHorario.size());
             System.out.println("---------------------------------------------------------");
         }
+        ordenaArrayHorario(diasUsados);
+        
         for (int i = 0; i < arrayHorario.size(); i++) {
 			daoHorario.cadastrarNovoHorario(arrayHorario.get(i), arrayRotaItinerario.get(0).getRotaitinerario_itinerarioId());
 		}
@@ -936,6 +947,19 @@ public class PanelHorario extends JPanel {
         chBxFeriadosRemocao.setEnabled(false);
         btnConfirmaRemocao.setEnabled(false);
     }
+    
+    public void ordenaArrayHorario(HashSet<Integer> diasUsados){
+    	ArrayList<Horario> arrayAuxHorario = new ArrayList<Horario>();
+    	for (Integer dia : diasUsados) {
+			for (int j = 0; j < arrayHorario.size(); j++) {
+				if(arrayHorario.get(j).getHorarioDiaId() == dia){
+					arrayAuxHorario.add(arrayHorario.get(j));
+				}
+			}
+		}
+    	arrayHorario = (ArrayList<Horario>)arrayAuxHorario.clone();
+    }
+    
     DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
     private int flagMin = 0;
     private DaoHorario daoHorario;
