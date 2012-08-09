@@ -123,6 +123,7 @@ public boolean atualizarHorario(Horario horario){
         }
         return matriz;
     }
+    
     public ArrayList<Horario> consultarTodosHorariosItinerario(int id) {
         ArrayList<Horario> arrayHorario = new ArrayList<Horario>();        
         BancoDados banco = new BancoDados();
@@ -161,6 +162,7 @@ public boolean atualizarHorario(Horario horario){
         }
         return arrayHorario;
     }
+    
     public ArrayList<Horario> verificaHorarioItinerario(int idItinerario, int horarioUsado, String dias, String horarioSaida) {
         ArrayList<Horario> arrayHorario = new ArrayList<Horario>();        
         BancoDados banco = new BancoDados();
@@ -239,4 +241,24 @@ public boolean atualizarHorario(Horario horario){
         return arrayHorario;
     }
     
+    public int calculaTotalCidadesItinerario(int id){
+        BancoDados banco = new BancoDados();
+        int resultado=0;
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT MAX(RotaItinerarioOrdem) from RotaItinerario where RotaItinerario_ItinerarioId = "+id;
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            resultado = rs.getInt("MAX(RotaItinerarioOrdem)");
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Não foi possivel carregar o driver.");
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
 }
