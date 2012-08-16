@@ -8,12 +8,19 @@ public class Passagem {
 	private String clienteNome;
 	private int assentoComprado;
 	private int horario;
+        private int diaId;
 	
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+        public int getDiaId() {
+		return diaId;
+	}
+	public void setDiaId(int diaId) {
+		this.diaId = diaId;
 	}
 	public String getData() {
 		return data;

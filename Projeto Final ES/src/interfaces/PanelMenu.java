@@ -134,13 +134,6 @@ public class PanelMenu extends JPanel {
                 pnlMenuLayout.createParallelGroup().addGroup(pnlMenuLayout.createSequentialGroup().addGap(28, 28, 28).addGroup(pnlMenuLayout.createParallelGroup().addComponent(btnHorario, 73, 73, 73).addComponent(btnRotaItinerario, 73, 73, 73).addComponent(btnItinerarioRota, 73, 73, 73).addComponent(btnCidade, 73, 73, 73).addComponent(btnEstado, 73, 73, 73).addComponent(btnMotorista, 73, 73, 73).addComponent(btnOnibus, 73, 73, 73)).addGap(28, 28, 28).addComponent(separadorMenu, 2, 2, 2).addGap(28, 28, 28).addComponent(pnlHome, 695, 695, 695).addComponent(pnlOnibus, 695, 695, 695).addComponent(pnlMotorista, 695, 695, 695).addComponent(pnlEstado, 695, 695, 695).addComponent(pnlCidade, 695, 695, 695).addComponent(pnlConsulta, 695, 695, 695).addComponent(pnlItinerarioRota, 695, 695, 695).addComponent(pnlHorario, 695, 695, 695).addComponent(pnlRotaItinerario, 695, 695, 695).addComponent(pnlFuncionario, 695, 695, 695).addContainerGap(29, 29)));
         pnlMenuLayout.setVerticalGroup(
                 pnlMenuLayout.createParallelGroup().addGroup(pnlMenuLayout.createSequentialGroup().addGap(28, 28, 28).addGroup(pnlMenuLayout.createParallelGroup().addComponent(pnlHome, 590, 590, 590).addComponent(pnlOnibus, 590, 590, 590).addComponent(pnlMotorista, 590, 590, 590).addComponent(pnlEstado, 590, 590, 590).addComponent(pnlCidade, 590, 590, 590).addComponent(pnlConsulta, 590, 590, 590).addComponent(pnlHorario, 590, 590, 590).addComponent(pnlRotaItinerario, 590, 590, 590).addComponent(pnlItinerarioRota, 590, 590, 590).addComponent(pnlFuncionario, 590, 590, 590).addGroup(pnlMenuLayout.createSequentialGroup().addComponent(btnOnibus, 73, 73, 73).addGap(12, 12, 12).addComponent(btnMotorista, 73, 73, 73).addGap(12, 12, 12).addComponent(btnEstado, 73, 73, 73).addGap(12, 12, 12).addComponent(btnCidade, 73, 73, 73).addGap(12, 12, 12).addComponent(btnItinerarioRota, 73, 73, 73).addGap(12, 12, 12).addComponent(btnRotaItinerario, 73, 73, 73).addGap(12, 12, 12).addComponent(btnHorario, 73, 73, 73).addGap(7, 7, 7)).addComponent(separadorMenu, 590, 590, 590)).addContainerGap(31, 31)));
-
-        pnlMenu.addMouseListener(new java.awt.event.MouseAdapter() {
-
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                pnlMenuMouseClicked(evt);
-            }
-        });
         return pnlMenu;
     }
 

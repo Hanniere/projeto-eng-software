@@ -16,6 +16,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import entidades.Cidade;
+import java.util.Calendar;
 
 public class PrincipalPassageiro extends JFrame implements MouseListener {
 
@@ -44,6 +45,7 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         arrayHorariosChegada = new ArrayList<String>();
         arrayPrecos = new ArrayList<Double>();
         arrayHorariosId = new ArrayList<Integer>();
+        arrayTabelaHorarioId = new ArrayList<Integer>();
         arrayPoltronasOcupadas = new ArrayList<Integer>();
 
         pnlInicioCompra = new JPanel(null);
@@ -262,7 +264,6 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         });
     }
 
-    //modificar
     private void inserePnlFimCompra() {
         listCompraFim = new JPanel(new FlowLayout(FlowLayout.LEFT));
         listCompraFim.setSize(new Dimension(700, 900));
@@ -490,11 +491,6 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                 }
             }
         }
-        JOptionPane.showMessageDialog(null, "Compra efetuada com sucesso!");
-        pnlFimCompra.setVisible(false);
-        pnlInicioCompra.removeAll();
-        inserePnlInicioCompra();
-        pnlInicioCompra.setVisible(true);
         String local = System.getProperty("user.dir");
         //escreve comprovante de compra
         try {
@@ -508,21 +504,39 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                 passagem.setAssentoComprado(Integer.parseInt(lblAuxAssento.getText().trim()));
                 f0.write(lblAux.getText() + " ");
                 f0.write(lblAuxAssento.getText() + barraN);
-                for (int j = 2; j < 6; j += 2) {
-                    JLabel lblAux1 = (JLabel) arrayAuxPnl.get(i).getComponent(j);
-                    JTextField txtAux1 = (JTextField) arrayAuxPnl.get(i).getComponent(j + 1);
+                for (int j = 3; j < 6; j += 2) {
+                    JLabel lblAux1 = (JLabel) arrayAuxPnl.get(i).getComponent(j-1);
+                    JTextField txtAux1 = (JTextField) arrayAuxPnl.get(i).getComponent(j);
                     if (j == 3) {
+                        System.out.println("txt Nome: " + txtAux1.getText());
                         passagem.setClienteNome(txtAux1.getText());
                     }
                     if (j == 5) {
+                        System.out.println("txt cpf: " + txtAux1.getText());
                         passagem.setClienteRg(txtAux1.getText());
                     }
                     f0.write(lblAux1.getText() + " ");
                     f0.write(txtAux1.getText() + barraN);
                 }
                 f0.write(barraN + barraN);
+                
+                Calendar calendarPegarDiaSemana = Calendar.getInstance();
+                calendarPegarDiaSemana.set(Calendar.DAY_OF_MONTH, cboCompraDataDia.getSelectedIndex());
+                calendarPegarDiaSemana.set(Calendar.MONTH, cboCompraDataMes.getSelectedIndex()-1);
+                calendarPegarDiaSemana.set(Calendar.YEAR, Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
+                int diaSemana = calendarPegarDiaSemana.get(Calendar.DAY_OF_WEEK);
+                passagem.setDiaId(diaSemana);
+                passagem.setData(cboCompraDataDia.getSelectedItem() + "/" + cboCompraDataMes.getSelectedItem() + "/" + cboCompraDataAno.getSelectedItem());
+                
                 daoPassagem = new DaoPassagem();
-                daoPassagem.cadastrarPassagemComprada(passagem);
+                for(int k=0;k<arrayTabelaHorarioId.size();k++){
+                    passagem.setHorario(arrayTabelaHorarioId.get(k));
+                    String cpf = daoPassagem.cadastrarPassagemComprada(passagem);
+                    if(!(cpf.equals(""))){
+                        JOptionPane.showMessageDialog(null, "Nao foi possivel finalizar a compra. Ja foi comprado uma passagem para esta viagem com o CPF "+cpf+".");
+                        return;
+                    }
+                }
             }
             f0.close();
             java.awt.Desktop.getDesktop().open(new File(local + "/src/imagens/Sem Titulo.txt"));
@@ -531,6 +545,12 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        JOptionPane.showMessageDialog(null, "Compra efetuada com sucesso!");
+        pnlFimCompra.setVisible(false);
+        pnlInicioCompra.removeAll();
+        inserePnlInicioCompra();
+        pnlInicioCompra.setVisible(true);
+        
 
         //fazer insercao no banco
     }
@@ -570,6 +590,7 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                 cboCompraDestino.removeAllItems();
                 cboCompraDestino.addItem("Selecione");
                 arrayRotaItinerarioIdCidadeDestino.clear();
+                arrayCidadesDestinoId.clear();
                 arrayRotaItinerarioIdCidadeDestino.add(0);
                 for (int i = 0; i < cidades.size(); i++) {
                     cboCompraDestino.addItem(cidades.get(i).getNome());
@@ -631,7 +652,6 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                     }
                     cboCompraHorario.requestFocus();
                 }
-
             }
         }
     }
@@ -702,14 +722,13 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                 lblCompraHorarioChegadaR.setText(arrayHorariosChegada.get(cboCompraHorario.getSelectedIndex()));
                 lblCompraHorarioPrecoR.setText(String.valueOf(arrayPrecos.get(cboCompraHorario.getSelectedIndex())));
                 arrayPoltronasOcupadas.clear();
-                System.out.println("aaaaa");
-                for(int i=0; i<arrayCidadesDestinoId.size();i++){
-                    System.out.println(arrayCidadesDestinoId.get(i));
-                }
-                System.out.println("cidade:"+ arrayCidadesDestinoId.get(cboCompraDestino.getSelectedIndex()-1));
+                arrayTabelaHorarioId.clear();
+                
                 arrayPoltronasOcupadas = daoPassagem.consultaPoltronasCompradas(arrayHorariosId.get(cboCompraHorario.getSelectedIndex()), (cboCompraDataDia.getSelectedItem() + "/" + cboCompraDataMes.getSelectedItem() + "/" + cboCompraDataAno.getSelectedItem()),arrayCidadesDestinoId.get(cboCompraDestino.getSelectedIndex()-1));
-                for (int i = 0; i < arrayPoltronasOcupadas.size(); i++) {
-                    System.out.println(arrayPoltronasOcupadas.get(i));
+                arrayTabelaHorarioId = daoPassagem.procuraHorariosId(arrayHorariosId.get(cboCompraHorario.getSelectedIndex()),arrayCidadesDestinoId.get(cboCompraDestino.getSelectedIndex()-1));
+                for (int i = 0; i < arrayTabelaHorarioId.size(); i++) {
+                    System.out.println("horario: " + arrayTabelaHorarioId.get(i));
+                    //System.out.println(arrayPoltronasOcupadas.get(i));
                 }
                 carregaPoltronas();
             } else {
@@ -789,6 +808,7 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
     private ArrayList<Integer> arrayRotaItinerarioIdCidadeDestino;
     private ArrayList<Integer> arrayHorariosId;
     private ArrayList<Integer> arrayPoltronasOcupadas;
+    private ArrayList<Integer> arrayTabelaHorarioId;
     private ArrayList<Double> arrayPrecos;
     private ArrayList<String> arrayHorariosChegada;
     private Passagem passagem;
