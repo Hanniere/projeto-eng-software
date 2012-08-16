@@ -134,4 +134,32 @@ public class DaoOnibus {
         } 
         return arrayList;
     }
+    public ArrayList<Onibus> consultarOnibusLivres(String horarioSaida, String horarioChegada, String dias){
+        ArrayList<Onibus> arrayList = new ArrayList<Onibus>();
+        BancoDados banco = new BancoDados();
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            String sql = "select onibus.* from onibus" +
+            		" where NOT EXISTS (select 1 from horario where onibus.OnibusId = horario.Horario_OnibusId and HorarioDiaId IN ("+dias+")" +
+            		" and (('"+horarioSaida+"' between horario.HorarioSaida and horario.HorarioChegada)" +
+            		" or ('"+horarioChegada+"' between horario.HorarioSaida and horario.HorarioChegada))" +
+            		" and Horario_usado = 1)";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Onibus onibus = new Onibus();
+                onibus.setId(rs.getInt("onibusId"));
+                onibus.setPlaca(rs.getString("onibusPlaca"));
+                arrayList.add(onibus);
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Não foi possivel carregar o driver.");
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+        } 
+        return arrayList;
+    }
 }
