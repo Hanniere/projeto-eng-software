@@ -12,39 +12,39 @@ import java.util.ArrayList;
 
 public class DaoHorario {
 
-public boolean cadastrarNovoHorario(Horario horario, int itinerarioId){
+    public boolean cadastrarNovoHorario(Horario horario, int itinerarioId) {
         BancoDados banco = new BancoDados();
         try {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql2 = "select * from horario " +
-            		"where HorarioDiaId IN ("+horario.getHorarioDiaId()+") " +
-            		"and HorarioSaida = '"+horario.getHorarioSaida()+"' " +
-            		"and Horario_RotaItinerarioId IN " +
-            		"(select RotaItinerarioId from rotaitinerario where RotaItinerario_ItinerarioId = "+itinerarioId+")"; 
+            String sql2 = "select * from horario "
+                    + "where HorarioDiaId IN (" + horario.getHorarioDiaId() + ") "
+                    + "and HorarioSaida = '" + horario.getHorarioSaida() + "' "
+                    + "and Horario_RotaItinerarioId IN "
+                    + "(select RotaItinerarioId from rotaitinerario where RotaItinerario_ItinerarioId = " + itinerarioId + ")";
             ResultSet rs = stmt.executeQuery(sql2);
-            if(rs.first()) {//Se existir first, ent�o j� existe no BD
-            	String sq13 ="update horario set HorarioPreco = "+horario.getHorarioPreco()+"" +
-            			" , Horario_MotoristaId = "+horario.getHorario_MotoristaId()+"" +
-            			" , Horario_OnibusId = "+horario.getHorario_OnibusId()+"" +
-            			" , Horario_usado = 1" +
-            			" where HorarioDiaId = "+horario.getHorarioDiaId()+"" +
-            			" and HorarioSaida = '"+horario.getHorarioSaida()+"'" +
-            			" and Horario_RotaItinerarioId = "+horario.getHorario_RotaItinerarioId()+"";
-            	stmt.executeUpdate(sq13);
+            if (rs.first()) {//Se existir first, ent�o j� existe no BD
+                String sq13 = "update horario set HorarioPreco = " + horario.getHorarioPreco() + ""
+                        + " , Horario_MotoristaId = " + horario.getHorario_MotoristaId() + ""
+                        + " , Horario_OnibusId = " + horario.getHorario_OnibusId() + ""
+                        + " , Horario_usado = 1"
+                        + " where HorarioDiaId = " + horario.getHorarioDiaId() + ""
+                        + " and HorarioSaida = '" + horario.getHorarioSaida() + "'"
+                        + " and Horario_RotaItinerarioId = " + horario.getHorario_RotaItinerarioId() + "";
+                stmt.executeUpdate(sq13);
             } else {
-            	System.out.println("INSERINDO HORARIO");
-                String sql = "insert into Horario (HorarioDiaId, Horario_RotaItinerarioId, HorarioSaida, HorarioChegada, HorarioPreco," +
-                		" Horario_MotoristaId, Horario_OnibusId, Horario_usado)" +
-                		" VALUES ( '"+horario.getHorarioDiaId()+"','"+horario.getHorario_RotaItinerarioId()+
-                		"','"+horario.getHorarioSaida()+"','"+horario.getHorarioChegada()+"','"+horario.getHorarioPreco()+
-                		"','"+horario.getHorario_MotoristaId()+"','"+horario.getHorario_OnibusId()+"', 1)";
+                System.out.println("INSERINDO HORARIO");
+                String sql = "insert into Horario (HorarioDiaId, Horario_RotaItinerarioId, HorarioSaida, HorarioChegada, HorarioPreco,"
+                        + " Horario_MotoristaId, Horario_OnibusId, Horario_usado)"
+                        + " VALUES ( '" + horario.getHorarioDiaId() + "','" + horario.getHorario_RotaItinerarioId()
+                        + "','" + horario.getHorarioSaida() + "','" + horario.getHorarioChegada() + "','" + horario.getHorarioPreco()
+                        + "','" + horario.getHorario_MotoristaId() + "','" + horario.getHorario_OnibusId() + "', 1)";
                 stmt.executeUpdate(sql);
             }
             rs.close();
             stmt.close();
-   
+
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
             ex.printStackTrace();
@@ -53,42 +53,150 @@ public boolean cadastrarNovoHorario(Horario horario, int itinerarioId){
             System.out.println("Problema com SQL.");
             ex.printStackTrace();
             return false;
-        } 
+        }
         return true;
     }
 
-public boolean atualizarHorario(Horario horario){
+    /*ArrayList<Horario> arraylist = new ArrayList<Horario>();
     BancoDados banco = new BancoDados();
     try {
-        Class.forName(banco.getDriver());
-        Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
-        Statement stmt = conn.createStatement();
-        
-    	String sq13 ="update horario set HorarioPreco = "+horario.getHorarioPreco()+"" +
-    			" , Horario_MotoristaId = "+horario.getHorario_MotoristaId()+"" +
-    			" , Horario_OnibusId = "+horario.getHorario_OnibusId()+"" +
-    			" , Horario_usado = "+horario.getHorario_usado()+"" +
-    			" where HorarioDiaId = "+horario.getHorarioDiaId()+"" +
-    			" and HorarioSaida = '"+horario.getHorarioSaida()+"'" +
-    			" and Horario_RotaItinerarioId = "+horario.getHorario_RotaItinerarioId()+"";
-        	stmt.executeUpdate(sq13);
-
-        stmt.close();
-  
+    Class.forName(banco.getDriver());
+    Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+    Statement stmt = conn.createStatement();
+    String sql = "SELECT horarioId FROM Horario INNER JOIN RotaItinerario ON (Horario_RotaItinerarioId = RotaItinerarioId) INNER JOIN Itinerario ON (RotaItinerario_ItinerarioId = ItinerarioId) WHERE ItinerarioId=" + idItinerario + " AND horarioSaida = '"+ horarioSaida +"'";
+    ResultSet rs = stmt.executeQuery(sql);
+    rs.next();
+    int idHorario = rs.getInt("horarioId");
+    System.out.println("idHorario " + idHorario);
+    int horarioIdAux = idHorario;
+    System.out.println("idHorarioAux " + horarioIdAux);
+    int destinoFinal = descobreCidadeDestinoFinal(idItinerario);
+    int cidadeIntermediaria = descobreCidadeDestino(idHorario);
+    System.out.println("destino final " + destinoFinal);
+    System.out.println("intermedi " + cidadeIntermediaria);
+    if (cidadeIntermediaria == destinoFinal) {
+    System.out.println("entrou no if");
+    sql = "SELECT * FROM Horario WHERE HorarioId = " + horarioIdAux;
+    rs = stmt.executeQuery(sql);
+    while (rs.next()) {
+    Horario horario = new Horario();
+    horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
+    horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
+    horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
+    horario.setHorarioSaida(rs.getString("horarioSaida"));
+    horario.setHorarioChegada(rs.getString("horarioChegada"));
+    horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
+    horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
+    horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
+    horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
+    horario.setHorarioPreco(rs.getDouble("horarioPreco"));
+    horario.setHorarioSaida(rs.getString("horarioSaida"));
+    arraylist.add(horario);
+    }
+    } else {
+    while (cidadeIntermediaria != destinoFinal) {
+    sql = "SELECT * FROM Horario WHERE HorarioId = " + horarioIdAux;
+    rs = stmt.executeQuery(sql);
+    while (rs.next()) {
+    Horario horario = new Horario();
+    horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
+    horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
+    horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
+    horario.setHorarioSaida(rs.getString("horarioSaida"));
+    horario.setHorarioChegada(rs.getString("horarioChegada"));
+    horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
+    horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
+    horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
+    horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
+    horario.setHorarioPreco(rs.getDouble("horarioPreco"));
+    horario.setHorarioSaida(rs.getString("horarioSaida"));
+    arraylist.add(horario);
+    }
+    horarioIdAux++;
+    System.out.println("horarioAux++ " + horarioIdAux);
+    cidadeIntermediaria = descobreCidadeDestino(horarioIdAux);
+    }
+    sql = "SELECT * FROM Horario WHERE HorarioId = " + horarioIdAux;
+    rs = stmt.executeQuery(sql);
+    while (rs.next()) {
+    Horario horario = new Horario();
+    horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
+    horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
+    horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
+    horario.setHorarioSaida(rs.getString("horarioSaida"));
+    horario.setHorarioChegada(rs.getString("horarioChegada"));
+    horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
+    horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
+    horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
+    horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
+    horario.setHorarioPreco(rs.getDouble("horarioPreco"));
+    horario.setHorarioSaida(rs.getString("horarioSaida"));
+    arraylist.add(horario);
+    }
+    }
     } catch (ClassNotFoundException ex) {
-        System.out.println("Não foi possivel carregar o driver.");
-        ex.printStackTrace();
-        return false;
+    System.out.println("Nao foi possivel carregar o driver.");
+    ex.printStackTrace();
     } catch (SQLException ex) {
-        System.out.println("Problema com SQL.");
-        ex.printStackTrace();
-        return false;
-    } 
-    return true;
-}
+    System.out.println("Problema com SQL.");
+    ex.printStackTrace();
+    }
+    return arraylist;*/
+    public boolean atualizarHorario(Horario horario, int idItinerario, String horarioSaida) {
+        BancoDados banco = new BancoDados();
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            String sql = new String();
+            int horarioIdAux = horario.getHorarioId();
+            System.out.println("idHorarioAux " + horarioIdAux);
+            int destinoFinal = descobreCidadeDestinoFinal(idItinerario);
+            int cidadeIntermediaria = descobreCidadeDestino(horario.getHorarioId());
+            System.out.println("destino final " + destinoFinal);
+            System.out.println("intermedi " + cidadeIntermediaria);
+            if (cidadeIntermediaria == destinoFinal) {
+                System.out.println("entrou no if");
+                sql = "update horario set HorarioPreco = " + horario.getHorarioPreco() + ""
+                    + " , Horario_MotoristaId = " + horario.getHorario_MotoristaId() + ""
+                    + " , Horario_OnibusId = " + horario.getHorario_OnibusId() + ""
+                    + " , Horario_usado = 0 "
+                    + " where HorarioId = " + horarioIdAux;
+                stmt.executeUpdate(sql);
+            } else {
+                while (cidadeIntermediaria != destinoFinal) {
+                    sql = "update horario set HorarioPreco = " + horario.getHorarioPreco() + ""
+                    + " , Horario_MotoristaId = " + horario.getHorario_MotoristaId() + ""
+                    + " , Horario_OnibusId = " + horario.getHorario_OnibusId() + ""
+                    + " , Horario_usado = 0"
+                    + " where HorarioId = " + horarioIdAux;
+                    stmt.executeUpdate(sql);
+                    horarioIdAux++;
+                    System.out.println("horarioAux++ " + horarioIdAux);
+                    cidadeIntermediaria = descobreCidadeDestino(horarioIdAux);
+                }
+                sql = "update horario set HorarioPreco = " + horario.getHorarioPreco() + ""
+                    + " , Horario_MotoristaId = " + horario.getHorario_MotoristaId() + ""
+                    + " , Horario_OnibusId = " + horario.getHorario_OnibusId() + ""
+                    + " , Horario_usado = 0"
+                    + " where HorarioId = " + horarioIdAux;
+                stmt.executeUpdate(sql);                
+            }
+            stmt.close();
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Não foi possivel carregar o driver.");
+            ex.printStackTrace();
+            return false;
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
     public ArrayList<ArrayList<String>> consultarTodosHorarios(int idRI, int dia) {
-        ArrayList<ArrayList<String>> matriz = new ArrayList<ArrayList<String>>();        
+        ArrayList<ArrayList<String>> matriz = new ArrayList<ArrayList<String>>();
         BancoDados banco = new BancoDados();
         try {
             Class.forName(banco.getDriver());
@@ -123,9 +231,9 @@ public boolean atualizarHorario(Horario horario){
         }
         return matriz;
     }
-    
-    public ArrayList<Horario> consultarTodosHorariosItinerario(int id) {
-        ArrayList<Horario> arrayHorario = new ArrayList<Horario>();        
+
+    public ArrayList<Horario> consultarTodosHorariosItinerario(int id, String horaSaida) {
+        ArrayList<Horario> arrayHorario = new ArrayList<Horario>();
         BancoDados banco = new BancoDados();
         try {
             Class.forName(banco.getDriver());
@@ -135,7 +243,7 @@ public boolean atualizarHorario(Horario horario){
                     + "FROM Horario H, RotaItinerario Ri, Itinerario I "
                     + "WHERE H.Horario_RotaItinerarioId = Ri.RotaItinerarioId "
                     + "AND Ri.RotaItinerario_ItinerarioId = I.ItinerarioId "
-                    + "AND I.ItinerarioId = " + id +" "
+                    + "AND I.ItinerarioId = " + id + " AND H.horarioSaida = '" + horaSaida + "' AND H.horario_usado = 1 "
                     + "ORDER BY Ri.RotaItinerarioOrdem";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -162,21 +270,21 @@ public boolean atualizarHorario(Horario horario){
         }
         return arrayHorario;
     }
-    
+
     public ArrayList<Horario> verificaHorarioItinerario(int idItinerario, int horarioUsado, String dias, String horarioSaida) {
-        ArrayList<Horario> arrayHorario = new ArrayList<Horario>();        
+        ArrayList<Horario> arrayHorario = new ArrayList<Horario>();
         BancoDados banco = new BancoDados();
         try {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "select * from horario where HorarioDiaId IN ("+dias+") " +
-            		"and HorarioSaida = '"+horarioSaida+"' " +
-            		"and Horario_RotaItinerarioId = (select RotaItinerarioId " +
-            		"from rotaitinerario " +
-            		"where RotaItinerario_ItinerarioId = "+idItinerario+" " +
-            		"and RotaItinerarioOrdem = 1) " +
-            		"and Horario_usado = "+horarioUsado+"";
+            String sql = "select * from horario where HorarioDiaId IN (" + dias + ") "
+                    + "and HorarioSaida = '" + horarioSaida + "' "
+                    + "and Horario_RotaItinerarioId = (select RotaItinerarioId "
+                    + "from rotaitinerario "
+                    + "where RotaItinerario_ItinerarioId = " + idItinerario + " "
+                    + "and RotaItinerarioOrdem = 1) "
+                    + "and Horario_usado = " + horarioUsado + "";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Horario horario = new Horario();
@@ -202,53 +310,103 @@ public boolean atualizarHorario(Horario horario){
         }
         return arrayHorario;
     }
-    
-    public ArrayList<Horario> consultaHorarioDeRotas(int id) {
-        ArrayList<Horario> arrayHorario = new ArrayList<Horario>();        
+
+    public ArrayList<Horario> consultaHorariosRotas(int idItinerario, String horarioSaida) {
+        ArrayList<Horario> arraylist = new ArrayList<Horario>();
         BancoDados banco = new BancoDados();
         try {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "SELECT horario_RotaItinerarioId, horarioId, horarioDiaId, horarioSaida, horarioChegada, horarioPreco, horario_MotoristaId, horario_OnibusId, horario_usado " +
-            		"FROM Horario H, RotaItinerario Ri " +
-            		"WHERE Ri.RotaItinerarioId = H.Horario_RotaItinerarioId " +
-            		"AND Ri.RotaItinerario_ItinerarioId = "+id+" " +
-            		"GROUP BY H.Horario_RotaItinerarioId";
+            String sql = "SELECT horarioId FROM Horario INNER JOIN RotaItinerario ON (Horario_RotaItinerarioId = RotaItinerarioId) INNER JOIN Itinerario ON (RotaItinerario_ItinerarioId = ItinerarioId) WHERE ItinerarioId=" + idItinerario + " AND horarioSaida = '" + horarioSaida + "'";
             ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                Horario horario = new Horario();
-                horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
-                horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
-                horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
-                horario.setHorarioSaida(rs.getString("horarioSaida"));
-                horario.setHorarioChegada(rs.getString("horarioChegada"));
-                horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
-                horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
-                horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
-                horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
-                arrayHorario.add(horario);
+            rs.next();
+            int idHorario = rs.getInt("horarioId");
+            System.out.println("idHorario " + idHorario);
+            int horarioIdAux = idHorario;
+            System.out.println("idHorarioAux " + horarioIdAux);
+            int destinoFinal = descobreCidadeDestinoFinal(idItinerario);
+            int cidadeIntermediaria = descobreCidadeDestino(idHorario);
+            System.out.println("destino final " + destinoFinal);
+            System.out.println("intermedi " + cidadeIntermediaria);
+            if (cidadeIntermediaria == destinoFinal) {
+                System.out.println("entrou no if");
+                sql = "SELECT * FROM Horario WHERE HorarioId = " + horarioIdAux;
+                rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    Horario horario = new Horario();
+                    horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
+                    horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
+                    horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
+                    horario.setHorarioSaida(rs.getString("horarioSaida"));
+                    horario.setHorarioChegada(rs.getString("horarioChegada"));
+                    horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
+                    horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
+                    horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
+                    horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
+                    horario.setHorarioPreco(rs.getDouble("horarioPreco"));
+                    horario.setHorarioSaida(rs.getString("horarioSaida"));
+                    arraylist.add(horario);
+                }
+            } else {
+                while (cidadeIntermediaria != destinoFinal) {
+                    sql = "SELECT * FROM Horario WHERE HorarioId = " + horarioIdAux;
+                    rs = stmt.executeQuery(sql);
+                    while (rs.next()) {
+                        Horario horario = new Horario();
+                        horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
+                        horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
+                        horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
+                        horario.setHorarioSaida(rs.getString("horarioSaida"));
+                        horario.setHorarioChegada(rs.getString("horarioChegada"));
+                        horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
+                        horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
+                        horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
+                        horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
+                        horario.setHorarioPreco(rs.getDouble("horarioPreco"));
+                        horario.setHorarioSaida(rs.getString("horarioSaida"));
+                        arraylist.add(horario);
+                    }
+                    horarioIdAux++;
+                    System.out.println("horarioAux++ " + horarioIdAux);
+                    cidadeIntermediaria = descobreCidadeDestino(horarioIdAux);
+                }
+                sql = "SELECT * FROM Horario WHERE HorarioId = " + horarioIdAux;
+                rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    Horario horario = new Horario();
+                    horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
+                    horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
+                    horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
+                    horario.setHorarioSaida(rs.getString("horarioSaida"));
+                    horario.setHorarioChegada(rs.getString("horarioChegada"));
+                    horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
+                    horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
+                    horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
+                    horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
+                    horario.setHorarioPreco(rs.getDouble("horarioPreco"));
+                    horario.setHorarioSaida(rs.getString("horarioSaida"));
+                    arraylist.add(horario);
+                }
             }
         } catch (ClassNotFoundException ex) {
-            System.out.println("Não foi possivel carregar o driver.");
+            System.out.println("Nao foi possivel carregar o driver.");
             ex.printStackTrace();
-
         } catch (SQLException ex) {
             System.out.println("Problema com SQL.");
             ex.printStackTrace();
-
         }
-        return arrayHorario;
+        return arraylist;
     }
-    
-    public int calculaTotalCidadesItinerario(int id){
+
+    public int calculaTotalCidadesItinerario(int id) {
         BancoDados banco = new BancoDados();
-        int resultado=0;
+        int resultado = 0;
         try {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "SELECT MAX(RotaItinerarioOrdem) from RotaItinerario where RotaItinerario_ItinerarioId = "+id;
+            String sql = "SELECT MAX(RotaItinerarioOrdem) from RotaItinerario where RotaItinerario_ItinerarioId = " + id;
             ResultSet rs = stmt.executeQuery(sql);
             rs.next();
             resultado = rs.getInt("MAX(RotaItinerarioOrdem)");
@@ -260,5 +418,50 @@ public boolean atualizarHorario(Horario horario){
             ex.printStackTrace();
         }
         return resultado;
+    }
+
+    public int descobreCidadeDestino(int horarioId) {
+        BancoDados banco = new BancoDados();
+        int cidadeDestino = 0;
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT Rota_CidadeDestino FROM Rota, RotaItinerario, Horario WHERE RotaId = RotaItinerario_RotaId AND RotaItinerarioId = Horario_RotaItinerarioId AND HorarioId = " + horarioId + "";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                cidadeDestino = rs.getInt("Rota_CidadeDestino");
+                System.out.println("Destino: " + cidadeDestino);
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Nao foi possivel carregar o driver.");
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+        }
+        return cidadeDestino;
+    }
+
+    public int descobreCidadeDestinoFinal(int id) {
+        BancoDados banco = new BancoDados();
+        int cidadeDestino = 0;
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            String sql = "select cidadeId from Cidade INNER JOIN Itinerario ON (cidadeId = itinerario_cidadeDestino) where itinerarioId = " + id + "";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                cidadeDestino = rs.getInt("cidadeId");
+            }
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Nao foi possivel carregar o driver.");
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+        }
+        return cidadeDestino;
     }
 }

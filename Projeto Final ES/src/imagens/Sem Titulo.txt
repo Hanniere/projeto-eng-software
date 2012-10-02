@@ -1,8 +1,17 @@
 Comprovante de Compra
 
 
-Assento:      30
-Nome Passageiro: q
-RG Passageiro: 23
+Origem: Sao Jose dos Campos
+Destino: Itajuba
+
+
+Assento:      23
+Nome Passageiro: 12
+CPF Passageiro: 12
+
+
+Assento:      27
+Nome Passageiro: 12
+CPF Passageiro: 12
 
 

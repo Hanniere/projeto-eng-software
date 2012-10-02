@@ -57,7 +57,6 @@ public class PanelRotaItinerario extends JPanel {
         carregaComboItinerarioRemocao();
 
         cboItinerarioCadastro.addItemListener(new ItemListener() {
-
             @Override
             public void itemStateChanged(ItemEvent evt) {
                 if (evt.getStateChange() == ItemEvent.SELECTED) {
@@ -70,34 +69,26 @@ public class PanelRotaItinerario extends JPanel {
                             cboCadastroDestino.setEnabled(true);
                             btnCadastroAddRota.setEnabled(true);
                         } else {
-                            JOptionPane.showMessageDialog(PanelRotaItinerario.this, "Itinerario nao possui rotas cadastradas");
-                            txtCadastroOrigem.setText(arrayItinerario.get(selectedCboIndexItinerario).getItinerario_cidadeOrigem() ); //setando primeiramente Origem           
-                            cboCadastroDestino.setEnabled(false);
-                            btnCadastroAddRota.setEnabled(false);
+                            JOptionPane.showMessageDialog(PanelRotaItinerario.this, "Cidade de origem nao possui rotas associadas.");
+                            reinicia();
                         }
-
+                    } else {
+                        reinicia();
                     }
                 }
             }
         });
 
         btnCadastroCancela.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent evt) {
-
-                //initComponents();
                 reinicia();
-
-
             }
         });
 
         btnCadastrar.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent evt) {
-
                 for (int i = 0; i < arrayRotaItinerarioCadastro.size(); i++) {
                     daoRotaItinerario.cadastrarNovoRotaItinerario(arrayRotaItinerarioCadastro.get(i));
                 }
@@ -105,6 +96,7 @@ public class PanelRotaItinerario extends JPanel {
                 reinicia();
                 carregaComboItinerarioRemocao();
                 carregaComboItinerarioCadastro();
+                JOptionPane.showMessageDialog(null, "Itinerario associado com sucesso!");
             }
         });
 
@@ -320,7 +312,6 @@ public class PanelRotaItinerario extends JPanel {
         JScrollPane scrollPaneRemocao = new JScrollPane(tableRotasRemocao);
         scrollPaneRemocao.setBounds(2, 20, 321, 148);
         tableRotasRemocao.setVisible(false);
-//        tableRotasCadastro.getCellEditor().cancelCellEditing();
 
         tableRotasRemocao.setToolTipText("Clique duas vezes para alterar rotas.");
         tbmRemocao.addColumn("Origem");
@@ -347,12 +338,21 @@ public class PanelRotaItinerario extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                daoItinerario.removerRotaItinerario(arrayItinerarioRemocao.get(selectIndexItinerarioRemover));
+                if(cboItinerarioRemocao.getSelectedIndex() == 0){
+                    JOptionPane.showMessageDialog(null, "Selecione um itinerario.");
+                } else {
+                    boolean verifica = daoItinerario.removerRotaItinerario(arrayItinerarioRemocao.get(selectIndexItinerarioRemover));
+                    if(verifica == false) {
+                        JOptionPane.showMessageDialog(null, "Nao e possivel remover. Existem horarios associados a este itinerario.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Rotas associadas ao itinerario removidas com sucesso!");
+                    }   
+                }
+                cboItinerarioRemocao.requestFocus();    
                 carregaComboItinerarioCadastro();
                 carregaComboItinerarioRemocao();
                 tbmRemocao.getDataVector().removeAllElements();
                 tbmRemocao.fireTableDataChanged();
-
             }
         });
 
@@ -440,6 +440,7 @@ public class PanelRotaItinerario extends JPanel {
         btnCadastrar.setEnabled(false);
 
     }
+    
     JTable tableRotasCadastro;
     DefaultTableModel tbmCadastro;
     JTable tableRotasRemocao;

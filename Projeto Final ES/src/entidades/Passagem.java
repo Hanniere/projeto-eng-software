@@ -4,7 +4,7 @@ public class Passagem {
 
 	private int id;
 	private String data;
-	private String clienteRg;
+	private String clienteCpf;
 	private String clienteNome;
 	private int assentoComprado;
 	private int horario;
@@ -28,11 +28,11 @@ public class Passagem {
 	public void setData(String data) {
 		this.data = data;
 	}
-	public String getClienteRg() {
-		return clienteRg;
+	public String getClienteCpf() {
+		return clienteCpf;
 	}
-	public void setClienteRg(String clienteRg) {
-		this.clienteRg = clienteRg;
+	public void setClienteCpf(String clienteCpf) {
+		this.clienteCpf = clienteCpf;
 	}
 	public String getClienteNome() {
 		return clienteNome;

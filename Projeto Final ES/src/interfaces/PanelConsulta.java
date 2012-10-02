@@ -14,6 +14,9 @@ import entidades.*;
 import dao.DaoPassagem;
 import entidades.Passagem;
 import java.awt.BorderLayout;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -30,6 +33,7 @@ public class PanelConsulta {
         daoEstado = new DaoEstado();
         daoMotorista = new DaoMotorista();
         daoRota = new DaoRota();
+        daoItinerario = new DaoItinerario();
         daoItinerario = new DaoItinerario();
         daoPassagem = new DaoPassagem();
         daoRotaItinerario = new DaoRotaItinerario();
@@ -310,7 +314,6 @@ public class PanelConsulta {
         arrayHorariosId = new ArrayList<Integer>();
         arrayPoltronasOcupadas = new ArrayList<Integer>();
 
-        
         cboConsultaPassagemDataAno.setEnabled(false);
         cboConsultaPassagemDataDia.setEnabled(false);
         cboConsultaPassagemDataMes.setEnabled(false);
@@ -332,7 +335,7 @@ public class PanelConsulta {
         listConsultaPassagem.setPreferredSize(new Dimension(100, acumuladorConsultaPassagem * 21));
         sListConsultaPassagem = new JScrollPane(listConsultaPassagem);
         sListConsultaPassagem.setPreferredSize(new Dimension(250, 210));
-
+        //sListConsultaPassagem.setVisible(false);
         for (int i = 1; i <= 31; i++) {
             cboConsultaPassagemDataDia.addItem(i);
         }
@@ -342,13 +345,6 @@ public class PanelConsulta {
         for (int i = 2012; i <= 2013; i++) {
             cboConsultaPassagemDataAno.addItem(i);
         }
-        ArrayList<Cidade> cidade = daoPassagem.carregaCidadesOrigem();
-        arrayCidadesOrigemId.add(0);
-        for (int i = 0; i < cidade.size(); i++) {
-            cboConsultaPassagemOrigem.addItem(cidade.get(i).getNome());
-            arrayCidadesOrigemId.add(cidade.get(i).getId());
-        }
-        
         pnlConsultaPassagemCampos.add(lblConsultaPassagemOrigem);
         pnlConsultaPassagemCampos.add(cboConsultaPassagemOrigem);
         pnlConsultaPassagemCampos.add(lblConsultaPassagemDestino);
@@ -570,6 +566,17 @@ public class PanelConsulta {
         listConsultaRota.setPreferredSize(new Dimension(150, acumuladorConsultaRota * 25));
     }
 
+    private void carregaDadosConsultaPassagem(ArrayList<Cidade> cidade){
+        cboConsultaPassagemOrigem.removeAllItems();
+        cboConsultaPassagemOrigem.addItem("Selecione");
+        arrayCidadesOrigemId.clear();
+        arrayCidadesOrigemId.add(0);
+        for (int i = 0; i < cidade.size(); i++) {
+            cboConsultaPassagemOrigem.addItem(cidade.get(i).getNome());
+            arrayCidadesOrigemId.add(cidade.get(i).getId());
+        }
+    }
+    
     private void carregaDadosConsultaItinerario(ArrayList<Itinerario> itinerarios) {
         acumuladorConsultaItinerario = 0;
         listConsultaItinerario.removeAll();
@@ -721,7 +728,13 @@ public class PanelConsulta {
         pnlConsultaItinerario.setVisible(false);
         pnlConsultaPassagem.setVisible(true);
         pnlConsultaHorario.setVisible(false);
-        //carregaDadosConsultaCidade(daoCidade.consultarTodasCidades());
+        cboConsultaPassagemDataAno.setEnabled(false);
+        cboConsultaPassagemDataMes.setEnabled(false);
+        cboConsultaPassagemDataDia.setEnabled(false);
+        cboConsultaPassagemDestino.setEnabled(false);
+        cboConsultaPassagemHorario.setEnabled(false);
+        carregaDadosConsultaPassagem(daoPassagem.carregaCidadesOrigem());
+        cboConsultaPassagemOrigem.requestFocus();
     }
 
     private void cboConsultaOnibusIdItemStateChanged(ItemEvent evt) {
@@ -840,6 +853,8 @@ public class PanelConsulta {
         cboConsultaPassagemDestino.setSelectedItem("Selecione");
         cboConsultaPassagemHorario.setEnabled(false);
         cboConsultaPassagemHorario.setSelectedItem("Selecione");
+        listConsultaPassagem.removeAll();        
+        listConsultaPassagem.updateUI();
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboConsultaPassagemOrigem.getSelectedItem().equals("Selecione"))) {
                 cboConsultaPassagemDestino.setEnabled(true);
@@ -850,6 +865,7 @@ public class PanelConsulta {
                 cboConsultaPassagemDestino.removeAllItems();
                 cboConsultaPassagemDestino.addItem("Selecione");
                 arrayRotaItinerarioIdCidadeDestino.clear();
+                arrayCidadesDestinoId.clear();
                 arrayRotaItinerarioIdCidadeDestino.add(0);
                 for (int i = 0; i < cidades.size(); i++) {
                     cboConsultaPassagemDestino.addItem(cidades.get(i).getNome());
@@ -857,6 +873,9 @@ public class PanelConsulta {
                     arrayRotaItinerarioIdCidadeDestino.add(Integer.parseInt(cidades.get(i).getEstado()));
                 }
                 cboConsultaPassagemDestino.requestFocus();
+            } else {
+                listConsultaPassagem.removeAll();
+                listConsultaPassagem.updateUI();
             }
         }
     }
@@ -870,6 +889,8 @@ public class PanelConsulta {
         cboConsultaPassagemDataMes.setSelectedItem("-");
         cboConsultaPassagemHorario.setEnabled(false);
         cboConsultaPassagemHorario.setSelectedItem("Selecione");
+        listConsultaPassagem.removeAll();        
+        listConsultaPassagem.updateUI();
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboConsultaPassagemDestino.getSelectedItem().equals("Selecione"))) {
                 cboConsultaPassagemDataAno.setEnabled(true);
@@ -877,6 +898,9 @@ public class PanelConsulta {
                 cboConsultaPassagemDataMes.setEnabled(true);
                 cboConsultaPassagemDataDia.requestFocus();
             }
+        } else {
+            listConsultaPassagem.removeAll();        
+            listConsultaPassagem.updateUI();
         }
     }
 
@@ -902,6 +926,9 @@ public class PanelConsulta {
                     }
                     cboConsultaPassagemHorario.requestFocus();
                 }
+            } else {
+                listConsultaPassagem.removeAll();        
+                listConsultaPassagem.updateUI();
             }
         }
     }
@@ -928,6 +955,9 @@ public class PanelConsulta {
                     }
                 }
                 cboConsultaPassagemDataAno.requestFocus();
+            } else {
+                listConsultaPassagem.removeAll();        
+                listConsultaPassagem.updateUI();
             }
         }
     }
@@ -954,6 +984,9 @@ public class PanelConsulta {
                     }
                 }
                 cboConsultaPassagemDataMes.requestFocus();
+            } else {
+                listConsultaPassagem.removeAll();        
+                listConsultaPassagem.updateUI();
             }
         }
     }
@@ -962,18 +995,43 @@ public class PanelConsulta {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboConsultaPassagemHorario.getSelectedItem().equals("Selecione"))) {
                 arrayPoltronasOcupadas.clear();
-                for(int i=0; i<arrayCidadesDestinoId.size();i++){
-                    System.out.println(arrayCidadesDestinoId.get(i));
-                }
-                System.out.println("cidade:"+ arrayCidadesDestinoId.get(cboConsultaPassagemDestino.getSelectedIndex()-1));
+                listConsultaPassagem.removeAll();
+                listConsultaPassagem.updateUI();
                 arrayPoltronasOcupadas = daoPassagem.consultaPoltronasCompradas(arrayHorariosId.get(cboConsultaPassagemHorario.getSelectedIndex()), (cboConsultaPassagemDataDia.getSelectedItem() + "/" + cboConsultaPassagemDataMes.getSelectedItem() + "/" + cboConsultaPassagemDataAno.getSelectedItem()),arrayCidadesDestinoId.get(cboConsultaPassagemDestino.getSelectedIndex()-1));
-                for (int i = 0; i < arrayPoltronasOcupadas.size(); i++) {
-                    System.out.println("poltrona ocupada: " + arrayPoltronasOcupadas.get(i));
+                if(arrayPoltronasOcupadas.isEmpty()){
+                    JLabel lblPassVendida = new JLabel("Não há passagens compradas nesta");
+                    lblPassVendida.setPreferredSize(new Dimension(250,30));
+                    listConsultaPassagem.add(lblPassVendida);
+                    JLabel lblPassVendida2 = new JLabel("viagem.");
+                    lblPassVendida.setPreferredSize(new Dimension(250,30));
+                    listConsultaPassagem.add(lblPassVendida2);
+                    listConsultaPassagem.updateUI();
+                } else {
+                    JLabel lblPassVendida = new JLabel("Passagens Vendidas:");
+                    lblPassVendida.setPreferredSize(new Dimension(250,30));
+                    listConsultaPassagem.add(lblPassVendida);
+                    Collections.sort(arrayPoltronasOcupadas);
+                    /*for(int i=0;i < arrayPoltronasOcupadas.size()-1;i++){
+                        if(arrayPoltronasOcupadas.get(i) == arrayPoltronasOcupadas.get(i+1)){
+                            arrayPoltronasOcupadas.remove(i);
+                            i = i--;
+                        }
+                    } */ 
+
+                    for(int i=0;i<arrayPoltronasOcupadas.size();i++){
+                        System.out.println("poltrona ocupada22: " + arrayPoltronasOcupadas.get(i));
+                        listConsultaPassagem.add(new JLabel(""+arrayPoltronasOcupadas.get(i)));
+                    }
+                    listConsultaPassagem.updateUI();
                 }
-                
-            }
+            } else {
+                listConsultaPassagem.removeAll();
+                listConsultaPassagem.updateUI();
+            }            
         }
     }
+
+    
     //------- Geral
     private Font fontePadrao;
     private DaoOnibus daoOnibus;

@@ -26,11 +26,9 @@ public class PanelRelatorio extends JFrame {
         this.setTitle("Relatorio");
         this.setMinimumSize(new Dimension(300, 200));
         this.setResizable(false);
-        //this.setUndecorated(true);
         Container frame = this.getContentPane();
         this.setSize(300, 200);
         Toolkit tk = Toolkit.getDefaultToolkit();
-        //  Obtendo a dimensão da tela
         Dimension screenSize = tk.getScreenSize();
         //  Centralizando
         setLocation((screenSize.width - getSize().width) / 2,
@@ -97,41 +95,42 @@ public class PanelRelatorio extends JFrame {
             JOptionPane.showMessageDialog(null, "Selecione um ano.");
             cboAno.requestFocus();
         } else {
-
-
             String local = System.getProperty("user.dir");
             //escreve relatorio
             try {
                 ArrayList<ArrayList<String>> passagens = daoPassagem.consultarTodasPassagensDoDia(String.valueOf(cboDia.getSelectedItem()) + "/" + String.valueOf(cboMes.getSelectedItem()) + "/" + String.valueOf(cboAno.getSelectedItem()));
-                System.out.println("num array: " + passagens.size());
-                String barraN = System.clearProperty("line.separator");
-                FileWriter f0 = new FileWriter(local + "/src/imagens/Sem Titulo.txt");
-                f0.write("Relatorio do dia " + String.valueOf(cboDia.getSelectedItem()) + "/" + String.valueOf(cboMes.getSelectedItem()) + "/" + String.valueOf(cboAno.getSelectedItem()) + barraN + barraN + barraN);
-                for (int i = 0; i < (passagens.size()); i++) {
-                    int j = i;
-                    System.out.println(j);
-                    while ((passagens.get(j).get(1).equals(passagens.get(j + 1).get(1))) && (passagens.get(j).get(13).equals(passagens.get(j + 1).get(13)))) {
-                        j++;
-                        if (j == passagens.size()-1) {
-                            System.out.println("tem q sair agr");
-                            break;
-                        }
-                    }
+                if(passagens.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Nao ha passagens compradas nesta data.");      
+                } else {
+                    String barraN = System.clearProperty("line.separator");
+                    FileWriter f0 = new FileWriter(local + "/src/imagens/Sem Titulo.txt");
+                    f0.write("Relatorio do dia " + String.valueOf(cboDia.getSelectedItem()) + "/" + String.valueOf(cboMes.getSelectedItem()) + "/" + String.valueOf(cboAno.getSelectedItem()) + barraN + barraN + barraN);
+                    for (int i = 0; i < passagens.size()-1; i++) {
+                        /*nt j = i;
+                        System.out.println(j);
+                        while ((passagens.get(j).get(1).equals(passagens.get(j + 1).get(1))) && (passagens.get(j).get(13).equals(passagens.get(j + 1).get(13)))) {
+                            j++;
+                            if (j == passagens.size()-1) {
+                                System.out.println("tem q sair agr");
+                                break;
+                            }
+                        }*/
 
-                    f0.write(barraN + "Passageiro: " + passagens.get(i).get(2));
-                    f0.write(barraN + "RG: " + passagens.get(i).get(1));
-                    f0.write(barraN + "Assento comprado: " + passagens.get(i).get(3));
-                    f0.write(barraN + "Viagem: " + passagens.get(i).get(7) + "-" + passagens.get(i).get(8) + " até " + passagens.get(j).get(9) + "-" + passagens.get(j).get(10));
-                    f0.write(barraN + "Horario de Saida: " + passagens.get(i).get(4));
-                    f0.write(barraN + "Horario de Chegada: " + passagens.get(j).get(5));
-                    f0.write(barraN + "Placa do Onibus que fez esta viagem: " + passagens.get(i).get(11));
-                    //f0.write(barraN+"Motorista que fez esta viagem: "+passagens.get(i).get(12));
-                    f0.write(barraN + barraN);
-                    i = j;
-                    System.out.println("i modificado: "+ i);
+                        //f0.write(barraN + "Passageiro: " + passagens.get(i).get(2));
+                        f0.write(barraN + "RG: " + passagens.get(i).get(1));
+                        f0.write(barraN + "Assento comprado: " + passagens.get(i).get(3));
+                        f0.write(barraN + "Viagem: " + passagens.get(i).get(7) + "-" + passagens.get(i).get(8) + " até " + passagens.get(i).get(9) + "-" + passagens.get(i).get(10));
+                        f0.write(barraN + "Horario de Saida: " + passagens.get(i).get(4));
+                        f0.write(barraN + "Horario de Chegada: " + passagens.get(i).get(5));
+                        f0.write(barraN + "Placa do Onibus que fez esta viagem: " + passagens.get(i).get(11));
+                        //f0.write(barraN+"Motorista que fez esta viagem: "+passagens.get(i).get(12));
+                        f0.write(barraN + barraN);
+                        //i = j;
+                        System.out.println("i modificado: "+ i);
+                    }
+                    f0.close();
+                    java.awt.Desktop.getDesktop().open(new File(local + "/src/imagens/Sem Titulo.txt"));
                 }
-                f0.close();
-                java.awt.Desktop.getDesktop().open(new File(local + "/src/imagens/Sem Titulo.txt"));
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {

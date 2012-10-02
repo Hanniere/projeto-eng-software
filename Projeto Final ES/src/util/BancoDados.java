@@ -5,7 +5,7 @@ public class BancoDados {
     private String driver = "com.mysql.jdbc.Driver";
     private String banco = "projES";
     private String host = "localhost";
-    private String str_conn = "jdbc:mysql://"+host+":3306/"+banco;
+    private String str_conn = "jdbc:mysql://"+host+":3306/"+banco; //3311
     private String usuario = "root";
     private String senha = "root";
 
