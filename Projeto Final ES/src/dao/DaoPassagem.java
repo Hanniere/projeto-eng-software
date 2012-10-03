@@ -336,7 +336,7 @@ public class DaoPassagem {
                     + " AND Cd.cidade_estadoId = Ed.estadoId"
                     + " AND H.horario_motoristaId = M.motoristaId"
                     + " AND H.horario_onibusId = O.onibusId"
-                    + " ORDER BY I.ItinerarioId, P.PassagemClienteCpf, H.horarioSaida";
+                    + " ORDER BY I.ItinerarioId, P.PassagemClienteCpf, P.PassagemNumAssentoComprado, H.horarioSaida";
 
             //String sql = "select * from Passagem where PassagemData = '" + data + "'";
             ResultSet rs = stmt.executeQuery(sql);

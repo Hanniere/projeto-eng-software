@@ -29,10 +29,10 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        initComponents();
+        inserePnlPrincipal();
     }
 
-    private void initComponents() {
+    private void inserePnlPrincipal() {
         this.setTitle("SISTEMA DE COMPRAS DE PASSAGENS DE ONIBUS");
         this.setMinimumSize(new Dimension(900, 700));
         this.setExtendedState(PrincipalPassageiro.MAXIMIZED_BOTH); //abrir tela maximizada
@@ -273,6 +273,24 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         pnlFimCompra.add(sListCompraFim);
     }
 
+    private void ordenaArrayPnl() {
+        int j;
+        boolean flag = true;   // set flag to true to begin first pass
+        JPanel temp;   //holding variable
+
+        while (flag) {
+            flag = false;
+            for (j = 0; j < arrayAuxPnl.size() - 1; j++) {
+                if (Integer.parseInt(arrayAuxPnl.get(j).getName()) > Integer.parseInt(arrayAuxPnl.get(j + 1).getName())) {
+                    temp = arrayAuxPnl.get(j);
+                    arrayAuxPnl.set(j, arrayAuxPnl.get(j+1));
+                    arrayAuxPnl.set(j+1, temp);
+                    flag = true;
+                }
+            }
+        }
+    }
+    
     private void iniciaFimCompra(int qtde, ArrayList<Integer> arrayAssentos) {
         listCompraFim.removeAll();
         Collections.sort(arrayAssentos);
@@ -286,11 +304,16 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
             arrayAuxPnl.get(i).add(new JTextField("", 15));
             arrayAuxPnl.get(i).add(new JLabel("CPF Passageiro:"));
             arrayAuxPnl.get(i).add(new JTextField("", 15));
+            arrayAuxPnl.get(i).setName((arrayLabelPoltronas.get(arrayAssentos.get(i)).getText()));
             ((JTextField) arrayAuxPnl.get(i).getComponent(5)).setDocument(limitaCaracteres(12));
             arrayAuxPnl.get(i).getComponent(1).setPreferredSize(new Dimension(150, 30));
             for (int j = 0; j < 6; j += 2) {
                 arrayAuxPnl.get(i).getComponent(j).setPreferredSize(new Dimension(120, 30));
             }
+            //listCompraFim.add(arrayAuxPnl.get(i));
+        }
+        ordenaArrayPnl();
+        for (int i = 0; i < qtde; i++) {
             listCompraFim.add(arrayAuxPnl.get(i));
         }
         if (qtde % 2 == 0) {
@@ -450,7 +473,13 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                 arrayAssentos.add(i);
             }
         }
+        for (int i = 0; i < arrayAssentos.size(); i++) {
+            System.out.println("assento " + arrayAssentos.get(i));
+        }
         Collections.sort(arrayAssentos);
+        for (int i = 0; i < arrayAssentos.size(); i++) {
+            System.out.println("assento " + arrayAssentos.get(i));
+        }
         if (contadorPoltronas == 0) {
             JOptionPane.showMessageDialog(null, "Selecione as poltronas desejadas para continuar.");
         } else {

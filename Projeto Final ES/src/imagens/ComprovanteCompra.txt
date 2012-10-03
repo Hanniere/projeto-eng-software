@@ -3,7 +3,7 @@ Relatorio do dia 15/7/2012
 
 
 Passageiro: Marcela
-RG: 1
+CPF: 1
 Assento comprado: 16
 Viagem: Sao Jose dos Campos-SP até Itajuba-MG
 Horario de Saida: 11:00:00
@@ -12,7 +12,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: q
-RG: 1
+CPF: 1
 Assento comprado: 20
 Viagem: Sao Jose dos Campos-SP até Itajuba-MG
 Horario de Saida: 11:00:00
@@ -21,7 +21,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: Matheus
-RG: 12
+CPF: 12
 Assento comprado: 15
 Viagem: Sao Jose dos Campos-SP até Itajuba-MG
 Horario de Saida: 11:00:00
@@ -30,7 +30,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: 12
-RG: 12
+CPF: 12
 Assento comprado: 23
 Viagem: Sao Jose dos Campos-SP até Itajuba-MG
 Horario de Saida: 11:00:00
@@ -39,7 +39,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: 12
-RG: 12
+CPF: 12
 Assento comprado: 27
 Viagem: Sao Jose dos Campos-SP até Itajuba-MG
 Horario de Saida: 11:00:00
@@ -48,7 +48,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: Matheus
-RG: 123
+CPF: 123
 Assento comprado: 9
 Viagem: Sao Jose dos Campos-SP até Guaratingueta-SP
 Horario de Saida: 11:00:00
@@ -57,7 +57,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: A
-RG: 1234
+CPF: 1234
 Assento comprado: 31
 Viagem: Guaratingueta-SP até Itajuba-MG
 Horario de Saida: 12:00:00
@@ -66,7 +66,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: Marcela
-RG: 12345
+CPF: 12345
 Assento comprado: 19
 Viagem: Sao Jose dos Campos-SP até Itajuba-MG
 Horario de Saida: 11:00:00
@@ -75,7 +75,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: q
-RG: 1333
+CPF: 1333
 Assento comprado: 12
 Viagem: Sao Jose dos Campos-SP até Itajuba-MG
 Horario de Saida: 11:00:00
@@ -84,7 +84,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: q
-RG: 23
+CPF: 23
 Assento comprado: 18
 Viagem: Guaratingueta-SP até Itajuba-MG
 Horario de Saida: 12:00:00
@@ -93,7 +93,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: q
-RG: 23
+CPF: 23
 Assento comprado: 30
 Viagem: Sao Jose dos Campos-SP até Guaratingueta-SP
 Horario de Saida: 11:00:00
@@ -102,7 +102,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: w
-RG: 4
+CPF: 4
 Assento comprado: 18
 Viagem: Sao Jose dos Campos-SP até Guaratingueta-SP
 Horario de Saida: 11:00:00
@@ -111,7 +111,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: Goias
-RG: 456
+CPF: 456
 Assento comprado: 17
 Viagem: Sao Jose dos Campos-SP até Guaratingueta-SP
 Horario de Saida: 11:00:00
@@ -120,7 +120,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: B
-RG: 4567
+CPF: 4567
 Assento comprado: 30
 Viagem: Guaratingueta-SP até Itajuba-MG
 Horario de Saida: 12:00:00
@@ -129,7 +129,7 @@ Placa do Onibus que fez esta viagem: DDJ-1345
 
 
 Passageiro: Victor
-RG: 789
+CPF: 789
 Assento comprado: 21
 Viagem: Guaratingueta-SP até Itajuba-MG
 Horario de Saida: 12:00:00

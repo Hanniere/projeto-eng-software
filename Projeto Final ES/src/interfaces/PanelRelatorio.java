@@ -48,7 +48,8 @@ public class PanelRelatorio extends JFrame {
         cboAno.setBounds(170, 50, 70, 30);
         btnGerarRelatorio.setBounds(15, 100, 130, 40);
         btnFecharFrame.setBounds(160, 100, 110, 40);
-
+        barraN = System.clearProperty("line.separator");
+        
         frame.add(lblSelecioneData);
         frame.add(cboDia);
         frame.add(cboMes);
@@ -62,7 +63,7 @@ public class PanelRelatorio extends JFrame {
         for (int i = 1; i <= 12; i++) {
             cboMes.addItem(i);
         }
-        for (int i = 2000; i <= 2012; i++) {
+        for (int i = 2012; i >= 2000; i--) {
             cboAno.addItem(i);
         }
 
@@ -102,34 +103,35 @@ public class PanelRelatorio extends JFrame {
                 if(passagens.isEmpty()){
                     JOptionPane.showMessageDialog(null, "Nao ha passagens compradas nesta data.");      
                 } else {
-                    String barraN = System.clearProperty("line.separator");
-                    FileWriter f0 = new FileWriter(local + "/src/imagens/Sem Titulo.txt");
+                    FileWriter f0 = new FileWriter(local + "/src/imagens/ComprovanteCompra.txt");
                     f0.write("Relatorio do dia " + String.valueOf(cboDia.getSelectedItem()) + "/" + String.valueOf(cboMes.getSelectedItem()) + "/" + String.valueOf(cboAno.getSelectedItem()) + barraN + barraN + barraN);
                     for (int i = 0; i < passagens.size()-1; i++) {
-                        /*nt j = i;
-                        System.out.println(j);
-                        while ((passagens.get(j).get(1).equals(passagens.get(j + 1).get(1))) && (passagens.get(j).get(13).equals(passagens.get(j + 1).get(13)))) {
+                        int j = i;
+                        while ((passagens.get(j).get(1).equals(passagens.get(j + 1).get(1))) && (passagens.get(j).get(13).equals(passagens.get(j + 1).get(13))) && (passagens.get(j).get(3).equals(passagens.get(j + 1).get(3)))) {
                             j++;
                             if (j == passagens.size()-1) {
-                                System.out.println("tem q sair agr");
                                 break;
                             }
-                        }*/
-
-                        //f0.write(barraN + "Passageiro: " + passagens.get(i).get(2));
-                        f0.write(barraN + "RG: " + passagens.get(i).get(1));
+                        }
+                        f0.write(barraN + "Passageiro: " + passagens.get(i).get(2));
+                        f0.write(barraN + "CPF: " + passagens.get(i).get(1));
                         f0.write(barraN + "Assento comprado: " + passagens.get(i).get(3));
-                        f0.write(barraN + "Viagem: " + passagens.get(i).get(7) + "-" + passagens.get(i).get(8) + " até " + passagens.get(i).get(9) + "-" + passagens.get(i).get(10));
+                        f0.write(barraN + "Viagem: " + passagens.get(i).get(7) + "-" + passagens.get(i).get(8) + " até " + passagens.get(j).get(9) + "-" + passagens.get(j).get(10));
                         f0.write(barraN + "Horario de Saida: " + passagens.get(i).get(4));
-                        f0.write(barraN + "Horario de Chegada: " + passagens.get(i).get(5));
+                        f0.write(barraN + "Horario de Chegada: " + passagens.get(j).get(5));
                         f0.write(barraN + "Placa do Onibus que fez esta viagem: " + passagens.get(i).get(11));
                         //f0.write(barraN+"Motorista que fez esta viagem: "+passagens.get(i).get(12));
+                        
+                        
                         f0.write(barraN + barraN);
-                        //i = j;
+                        i = j;
                         System.out.println("i modificado: "+ i);
                     }
                     f0.close();
-                    java.awt.Desktop.getDesktop().open(new File(local + "/src/imagens/Sem Titulo.txt"));
+                    java.awt.Desktop.getDesktop().open(new File(local + "/src/imagens/ComprovanteCompra.txt"));
+                    cboDia.setSelectedIndex(0);
+                    cboMes.setSelectedIndex(0);
+                    cboAno.setSelectedIndex(0);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -149,4 +151,5 @@ public class PanelRelatorio extends JFrame {
     private JComboBox cboAno;
     private JButton btnGerarRelatorio;
     private JButton btnFecharFrame;
+    private String barraN;
 }
