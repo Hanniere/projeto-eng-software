@@ -194,7 +194,44 @@ public class PanelFuncionario extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnFuncionarioCadastrarClick(evt);
+                if (txtFuncionarioCadastroNome.getText().equals("")) {
+                    JOptionPane.showMessageDialog(pnlFuncionario, "Digite um nome.");
+                    txtFuncionarioCadastroNome.requestFocus();
+                } else if (txtFuncionarioCadastroCpf.getText().equals("   .   .   -  ")) {
+                    JOptionPane.showMessageDialog(pnlFuncionario, "Digite um CPF.");
+                    txtFuncionarioCadastroCpf.requestFocus();
+                } else if (txtFuncionarioCadastroEmail.getText().equals("")) {
+                    JOptionPane.showMessageDialog(pnlFuncionario, "Digite um e-mail.");
+                    txtFuncionarioCadastroEmail.requestFocus();
+                } else if (txtFuncionarioCadastroSenha.getText().equals("")) {
+                    JOptionPane.showMessageDialog(pnlFuncionario, "Digite uma senha.");
+                    txtFuncionarioCadastroSenha.requestFocus();
+                } else {
+                    funcionario.setFuncionarioNome(txtFuncionarioCadastroNome.getText());
+                    funcionario.setFuncionarioCpf(txtFuncionarioCadastroCpf.getText());
+                    funcionario.setFuncionarioSenha(txtFuncionarioCadastroSenha.getText());
+                    funcionario.setFuncionarioEmail(txtFuncionarioCadastroEmail.getText());
+                    if (chBxFuncionarioCadastroAdmin.isSelected()) {
+                        funcionario.setFuncionarioAcesso(1);
+                    } else {
+                        funcionario.setFuncionarioAcesso(0);
+                    }
+                    boolean verifica = daoFuncionario.cadastrarFuncionario(funcionario);
+                    if (verifica) {
+                        JOptionPane.showMessageDialog(pnlFuncionario, "Funcionario cadastrado com sucesso!");
+                        txtFuncionarioCadastroNome.setText("");
+                        txtFuncionarioCadastroCpf.setValue("");
+                        txtFuncionarioCadastroSenha.setText("");
+                        txtFuncionarioCadastroEmail.setText("");
+                        chBxFuncionarioCadastroAdmin.setSelected(false);
+                        carregaCombosFuncionario();
+                        txtFuncionarioCadastroNome.requestFocus();
+                    } else {
+                        JOptionPane.showMessageDialog(pnlFuncionario, "CPF ja existe para outro funcionario!");
+                        txtFuncionarioCadastroCpf.setValue("");
+                        txtFuncionarioCadastroCpf.requestFocus();
+                    }
+                }
             }
         });
 
@@ -202,7 +239,12 @@ public class PanelFuncionario extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnFuncionarioCadastroLimpaClick(evt);
+                txtFuncionarioCadastroCpf.setValue("");
+                txtFuncionarioCadastroEmail.setText("");
+                txtFuncionarioCadastroSenha.setText("");
+                txtFuncionarioCadastroNome.setText("");
+                chBxFuncionarioCadastroAdmin.setSelected(false);
+                txtFuncionarioCadastroNome.requestFocus();
             }
         });
 
@@ -210,7 +252,54 @@ public class PanelFuncionario extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnFuncionarioAlterarClick(evt);
+                if (cboFuncionarioAlteracaoNome.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(pnlFuncionario, "Selecione um funcionario.");
+                    cboFuncionarioAlteracaoNome.requestFocus();
+                } else if (txtFuncionarioAlteracaoNome.getText().equals("")) {
+                    JOptionPane.showMessageDialog(pnlFuncionario, "Digite um nome.");
+                    txtFuncionarioAlteracaoNome.requestFocus();
+                } else if (txtFuncionarioAlteracaoCpf.getText().equals("")) {
+                    JOptionPane.showMessageDialog(pnlFuncionario, "Digite um CPF.");
+                    txtFuncionarioAlteracaoCpf.requestFocus();
+                } else if (txtFuncionarioAlteracaoEmail.getText().equals("")) {
+                    JOptionPane.showMessageDialog(pnlFuncionario, "Digite um e-mail.");
+                    txtFuncionarioAlteracaoEmail.requestFocus();
+                } else if (txtFuncionarioAlteracaoSenha.getText().equals("")) {
+                    JOptionPane.showMessageDialog(pnlFuncionario, "Digite uma senha.");
+                    txtFuncionarioAlteracaoSenha.requestFocus();
+                } else {
+                    funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioAlteracaoIdOculto.getSelectedItem())));
+                    funcionario.setFuncionarioNome(txtFuncionarioAlteracaoNome.getText());
+                    funcionario.setFuncionarioCpf(txtFuncionarioAlteracaoCpf.getText());
+                    funcionario.setFuncionarioSenha(txtFuncionarioAlteracaoSenha.getText());
+                    funcionario.setFuncionarioEmail(txtFuncionarioAlteracaoEmail.getText());
+                    if (chBxFuncionarioAlteracaoAdmin.isSelected()) {
+                        funcionario.setFuncionarioAcesso(1);
+                    } else {
+                        funcionario.setFuncionarioAcesso(0);
+                    }
+                    boolean verifica = daoFuncionario.alterarFuncionario(funcionario);
+                    if (verifica) {
+                        JOptionPane.showMessageDialog(pnlFuncionario, "Funcionario alterado com sucesso!");
+                        txtFuncionarioAlteracaoNome.setText("");
+                        txtFuncionarioAlteracaoCpf.setValue("");
+                        txtFuncionarioAlteracaoSenha.setText("");
+                        txtFuncionarioAlteracaoEmail.setText("");
+                        chBxFuncionarioAlteracaoAdmin.setSelected(false);
+                        cboFuncionarioAlteracaoNome.setSelectedItem("Selecione");
+                        cboFuncionarioAlteracaoIdOculto.setSelectedItem("Selecione");
+                        carregaCombosFuncionario();
+                        cboFuncionarioAlteracaoNome.requestFocus();
+                    } else {
+                        JOptionPane.showMessageDialog(pnlFuncionario, "CPF ja existe para outro funcionario!");
+                        txtFuncionarioAlteracaoCpf.setValue("");
+                        txtFuncionarioAlteracaoEmail.setText("");
+                        txtFuncionarioAlteracaoNome.setText("");
+                        txtFuncionarioAlteracaoSenha.setText("");
+                        chBxFuncionarioAlteracaoAdmin.setSelected(false);
+                        txtFuncionarioAlteracaoCpf.requestFocus();
+                    }
+                }
             }
         });
 
@@ -218,7 +307,36 @@ public class PanelFuncionario extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnFuncionarioRemoverClick(evt);
+                int confirma = 0;
+                if (cboFuncionarioRemocaoNome.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(pnlFuncionario, "Selecione um funcionario para remover.");
+                    cboFuncionarioRemocaoNome.requestFocus();
+                } else {
+                    confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
+                    if (confirma == JOptionPane.YES_OPTION) {
+                        funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioRemocaoIdOculto.getSelectedItem())));
+                        boolean verifica = daoFuncionario.removerFuncionario(funcionario);
+                        if (verifica) {
+                            JOptionPane.showMessageDialog(null, "Funcionario removido com sucesso!");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Nao foi possivel remover o funcionario. Ele esta cadastrado em algum itinerario.");
+                        }
+                        cboFuncionarioRemocaoNome.setSelectedItem("Selecione");
+                        cboFuncionarioRemocaoIdOculto.setSelectedItem("Selecione");
+                        lblFuncionarioRemocaoCpfR.setText("");
+                        lblFuncionarioRemocaoEmailR.setText("");
+                        lblFuncionarioRemocaoAdmin.setText("");
+                        carregaCombosFuncionario();
+                        cboFuncionarioRemocaoNome.requestFocus();
+                    } else {
+                        cboFuncionarioRemocaoNome.setSelectedItem("Selecione");
+                        cboFuncionarioRemocaoIdOculto.setSelectedItem("Selecione");
+                        lblFuncionarioRemocaoCpfR.setText("");
+                        lblFuncionarioRemocaoEmailR.setText("");
+                        lblFuncionarioRemocaoAdmin.setText("");
+                        cboFuncionarioRemocaoNome.requestFocus();
+                    }
+                }
             }
         });
 
@@ -226,7 +344,28 @@ public class PanelFuncionario extends JPanel {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboFuncionarioAlteracaoNomeClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboFuncionarioAlteracaoNome.getSelectedItem().equals("Selecione"))) {
+                        cboFuncionarioAlteracaoIdOculto.setSelectedIndex(cboFuncionarioAlteracaoNome.getSelectedIndex());
+                        funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioAlteracaoIdOculto.getSelectedItem())));
+                        Funcionario aux = daoFuncionario.consultarFuncionario(funcionario);
+                        txtFuncionarioAlteracaoNome.setText(aux.getFuncionarioNome());
+                        txtFuncionarioAlteracaoCpf.setText(aux.getFuncionarioCpf());
+                        txtFuncionarioAlteracaoSenha.setText(aux.getFuncionarioSenha());
+                        txtFuncionarioAlteracaoEmail.setText(aux.getFuncionarioEmail());
+                        if (aux.getFuncionarioAcesso() == 1) {
+                            chBxFuncionarioAlteracaoAdmin.setSelected(true);
+                        } else {
+                            chBxFuncionarioAlteracaoAdmin.setSelected(false);
+                        }
+                    } else {
+                        txtFuncionarioAlteracaoNome.setText("");
+                        txtFuncionarioAlteracaoCpf.setValue("");
+                        txtFuncionarioAlteracaoSenha.setText("");
+                        txtFuncionarioAlteracaoEmail.setText("");
+                        cboFuncionarioAlteracaoIdOculto.setSelectedItem("Selecione");
+                    }
+                }
             }
         });
 
@@ -234,7 +373,25 @@ public class PanelFuncionario extends JPanel {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboFuncionarioRemocaoNomeClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboFuncionarioRemocaoNome.getSelectedItem().equals("Selecione"))) {
+                        cboFuncionarioRemocaoIdOculto.setSelectedIndex(cboFuncionarioRemocaoNome.getSelectedIndex());
+                        funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioRemocaoIdOculto.getSelectedItem())));
+                        Funcionario aux = daoFuncionario.consultarFuncionario(funcionario);
+                        lblFuncionarioRemocaoCpfR.setText(aux.getFuncionarioCpf());
+                        lblFuncionarioRemocaoEmailR.setText(aux.getFuncionarioEmail());
+                        if (aux.getFuncionarioAcesso() == 1) {
+                            lblFuncionarioRemocaoAdmin.setText("Administrador do Sistema.");
+                        } else {
+                            lblFuncionarioRemocaoAdmin.setText("Nao e Administrador do Sistema.");
+                        }
+                    } else {
+                        lblFuncionarioRemocaoCpfR.setText("");
+                        lblFuncionarioRemocaoEmailR.setText("");
+                        lblFuncionarioRemocaoAdmin.setText("");
+                        cboFuncionarioRemocaoIdOculto.setSelectedIndex(cboFuncionarioRemocaoNome.getSelectedIndex());
+                    }
+                }
             }
         });
 
@@ -242,7 +399,25 @@ public class PanelFuncionario extends JPanel {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboFuncionarioConsultaNomeClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboFuncionarioConsultaNome.getSelectedItem().equals("Selecione"))) {
+                        cboFuncionarioConsultaIdOculto.setSelectedIndex(cboFuncionarioConsultaNome.getSelectedIndex());
+                        funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioConsultaIdOculto.getSelectedItem())));
+                        Funcionario aux = daoFuncionario.consultarFuncionario(funcionario);
+                        lblFuncionarioConsultaCpfR.setText(aux.getFuncionarioCpf());
+                        lblFuncionarioConsultaEmailR.setText(aux.getFuncionarioEmail());
+                        if (aux.getFuncionarioAcesso() == 1) {
+                            lblFuncionarioConsultaAdmin.setText("Administrador do Sistema.");
+                        } else {
+                            lblFuncionarioConsultaAdmin.setText("Nao e Administrador do Sistema.");
+                        }
+                    } else {
+                        lblFuncionarioConsultaCpfR.setText("");
+                        lblFuncionarioConsultaEmailR.setText("");
+                        lblFuncionarioConsultaAdmin.setText("");
+                        cboFuncionarioConsultaIdOculto.setSelectedIndex(cboFuncionarioConsultaNome.getSelectedIndex());
+                    }
+                }
             }
         });
 
@@ -309,208 +484,7 @@ public class PanelFuncionario extends JPanel {
         };
     }
 
-    private void btnFuncionarioCadastrarClick(ActionEvent evt) {
-        if (txtFuncionarioCadastroNome.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite um nome.");
-            txtFuncionarioCadastroNome.requestFocus();
-        } else if (txtFuncionarioCadastroCpf.getText().equals("   .   .   -  ")) {
-            JOptionPane.showMessageDialog(this, "Digite um CPF.");
-            txtFuncionarioCadastroCpf.requestFocus();
-        } else if (txtFuncionarioCadastroEmail.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite um e-mail.");
-            txtFuncionarioCadastroEmail.requestFocus();
-        } else if (txtFuncionarioCadastroSenha.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite uma senha.");
-            txtFuncionarioCadastroSenha.requestFocus();
-        } else {
-            funcionario.setFuncionarioNome(txtFuncionarioCadastroNome.getText());
-            funcionario.setFuncionarioCpf(txtFuncionarioCadastroCpf.getText());
-            funcionario.setFuncionarioSenha(txtFuncionarioCadastroSenha.getText());
-            funcionario.setFuncionarioEmail(txtFuncionarioCadastroEmail.getText());
-            if (chBxFuncionarioCadastroAdmin.isSelected()) {
-                funcionario.setFuncionarioAcesso(1);
-            } else {
-                funcionario.setFuncionarioAcesso(0);
-            }
-            boolean verifica = daoFuncionario.cadastrarFuncionario(funcionario);
-            if (verifica) {
-                JOptionPane.showMessageDialog(this, "Funcionario cadastrado com sucesso!");
-                txtFuncionarioCadastroNome.setText("");
-                txtFuncionarioCadastroCpf.setValue("");
-                txtFuncionarioCadastroSenha.setText("");
-                txtFuncionarioCadastroEmail.setText("");
-                chBxFuncionarioCadastroAdmin.setSelected(false);
-                carregaCombosFuncionario();
-                txtFuncionarioCadastroNome.requestFocus();
-            } else {
-                JOptionPane.showMessageDialog(this, "CPF ja existe para outro funcionario!");
-                txtFuncionarioCadastroCpf.setValue("");
-                txtFuncionarioCadastroCpf.requestFocus();
-            }
-        }
-    }
-
-    private void btnFuncionarioCadastroLimpaClick(ActionEvent evt) {
-        txtFuncionarioCadastroCpf.setValue("");
-        txtFuncionarioCadastroEmail.setText("");
-        txtFuncionarioCadastroSenha.setText("");
-        txtFuncionarioCadastroNome.setText("");
-        chBxFuncionarioCadastroAdmin.setSelected(false);
-        txtFuncionarioCadastroNome.requestFocus();
-    }
-
-    private void btnFuncionarioAlterarClick(ActionEvent evt) {
-        if (cboFuncionarioAlteracaoNome.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(this, "Selecione um funcionario.");
-            cboFuncionarioAlteracaoNome.requestFocus();
-        } else if (txtFuncionarioAlteracaoNome.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite um nome.");
-            txtFuncionarioAlteracaoNome.requestFocus();
-        } else if (txtFuncionarioAlteracaoCpf.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite um CPF.");
-            txtFuncionarioAlteracaoCpf.requestFocus();
-        } else if (txtFuncionarioAlteracaoEmail.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite um e-mail.");
-            txtFuncionarioAlteracaoEmail.requestFocus();
-        } else if (txtFuncionarioAlteracaoSenha.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite uma senha.");
-            txtFuncionarioAlteracaoSenha.requestFocus();
-        } else {
-            funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioAlteracaoIdOculto.getSelectedItem())));
-            funcionario.setFuncionarioNome(txtFuncionarioAlteracaoNome.getText());
-            funcionario.setFuncionarioCpf(txtFuncionarioAlteracaoCpf.getText());
-            funcionario.setFuncionarioSenha(txtFuncionarioAlteracaoSenha.getText());
-            funcionario.setFuncionarioEmail(txtFuncionarioAlteracaoEmail.getText());
-            if (chBxFuncionarioAlteracaoAdmin.isSelected()) {
-                funcionario.setFuncionarioAcesso(1);
-            } else {
-                funcionario.setFuncionarioAcesso(0);
-            }
-            boolean verifica = daoFuncionario.alterarFuncionario(funcionario);
-            if (verifica) {
-                JOptionPane.showMessageDialog(this, "Funcionario alterado com sucesso!");
-                txtFuncionarioAlteracaoNome.setText("");
-                txtFuncionarioAlteracaoCpf.setValue("");
-                txtFuncionarioAlteracaoSenha.setText("");
-                txtFuncionarioAlteracaoEmail.setText("");
-                chBxFuncionarioAlteracaoAdmin.setSelected(false);
-                cboFuncionarioAlteracaoNome.setSelectedItem("Selecione");
-                cboFuncionarioAlteracaoIdOculto.setSelectedItem("Selecione");
-                carregaCombosFuncionario();
-                cboFuncionarioAlteracaoNome.requestFocus();
-            } else {
-                JOptionPane.showMessageDialog(this, "CPF ja existe para outro funcionario!");
-                txtFuncionarioAlteracaoCpf.setValue("");
-                txtFuncionarioAlteracaoEmail.setText("");
-                txtFuncionarioAlteracaoNome.setText("");
-                txtFuncionarioAlteracaoSenha.setText("");
-                chBxFuncionarioAlteracaoAdmin.setSelected(false);
-                txtFuncionarioAlteracaoCpf.requestFocus();
-            }
-        }
-    }
-
-    private void btnFuncionarioRemoverClick(ActionEvent evt) {
-        int confirma = 0;
-        if (cboFuncionarioRemocaoNome.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(this, "Selecione um funcionario para remover.");
-            cboFuncionarioRemocaoNome.requestFocus();
-        } else {
-            confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
-            if (confirma == JOptionPane.YES_OPTION) {
-                funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioRemocaoIdOculto.getSelectedItem())));
-                boolean verifica = daoFuncionario.removerFuncionario(funcionario);
-                if (verifica) {
-                    JOptionPane.showMessageDialog(null, "Funcionario removido com sucesso!");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Nao foi possivel remover o funcionario. Ele esta cadastrado em algum itinerario.");
-                }
-                cboFuncionarioRemocaoNome.setSelectedItem("Selecione");
-                cboFuncionarioRemocaoIdOculto.setSelectedItem("Selecione");
-                lblFuncionarioRemocaoCpfR.setText("");
-                lblFuncionarioRemocaoEmailR.setText("");
-                lblFuncionarioRemocaoAdmin.setText("");
-                carregaCombosFuncionario();
-                cboFuncionarioRemocaoNome.requestFocus();
-            } else {
-                cboFuncionarioRemocaoNome.setSelectedItem("Selecione");
-                cboFuncionarioRemocaoIdOculto.setSelectedItem("Selecione");
-                lblFuncionarioRemocaoCpfR.setText("");
-                lblFuncionarioRemocaoEmailR.setText("");
-                lblFuncionarioRemocaoAdmin.setText("");
-                cboFuncionarioRemocaoNome.requestFocus();
-            }
-        }
-    }
-
-    private void cboFuncionarioAlteracaoNomeClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboFuncionarioAlteracaoNome.getSelectedItem().equals("Selecione"))) {
-                cboFuncionarioAlteracaoIdOculto.setSelectedIndex(cboFuncionarioAlteracaoNome.getSelectedIndex());
-                funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioAlteracaoIdOculto.getSelectedItem())));
-                Funcionario aux = daoFuncionario.consultarFuncionario(funcionario);
-                txtFuncionarioAlteracaoNome.setText(aux.getFuncionarioNome());
-                txtFuncionarioAlteracaoCpf.setText(aux.getFuncionarioCpf());
-                txtFuncionarioAlteracaoSenha.setText(aux.getFuncionarioSenha());
-                txtFuncionarioAlteracaoEmail.setText(aux.getFuncionarioEmail());
-                if (aux.getFuncionarioAcesso() == 1) {
-                    chBxFuncionarioAlteracaoAdmin.setSelected(true);
-                } else {
-                    chBxFuncionarioAlteracaoAdmin.setSelected(false);
-                }
-            } else {
-                txtFuncionarioAlteracaoNome.setText("");
-                txtFuncionarioAlteracaoCpf.setValue("");
-                txtFuncionarioAlteracaoSenha.setText("");
-                txtFuncionarioAlteracaoEmail.setText("");
-                cboFuncionarioAlteracaoIdOculto.setSelectedItem("Selecione");
-            }
-        }
-    }
-
-    private void cboFuncionarioRemocaoNomeClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboFuncionarioRemocaoNome.getSelectedItem().equals("Selecione"))) {
-                cboFuncionarioRemocaoIdOculto.setSelectedIndex(cboFuncionarioRemocaoNome.getSelectedIndex());
-                funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioRemocaoIdOculto.getSelectedItem())));
-                Funcionario aux = daoFuncionario.consultarFuncionario(funcionario);
-                lblFuncionarioRemocaoCpfR.setText(aux.getFuncionarioCpf());
-                lblFuncionarioRemocaoEmailR.setText(aux.getFuncionarioEmail());
-                if (aux.getFuncionarioAcesso() == 1) {
-                    lblFuncionarioRemocaoAdmin.setText("Administrador do Sistema.");
-                } else {
-                    lblFuncionarioRemocaoAdmin.setText("Nao e Administrador do Sistema.");
-                }
-            } else {
-                lblFuncionarioRemocaoCpfR.setText("");
-                lblFuncionarioRemocaoEmailR.setText("");
-                lblFuncionarioRemocaoAdmin.setText("");
-                cboFuncionarioRemocaoIdOculto.setSelectedIndex(cboFuncionarioRemocaoNome.getSelectedIndex());
-            }
-        }
-    }
-
-    private void cboFuncionarioConsultaNomeClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboFuncionarioConsultaNome.getSelectedItem().equals("Selecione"))) {
-                cboFuncionarioConsultaIdOculto.setSelectedIndex(cboFuncionarioConsultaNome.getSelectedIndex());
-                funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioConsultaIdOculto.getSelectedItem())));
-                Funcionario aux = daoFuncionario.consultarFuncionario(funcionario);
-                lblFuncionarioConsultaCpfR.setText(aux.getFuncionarioCpf());
-                lblFuncionarioConsultaEmailR.setText(aux.getFuncionarioEmail());
-                if (aux.getFuncionarioAcesso() == 1) {
-                    lblFuncionarioConsultaAdmin.setText("Administrador do Sistema.");
-                } else {
-                    lblFuncionarioConsultaAdmin.setText("Nao e Administrador do Sistema.");
-                }
-            } else {
-                lblFuncionarioConsultaCpfR.setText("");
-                lblFuncionarioConsultaEmailR.setText("");
-                lblFuncionarioConsultaAdmin.setText("");
-                cboFuncionarioConsultaIdOculto.setSelectedIndex(cboFuncionarioConsultaNome.getSelectedIndex());
-            }
-        }
-    }
+    
     //------- Geral
     private Font fontePadrao;
     private GridLayout gridLayout2_2;

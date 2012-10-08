@@ -184,11 +184,55 @@ public class PanelItinerarioRota extends JPanel {
         pnlRotaRemocao.add(lblRotaRemocaoDuracaoR);
         pnlRotaRemocao.add(btnRotaRemover);
 
+        /* Rota */
+        
+                /* Cadastro */
+        
         btnRotaCadastrar.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnRotaCadastrarClick(evt);
+                if (cboRotaCadastroOrigem.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
+                    cboRotaCadastroOrigem.requestFocus();
+                } else if (cboRotaCadastroDestino.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione um Destino.");
+                    cboRotaCadastroDestino.requestFocus();
+                } else if (cboRotaCadastroDuracaoHora.getSelectedItem().equals("-")) {
+                    JOptionPane.showMessageDialog(null, "Selecione uma hora.");
+                    cboRotaCadastroDuracaoHora.requestFocus();
+                } else if (cboRotaCadastroDuracaoMinuto.getSelectedItem().equals("-")) {
+                    JOptionPane.showMessageDialog(null, "Selecione os minutos.");
+                    cboRotaCadastroDuracaoMinuto.requestFocus();
+                } else {
+                    int hora, total;
+                    hora = (Integer.parseInt(String.valueOf(cboRotaCadastroDuracaoHora.getSelectedItem())) * 60);
+                    total = hora + Integer.parseInt(String.valueOf(cboRotaCadastroDuracaoMinuto.getSelectedItem()));
+                    rota.setRotaDuracao(String.valueOf(total));
+                    rota.setRota_cidadeOrigemId(Integer.parseInt(String.valueOf(cboRotaCadastroOrigemOculto.getSelectedItem())));
+                    rota.setRota_cidadeDestinoId(Integer.parseInt(String.valueOf(cboRotaCadastroDestinoOculto.getSelectedItem())));
+
+                    int verifica = daoRota.cadastrarRota(rota);
+                    if (verifica == 0) {
+                        JOptionPane.showMessageDialog(null, "Rota cadastrada com sucesso!");
+                        cboRotaCadastroOrigem.setSelectedItem("Selecione");
+                        cboRotaCadastroDestino.setSelectedItem("Selecione");
+                        carregaCombosCidade();
+                        carregaCombosRota();
+                        carregaCombosHora();
+                        carregaCombosMinuto();
+                        cboRotaCadastroOrigem.requestFocus();
+                    } else if (verifica == 1) {
+                        JOptionPane.showMessageDialog(null, "Rota ja existente.");
+                        cboRotaCadastroOrigem.setSelectedItem("Selecione");
+                        cboRotaCadastroOrigem.requestFocus();
+                        cboRotaCadastroDestino.setSelectedItem("Selecione");
+                    } else if (verifica == 2) {
+                        JOptionPane.showMessageDialog(null, "Selecione um Destino diferente da Origem.");
+                        cboRotaCadastroDestino.setSelectedItem("Selecione");
+                        cboRotaCadastroDestino.requestFocus();
+                    }
+                }
             }
         });
 
@@ -196,39 +240,12 @@ public class PanelItinerarioRota extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnRotaCadastroLimpaClick(evt);
-            }
-        });
-
-        btnRotaAlterar.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                btnRotaAlterarClick(evt);
-            }
-        });
-
-        btnRotaRemover.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                btnRotaRemoverClick(evt);
-            }
-        });
-
-        cboRotaAlteracaoIdRota.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboRotaAlteracaoIdRotaClick(evt);
-            }
-        });
-
-        cboRotaRemocaoIdRota.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboRotaRemocaoOrigemDestinoClick(evt);
+                txtRotaCadastroDuracao.setText("");
+                cboRotaCadastroOrigem.setSelectedItem("Selecione");
+                cboRotaCadastroOrigemOculto.setSelectedItem("Selecione");
+                cboRotaCadastroDestino.setSelectedItem("Selecione");
+                cboRotaCadastroDestinoOculto.setSelectedItem("Selecione");
+                cboRotaCadastroOrigem.requestFocus();
             }
         });
 
@@ -236,15 +253,112 @@ public class PanelItinerarioRota extends JPanel {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboRotaCadastroOrigemClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboRotaCadastroOrigem.getSelectedItem().equals("Selecione"))) {
+                        cboRotaCadastroOrigemOculto.setSelectedIndex(cboRotaCadastroOrigem.getSelectedIndex());
+                    } else {
+                        txtRotaCadastroDuracao.setText("");
+                        cboRotaCadastroOrigem.setSelectedItem("Selecione");
+                        cboRotaCadastroDestino.setSelectedItem("Selecione");
+                    }
+                }
             }
         });
-
+        
         cboRotaCadastroDestino.addItemListener(new ItemListener() {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboRotaCadastroDestinoClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboRotaCadastroDestino.getSelectedItem().equals("Selecione"))) {
+                        cboRotaCadastroDestinoOculto.setSelectedIndex(cboRotaCadastroDestino.getSelectedIndex());
+                    } else {
+                        txtRotaCadastroDuracao.setText("");
+                        cboRotaCadastroOrigem.setSelectedItem("Selecione");
+                        cboRotaCadastroDestino.setSelectedItem("Selecione");
+                    }
+                }
+            }
+        });
+        
+                
+                /* Alteracao */
+        
+        btnRotaAlterar.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                if (cboRotaAlteracaoIdRota.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione uma Rota.");
+                    cboRotaAlteracaoIdRota.requestFocus();
+                } else if (cboRotaAlteracaoOrigem.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
+                    cboRotaAlteracaoOrigem.requestFocus();
+                } else if (cboRotaAlteracaoDestino.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione um Destino.");
+                    cboRotaAlteracaoDestino.requestFocus();
+                } else if (cboRotaAlteracaoDuracaoHora.getSelectedItem().equals("-") || cboRotaAlteracaoDuracaoMinuto.getSelectedItem().equals("-")) {
+                    JOptionPane.showMessageDialog(null, "Selecione a Duracao da Rota.");
+                    cboRotaAlteracaoDuracaoHora.requestFocus();
+                } else {
+                    rota.setRotaId(Integer.parseInt(String.valueOf(cboRotaAlteracaoIdRotaOculto.getSelectedItem())));
+                    int horaEmMinutos = Integer.parseInt(String.valueOf(cboRotaAlteracaoDuracaoHora.getSelectedItem())) * 60;
+                    int minuto = Integer.parseInt(String.valueOf(cboRotaAlteracaoDuracaoMinuto.getSelectedItem()));
+                    rota.setRotaDuracao(String.valueOf(horaEmMinutos + minuto));
+                    rota.setRota_cidadeOrigemId(Integer.parseInt(String.valueOf(cboRotaAlteracaoOrigemOculto.getSelectedItem())));
+                    rota.setRota_cidadeDestinoId(Integer.parseInt(String.valueOf(cboRotaAlteracaoDestinoOculto.getSelectedItem())));
+                    int verifica = daoRota.alterarRota(rota);
+                    if (verifica == 0) {
+                        JOptionPane.showMessageDialog(null, "Rota alterada com sucesso!");
+                    } else if (verifica == 1) {
+                        JOptionPane.showMessageDialog(null, "Rota ja existente!");
+                    } else if (verifica == 2) {
+                        JOptionPane.showMessageDialog(null, "Nao foi possivel alterar essa Rota pois ela pertence a um itinerario!");
+                    } else if (verifica == 3) {
+                        JOptionPane.showMessageDialog(null, "Selecione um Destino diferente da Origem!");
+                    }
+                    carregaCombosCidade();
+                    carregaCombosRota();
+                    carregaCombosHora();
+                    carregaCombosMinuto();
+                    cboRotaAlteracaoIdRota.setSelectedItem("Selecione");
+                    cboRotaAlteracaoIdRotaOculto.setSelectedItem("Selecione");
+                    cboRotaAlteracaoOrigem.setSelectedItem("Selecione");
+                    cboRotaAlteracaoOrigemOculto.setSelectedItem("Selecione");
+                    cboRotaAlteracaoDestino.setSelectedItem("Selecione");
+                    cboRotaAlteracaoDestinoOculto.setSelectedItem("Selecione");
+                    cboRotaAlteracaoIdRota.requestFocus();
+                }
+            }
+        });
+
+        cboRotaAlteracaoIdRota.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboRotaAlteracaoIdRota.getSelectedItem().equals("Selecione"))) {
+                        cboRotaAlteracaoIdRotaOculto.setSelectedIndex(cboRotaAlteracaoIdRota.getSelectedIndex());
+                        rota.setRotaId(Integer.parseInt(String.valueOf(cboRotaAlteracaoIdRotaOculto.getSelectedItem())));
+                        Rota aux = daoRota.consultaRota(rota);
+                        int hora, minuto;
+                        hora = (Integer.parseInt(aux.getRotaDuracao()) / 60);
+                        minuto = Integer.parseInt(aux.getRotaDuracao()) - (hora * 60);
+                        cboRotaAlteracaoDuracaoHora.setSelectedItem(hora);
+                        cboRotaAlteracaoDuracaoMinuto.setSelectedItem(minuto);
+                        cboRotaAlteracaoOrigemOculto.setSelectedItem(aux.getRota_cidadeOrigemId());
+                        cboRotaAlteracaoDestinoOculto.setSelectedItem(aux.getRota_cidadeDestinoId());
+                        cboRotaAlteracaoOrigem.setSelectedIndex(cboRotaAlteracaoOrigemOculto.getSelectedIndex());
+                        cboRotaAlteracaoDestino.setSelectedIndex(cboRotaAlteracaoDestinoOculto.getSelectedIndex());
+                    } else {
+                        cboRotaAlteracaoDuracaoHora.setSelectedItem("-");
+                        cboRotaAlteracaoDuracaoMinuto.setSelectedItem("-");
+                        cboRotaAlteracaoOrigem.setSelectedItem("Selecione");
+                        cboRotaAlteracaoDestino.setSelectedItem("Selecione");
+                        cboRotaAlteracaoOrigemOculto.setSelectedItem("Selecione");
+                        cboRotaAlteracaoDestinoOculto.setSelectedItem("Selecione");
+                    }
+                }
             }
         });
 
@@ -252,7 +366,11 @@ public class PanelItinerarioRota extends JPanel {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboRotaAlteracaoCidadeOrigemClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboRotaAlteracaoOrigem.getSelectedItem().equals("Selecione"))) {
+                        cboRotaAlteracaoOrigemOculto.setSelectedIndex(cboRotaAlteracaoOrigem.getSelectedIndex());
+                    }
+                }
             }
         });
 
@@ -260,7 +378,64 @@ public class PanelItinerarioRota extends JPanel {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboRotaAlteracaoCidadeDestinoClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboRotaAlteracaoDestino.getSelectedItem().equals("Selecione"))) {
+                        cboRotaAlteracaoDestinoOculto.setSelectedIndex(cboRotaAlteracaoDestino.getSelectedIndex());
+                    }
+                }
+            }
+        });
+
+                /* Remocao */
+        btnRotaRemover.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                int confirma = 0;
+                if (cboRotaRemocaoIdRota.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione uma Rota para remover.");
+                    cboRotaRemocaoIdRota.requestFocus();
+                } else {
+                    confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
+                    if (confirma == JOptionPane.YES_OPTION) {
+                        rota.setRotaId(Integer.parseInt(String.valueOf(cboRotaRemocaoIdRotaOculto.getSelectedItem())));
+                        boolean verifica = daoRota.removerRota(rota);
+                        if (verifica) {
+                            JOptionPane.showMessageDialog(null, "Rota removida com sucesso!");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Nao foi possivel remover Rota. Ela esta sendo usada por algum Itinerario.");
+                        }
+                        cboRotaRemocaoIdRota.setSelectedItem("Selecione");
+                        cboRotaRemocaoIdRotaOculto.setSelectedItem("Selecione");
+                        lblRotaRemocaoDuracaoR.setText("");
+                        cboRotaRemocaoIdRota.requestFocus();
+                    } else {
+                        cboRotaRemocaoIdRota.setSelectedItem("Selecione");
+                        cboRotaRemocaoIdRotaOculto.setSelectedItem("Selecione");
+                        lblRotaRemocaoDuracaoR.setText("");
+                        cboRotaRemocaoIdRota.requestFocus();
+                    }
+                    carregaCombosCidade();
+                    carregaCombosRota();
+                }
+            }
+        });
+        
+        cboRotaRemocaoIdRota.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboRotaRemocaoIdRota.getSelectedItem().equals("Selecione"))) {
+                        cboRotaRemocaoIdRotaOculto.setSelectedIndex(cboRotaRemocaoIdRota.getSelectedIndex());
+                        rota.setRotaId(Integer.parseInt(String.valueOf(cboRotaRemocaoIdRotaOculto.getSelectedItem())));
+                        rota = daoRota.consultaRota(rota);
+                        lblRotaRemocaoDuracaoR.setText(rota.getRotaDuracao());
+                    } else {
+                        cboRotaRemocaoIdRotaOculto.setSelectedIndex(cboRotaRemocaoIdRota.getSelectedIndex());
+                        lblRotaRemocaoDuracaoR.setText("");
+                    }
+                }
             }
         });
 
@@ -359,7 +534,30 @@ public class PanelItinerarioRota extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnItinerarioCadastrarClick(evt);
+                if (cboItinerarioCadastroOrigem.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
+                    cboItinerarioCadastroOrigem.requestFocus();
+                } else if (cboItinerarioCadastroDestino.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione um Destino.");
+                    cboItinerarioCadastroDestino.requestFocus();
+                } else {
+                    itinerario.setItinerario_cidadeOrigemId(arrayListCidade.get(cboItinerarioCadastroOrigem.getSelectedIndex() - 1).getCidadeId());
+                    itinerario.setItinerario_cidadeDestinoId(arrayListCidade.get(cboItinerarioCadastroDestino.getSelectedIndex() - 1).getCidadeId());
+                    int verifica = daoItinerario.cadastrarItinerario(itinerario);
+                    if (verifica == 0) {
+                        JOptionPane.showMessageDialog(null, "Itinerario cadastrado com sucesso!");
+                        cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
+                        cboItinerarioCadastroDestino.setSelectedItem("Selecione");
+                        carregaCombosCidade();
+                        carregaCombosItinerario();
+                        cboItinerarioCadastroOrigem.requestFocus();
+                    } else if (verifica == 1) {
+                        JOptionPane.showMessageDialog(null, "Selecione um Destino diferente da Origem.");
+                        cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
+                        cboItinerarioCadastroDestino.setSelectedItem("Selecione");
+                        cboItinerarioCadastroOrigem.requestFocus();
+                    }
+                }
             }
         });
 
@@ -367,7 +565,9 @@ public class PanelItinerarioRota extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnItinerarioCadastroLimpaClick(evt);
+                cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
+                cboItinerarioCadastroDestino.setSelectedItem("Selecione");
+                cboItinerarioCadastroOrigem.requestFocus();
             }
         });
 
@@ -375,7 +575,14 @@ public class PanelItinerarioRota extends JPanel {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboItinerarioCadastroOrigemClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboItinerarioCadastroOrigem.getSelectedItem().equals("Selecione"))) {
+                        //cboItinerarioCadastroOrigemOculto.setSelectedIndex(cboItinerarioCadastroOrigem.getSelectedIndex());
+                    } else {
+                        cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
+                        cboItinerarioCadastroDestino.setSelectedItem("Selecione");
+                    }
+                }
             }
         });
 
@@ -383,16 +590,50 @@ public class PanelItinerarioRota extends JPanel {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboItinerarioCadastroDestinoClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboItinerarioCadastroDestino.getSelectedItem().equals("Selecione"))) {
+                        //cboItinerarioCadastroDestinoOculto.setSelectedIndex(cboItinerarioCadastroDestino.getSelectedIndex());
+                    } else {
+                        cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
+                        cboItinerarioCadastroDestino.setSelectedItem("Selecione");
+                    }
+                }
             }
         });
 
-        /* Altera��o */
+        /* Alteração */
         btnItinerarioAlterar.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnItinerarioAlterarClick(evt);
+                if (cboItinerarioAlteracaoIdItinerario.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione um Itiner�rio.");
+                    cboItinerarioAlteracaoIdItinerario.requestFocus();
+                } else if (cboItinerarioAlteracaoOrigem.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
+                    cboItinerarioAlteracaoOrigem.requestFocus();
+                } else if (cboItinerarioAlteracaoDestino.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione um Destino.");
+                    cboItinerarioAlteracaoDestino.requestFocus();
+                } else {
+                    itinerario.setItinerarioId(arraylistItinerarios.get(cboItinerarioAlteracaoIdItinerario.getSelectedIndex() - 1).getItinerarioId());
+                    itinerario.setItinerario_cidadeOrigemId(arrayListCidade.get(cboItinerarioAlteracaoOrigem.getSelectedIndex() - 1).getCidadeId());
+                    itinerario.setItinerario_cidadeDestinoId(arrayListCidade.get(cboItinerarioAlteracaoDestino.getSelectedIndex() - 1).getCidadeId());
+                    int verifica = daoItinerario.alterarItinerario(itinerario);
+                    if (verifica == 0) {
+                        JOptionPane.showMessageDialog(null, "Itinerario alterado com sucesso!");
+                    } else if (verifica == 1) {
+                        JOptionPane.showMessageDialog(null, "Nao foi possivel alterar esse Itinerario pois ela pertence a uma viagem!");
+                    } else if (verifica == 2) {
+                        JOptionPane.showMessageDialog(null, "Selecione um  Destino diferente da Origem!");
+                    }
+                    carregaCombosCidade();
+                    carregaCombosItinerario();
+                    cboItinerarioAlteracaoIdItinerario.setSelectedItem("Selecione");
+                    cboItinerarioAlteracaoOrigem.setSelectedItem("Selecione");
+                    cboItinerarioAlteracaoDestino.setSelectedItem("Selecione");
+                    cboItinerarioAlteracaoIdItinerario.requestFocus();
+                }
             }
         });
 
@@ -400,23 +641,25 @@ public class PanelItinerarioRota extends JPanel {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboItinerarioAlteracaoIdItinerarioClick(evt);
-            }
-        });
-
-        cboItinerarioAlteracaoOrigem.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboItinerarioAlteracaoOrigemClick(evt);
-            }
-        });
-
-        cboItinerarioAlteracaoDestino.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboItinerarioAlteracaoDestinoClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboItinerarioAlteracaoIdItinerario.getSelectedItem().equals("Selecione"))) {
+                        itinerario.setItinerarioId(arraylistItinerarios.get(cboItinerarioAlteracaoIdItinerario.getSelectedIndex() - 1).getItinerarioId());
+                        Itinerario alterarItinerario = daoItinerario.consultaItinerario(itinerario);
+                        for (int i = 0; i < arrayListCidade.size(); i++) {
+                            if (alterarItinerario.getItinerario_cidadeOrigemId() == arrayListCidade.get(i).getCidadeId()) {
+                                cboItinerarioAlteracaoOrigem.setSelectedIndex(i + 1);
+                            }
+                        }
+                        for (int i = 0; i < arrayListCidade.size(); i++) {
+                            if (alterarItinerario.getItinerario_cidadeDestinoId() == arrayListCidade.get(i).getCidadeId()) {
+                                cboItinerarioAlteracaoDestino.setSelectedIndex(i + 1);
+                            }
+                        }
+                    } else {
+                        cboItinerarioAlteracaoOrigem.setSelectedItem("Selecione");
+                        cboItinerarioAlteracaoDestino.setSelectedItem("Selecione");
+                    }
+                }
             }
         });
 
@@ -425,7 +668,29 @@ public class PanelItinerarioRota extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnItinerarioRemoverClick(evt);
+                int confirma = 0;
+                if (cboItinerarioRemocaoIdItinerario.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione um Itinerario para remover.");
+                    cboItinerarioRemocaoIdItinerario.requestFocus();
+                } else {
+                    confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
+                    if (confirma == JOptionPane.YES_OPTION) {
+                        itinerario.setItinerarioId(arraylistItinerarios.get(cboItinerarioRemocaoIdItinerario.getSelectedIndex() - 1).getItinerarioId());
+                        boolean verifica = daoItinerario.removerItinerario(itinerario);
+                        if (verifica) {
+                            JOptionPane.showMessageDialog(null, "Itinerario removido com sucesso!");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Nao foi possivel remover o itinerario. Ele pertence a uma viagem.");
+                        }
+                        cboItinerarioRemocaoIdItinerario.setSelectedItem("Selecione");
+                        cboItinerarioRemocaoIdItinerario.requestFocus();
+                    } else {
+                        cboItinerarioRemocaoIdItinerario.setSelectedItem("Selecione");
+                        cboItinerarioRemocaoIdItinerario.requestFocus();
+                    }
+                    carregaCombosCidade();
+                    carregaCombosItinerario();
+                }
             }
         });
 
@@ -433,7 +698,12 @@ public class PanelItinerarioRota extends JPanel {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboItinerarioRemocaoIdItinerarioClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboItinerarioRemocaoIdItinerario.getSelectedItem().equals("Selecione"))) {
+                        itinerario.setItinerarioId(arraylistItinerarios.get(cboItinerarioRemocaoIdItinerario.getSelectedIndex() - 1).getItinerarioId());
+                        itinerario = daoItinerario.consultaItinerario(itinerario);
+                    }
+                }
             }
         });
     }
@@ -581,380 +851,6 @@ public class PanelItinerarioRota extends JPanel {
         }
     }
 
-    /* Rota */
-    /* Cadastro */
-    private void btnRotaCadastrarClick(ActionEvent evt) {
-        if (cboRotaCadastroOrigem.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
-            cboRotaCadastroOrigem.requestFocus();
-        } else if (cboRotaCadastroDestino.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Destino.");
-            cboRotaCadastroDestino.requestFocus();
-        } else if (cboRotaCadastroDuracaoHora.getSelectedItem().equals("-")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma hora.");
-            cboRotaCadastroDuracaoHora.requestFocus();
-        } else if (cboRotaCadastroDuracaoMinuto.getSelectedItem().equals("-")) {
-            JOptionPane.showMessageDialog(null, "Selecione os minutos.");
-            cboRotaCadastroDuracaoMinuto.requestFocus();
-        } else {
-            int hora, total;
-            hora = (Integer.parseInt(String.valueOf(cboRotaCadastroDuracaoHora.getSelectedItem())) * 60);
-            total = hora + Integer.parseInt(String.valueOf(cboRotaCadastroDuracaoMinuto.getSelectedItem()));
-            rota.setRotaDuracao(String.valueOf(total));
-            rota.setRota_cidadeOrigemId(Integer.parseInt(String.valueOf(cboRotaCadastroOrigemOculto.getSelectedItem())));
-            rota.setRota_cidadeDestinoId(Integer.parseInt(String.valueOf(cboRotaCadastroDestinoOculto.getSelectedItem())));
-
-            int verifica = daoRota.cadastrarRota(rota);
-            if (verifica == 0) {
-                JOptionPane.showMessageDialog(null, "Rota cadastrada com sucesso!");
-                cboRotaCadastroOrigem.setSelectedItem("Selecione");
-                cboRotaCadastroDestino.setSelectedItem("Selecione");
-                carregaCombosCidade();
-                carregaCombosRota();
-                carregaCombosHora();
-                carregaCombosMinuto();
-                cboRotaCadastroOrigem.requestFocus();
-            } else if (verifica == 1) {
-                JOptionPane.showMessageDialog(null, "Rota ja existente.");
-                cboRotaCadastroOrigem.setSelectedItem("Selecione");
-                cboRotaCadastroOrigem.requestFocus();
-                cboRotaCadastroDestino.setSelectedItem("Selecione");
-            } else if (verifica == 2) {
-                JOptionPane.showMessageDialog(null, "Selecione um Destino diferente da Origem.");
-                cboRotaCadastroDestino.setSelectedItem("Selecione");
-                cboRotaCadastroDestino.requestFocus();
-            }
-        }
-    }
-
-    private void btnRotaCadastroLimpaClick(ActionEvent evt) {
-        txtRotaCadastroDuracao.setText("");
-        cboRotaCadastroOrigem.setSelectedItem("Selecione");
-        cboRotaCadastroOrigemOculto.setSelectedItem("Selecione");
-        cboRotaCadastroDestino.setSelectedItem("Selecione");
-        cboRotaCadastroDestinoOculto.setSelectedItem("Selecione");
-        cboRotaCadastroOrigem.requestFocus();
-    }
-
-    private void cboRotaCadastroOrigemClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboRotaCadastroOrigem.getSelectedItem().equals("Selecione"))) {
-                cboRotaCadastroOrigemOculto.setSelectedIndex(cboRotaCadastroOrigem.getSelectedIndex());
-            } else {
-                txtRotaCadastroDuracao.setText("");
-                cboRotaCadastroOrigem.setSelectedItem("Selecione");
-                cboRotaCadastroDestino.setSelectedItem("Selecione");
-            }
-        }
-    }
-
-    private void cboRotaCadastroDestinoClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboRotaCadastroDestino.getSelectedItem().equals("Selecione"))) {
-                cboRotaCadastroDestinoOculto.setSelectedIndex(cboRotaCadastroDestino.getSelectedIndex());
-            } else {
-                txtRotaCadastroDuracao.setText("");
-                cboRotaCadastroOrigem.setSelectedItem("Selecione");
-                cboRotaCadastroDestino.setSelectedItem("Selecione");
-            }
-        }
-    }
-
-    /* Alteracao */
-    private void btnRotaAlterarClick(ActionEvent evt) {
-        if (cboRotaAlteracaoIdRota.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma Rota.");
-            cboRotaAlteracaoIdRota.requestFocus();
-        } else if (cboRotaAlteracaoOrigem.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
-            cboRotaAlteracaoOrigem.requestFocus();
-        } else if (cboRotaAlteracaoDestino.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Destino.");
-            cboRotaAlteracaoDestino.requestFocus();
-        } else if (cboRotaAlteracaoDuracaoHora.getSelectedItem().equals("-") || cboRotaAlteracaoDuracaoMinuto.getSelectedItem().equals("-")) {
-            JOptionPane.showMessageDialog(null, "Selecione a Duracao da Rota.");
-            cboRotaAlteracaoDuracaoHora.requestFocus();
-        } else {
-            rota.setRotaId(Integer.parseInt(String.valueOf(cboRotaAlteracaoIdRotaOculto.getSelectedItem())));
-            int horaEmMinutos = Integer.parseInt(String.valueOf(cboRotaAlteracaoDuracaoHora.getSelectedItem())) * 60;
-            int minuto = Integer.parseInt(String.valueOf(cboRotaAlteracaoDuracaoMinuto.getSelectedItem()));
-            rota.setRotaDuracao(String.valueOf(horaEmMinutos + minuto));
-            rota.setRota_cidadeOrigemId(Integer.parseInt(String.valueOf(cboRotaAlteracaoOrigemOculto.getSelectedItem())));
-            rota.setRota_cidadeDestinoId(Integer.parseInt(String.valueOf(cboRotaAlteracaoDestinoOculto.getSelectedItem())));
-            int verifica = daoRota.alterarRota(rota);
-            if (verifica == 0) {
-                JOptionPane.showMessageDialog(null, "Rota alterada com sucesso!");
-            } else if (verifica == 1) {
-                JOptionPane.showMessageDialog(null, "Rota ja existente!");
-            } else if (verifica == 2) {
-                JOptionPane.showMessageDialog(null, "Nao foi possivel alterar essa Rota pois ela pertence a um itinerario!");
-            } else if (verifica == 3) {
-                JOptionPane.showMessageDialog(null, "Selecione um Destino diferente da Origem!");
-            }
-            carregaCombosCidade();
-            carregaCombosRota();
-            carregaCombosHora();
-            carregaCombosMinuto();
-            cboRotaAlteracaoIdRota.setSelectedItem("Selecione");
-            cboRotaAlteracaoIdRotaOculto.setSelectedItem("Selecione");
-            cboRotaAlteracaoOrigem.setSelectedItem("Selecione");
-            cboRotaAlteracaoOrigemOculto.setSelectedItem("Selecione");
-            cboRotaAlteracaoDestino.setSelectedItem("Selecione");
-            cboRotaAlteracaoDestinoOculto.setSelectedItem("Selecione");
-            cboRotaAlteracaoIdRota.requestFocus();
-        }
-    }
-
-    private void cboRotaAlteracaoIdRotaClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboRotaAlteracaoIdRota.getSelectedItem().equals("Selecione"))) {
-                cboRotaAlteracaoIdRotaOculto.setSelectedIndex(cboRotaAlteracaoIdRota.getSelectedIndex());
-                rota.setRotaId(Integer.parseInt(String.valueOf(cboRotaAlteracaoIdRotaOculto.getSelectedItem())));
-                Rota aux = daoRota.consultaRota(rota);
-                int hora, minuto;
-                hora = (Integer.parseInt(aux.getRotaDuracao()) / 60);
-                minuto = Integer.parseInt(aux.getRotaDuracao()) - (hora * 60);
-                cboRotaAlteracaoDuracaoHora.setSelectedItem(hora);
-                cboRotaAlteracaoDuracaoMinuto.setSelectedItem(minuto);
-                cboRotaAlteracaoOrigemOculto.setSelectedItem(aux.getRota_cidadeOrigemId());
-                cboRotaAlteracaoDestinoOculto.setSelectedItem(aux.getRota_cidadeDestinoId());
-                cboRotaAlteracaoOrigem.setSelectedIndex(cboRotaAlteracaoOrigemOculto.getSelectedIndex());
-                cboRotaAlteracaoDestino.setSelectedIndex(cboRotaAlteracaoDestinoOculto.getSelectedIndex());
-            } else {
-                cboRotaAlteracaoDuracaoHora.setSelectedItem("-");
-                cboRotaAlteracaoDuracaoMinuto.setSelectedItem("-");
-                cboRotaAlteracaoOrigem.setSelectedItem("Selecione");
-                cboRotaAlteracaoDestino.setSelectedItem("Selecione");
-                cboRotaAlteracaoOrigemOculto.setSelectedItem("Selecione");
-                cboRotaAlteracaoDestinoOculto.setSelectedItem("Selecione");
-            }
-        }
-    }
-
-    private void cboRotaAlteracaoCidadeOrigemClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboRotaAlteracaoOrigem.getSelectedItem().equals("Selecione"))) {
-                cboRotaAlteracaoOrigemOculto.setSelectedIndex(cboRotaAlteracaoOrigem.getSelectedIndex());
-            }
-        }
-    }
-
-    private void cboRotaAlteracaoCidadeDestinoClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboRotaAlteracaoDestino.getSelectedItem().equals("Selecione"))) {
-                cboRotaAlteracaoDestinoOculto.setSelectedIndex(cboRotaAlteracaoDestino.getSelectedIndex());
-            }
-        }
-    }
-
-    /* Remocao */
-    private void btnRotaRemoverClick(ActionEvent evt) {
-        int confirma = 0;
-        if (cboRotaRemocaoIdRota.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma Rota para remover.");
-            cboRotaRemocaoIdRota.requestFocus();
-        } else {
-            confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
-            if (confirma == JOptionPane.YES_OPTION) {
-                rota.setRotaId(Integer.parseInt(String.valueOf(cboRotaRemocaoIdRotaOculto.getSelectedItem())));
-                boolean verifica = daoRota.removerRota(rota);
-                if (verifica) {
-                    JOptionPane.showMessageDialog(null, "Rota removida com sucesso!");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Nao foi possivel remover Rota. Ela esta sendo usada por algum Itinerario.");
-                }
-                cboRotaRemocaoIdRota.setSelectedItem("Selecione");
-                cboRotaRemocaoIdRotaOculto.setSelectedItem("Selecione");
-                lblRotaRemocaoDuracaoR.setText("");
-                cboRotaRemocaoIdRota.requestFocus();
-            } else {
-                cboRotaRemocaoIdRota.setSelectedItem("Selecione");
-                cboRotaRemocaoIdRotaOculto.setSelectedItem("Selecione");
-                lblRotaRemocaoDuracaoR.setText("");
-                cboRotaRemocaoIdRota.requestFocus();
-            }
-            carregaCombosCidade();
-            carregaCombosRota();
-        }
-    }
-
-    private void cboRotaRemocaoOrigemDestinoClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboRotaRemocaoIdRota.getSelectedItem().equals("Selecione"))) {
-                cboRotaRemocaoIdRotaOculto.setSelectedIndex(cboRotaRemocaoIdRota.getSelectedIndex());
-                rota.setRotaId(Integer.parseInt(String.valueOf(cboRotaRemocaoIdRotaOculto.getSelectedItem())));
-                rota = daoRota.consultaRota(rota);
-                lblRotaRemocaoDuracaoR.setText(rota.getRotaDuracao());
-            } else {
-                cboRotaRemocaoIdRotaOculto.setSelectedIndex(cboRotaRemocaoIdRota.getSelectedIndex());
-                lblRotaRemocaoDuracaoR.setText("");
-            }
-        }
-    }
-
-    /* Itinerario */
-    /* Cadastro */
-    private void btnItinerarioCadastrarClick(ActionEvent evt) {
-        if (cboItinerarioCadastroOrigem.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
-            cboItinerarioCadastroOrigem.requestFocus();
-        } else if (cboItinerarioCadastroDestino.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Destino.");
-            cboItinerarioCadastroDestino.requestFocus();
-        } else {
-            itinerario.setItinerario_cidadeOrigemId(arrayListCidade.get(cboItinerarioCadastroOrigem.getSelectedIndex() - 1).getCidadeId());
-            itinerario.setItinerario_cidadeDestinoId(arrayListCidade.get(cboItinerarioCadastroDestino.getSelectedIndex() - 1).getCidadeId());
-            int verifica = daoItinerario.cadastrarItinerario(itinerario);
-            if (verifica == 0) {
-                JOptionPane.showMessageDialog(null, "Itinerario cadastrado com sucesso!");
-                cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
-                cboItinerarioCadastroDestino.setSelectedItem("Selecione");
-                carregaCombosCidade();
-                carregaCombosItinerario();
-                cboItinerarioCadastroOrigem.requestFocus();
-            } else if (verifica == 1) {
-                JOptionPane.showMessageDialog(null, "Selecione um Destino diferente da Origem.");
-                cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
-                cboItinerarioCadastroDestino.setSelectedItem("Selecione");
-                cboItinerarioCadastroOrigem.requestFocus();
-            }
-        }
-    }
-
-    private void btnItinerarioCadastroLimpaClick(ActionEvent evt) {
-        cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
-        cboItinerarioCadastroDestino.setSelectedItem("Selecione");
-        cboItinerarioCadastroOrigem.requestFocus();
-    }
-
-    private void cboItinerarioCadastroOrigemClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboItinerarioCadastroOrigem.getSelectedItem().equals("Selecione"))) {
-                //cboItinerarioCadastroOrigemOculto.setSelectedIndex(cboItinerarioCadastroOrigem.getSelectedIndex());
-            } else {
-                cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
-                cboItinerarioCadastroDestino.setSelectedItem("Selecione");
-            }
-        }
-    }
-
-    private void cboItinerarioCadastroDestinoClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboItinerarioCadastroDestino.getSelectedItem().equals("Selecione"))) {
-                //cboItinerarioCadastroDestinoOculto.setSelectedIndex(cboItinerarioCadastroDestino.getSelectedIndex());
-            } else {
-                cboItinerarioCadastroOrigem.setSelectedItem("Selecione");
-                cboItinerarioCadastroDestino.setSelectedItem("Selecione");
-            }
-        }
-    }
-
-    /* Alteracao */
-    private void btnItinerarioAlterarClick(ActionEvent evt) {
-        if (cboItinerarioAlteracaoIdItinerario.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Itiner�rio.");
-            cboItinerarioAlteracaoIdItinerario.requestFocus();
-        } else if (cboItinerarioAlteracaoOrigem.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma Origem.");
-            cboItinerarioAlteracaoOrigem.requestFocus();
-        } else if (cboItinerarioAlteracaoDestino.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Destino.");
-            cboItinerarioAlteracaoDestino.requestFocus();
-        } else {
-            itinerario.setItinerarioId(arraylistItinerarios.get(cboItinerarioAlteracaoIdItinerario.getSelectedIndex() - 1).getItinerarioId());
-            itinerario.setItinerario_cidadeOrigemId(arrayListCidade.get(cboItinerarioAlteracaoOrigem.getSelectedIndex() - 1).getCidadeId());
-            itinerario.setItinerario_cidadeDestinoId(arrayListCidade.get(cboItinerarioAlteracaoDestino.getSelectedIndex() - 1).getCidadeId());
-            int verifica = daoItinerario.alterarItinerario(itinerario);
-            if (verifica == 0) {
-                JOptionPane.showMessageDialog(null, "Itinerario alterado com sucesso!");
-            } else if (verifica == 1) {
-                JOptionPane.showMessageDialog(null, "Nao foi possivel alterar esse Itinerario pois ela pertence a uma viagem!");
-            } else if (verifica == 2) {
-                JOptionPane.showMessageDialog(null, "Selecione um  Destino diferente da Origem!");
-            }
-            carregaCombosCidade();
-            carregaCombosItinerario();
-            cboItinerarioAlteracaoIdItinerario.setSelectedItem("Selecione");
-            cboItinerarioAlteracaoOrigem.setSelectedItem("Selecione");
-            cboItinerarioAlteracaoDestino.setSelectedItem("Selecione");
-            cboItinerarioAlteracaoIdItinerario.requestFocus();
-        }
-    }
-
-    private void cboItinerarioAlteracaoIdItinerarioClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboItinerarioAlteracaoIdItinerario.getSelectedItem().equals("Selecione"))) {
-                itinerario.setItinerarioId(arraylistItinerarios.get(cboItinerarioAlteracaoIdItinerario.getSelectedIndex() - 1).getItinerarioId());
-                Itinerario alterarItinerario = daoItinerario.consultaItinerario(itinerario);
-                for (int i = 0; i < arrayListCidade.size(); i++) {
-                    if (alterarItinerario.getItinerario_cidadeOrigemId() == arrayListCidade.get(i).getCidadeId()) {
-                        cboItinerarioAlteracaoOrigem.setSelectedIndex(i + 1);
-                    }
-                }
-                for (int i = 0; i < arrayListCidade.size(); i++) {
-                    if (alterarItinerario.getItinerario_cidadeDestinoId() == arrayListCidade.get(i).getCidadeId()) {
-                        cboItinerarioAlteracaoDestino.setSelectedIndex(i + 1);
-                    }
-                }
-            } else {
-                cboItinerarioAlteracaoOrigem.setSelectedItem("Selecione");
-                cboItinerarioAlteracaoDestino.setSelectedItem("Selecione");
-            }
-        }
-    }
-
-    private void cboItinerarioAlteracaoOrigemClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboItinerarioAlteracaoOrigem.getSelectedItem().equals("Selecione"))) {
-            }
-        }
-    }
-
-    private void cboItinerarioAlteracaoDestinoClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboItinerarioAlteracaoDestino.getSelectedItem().equals("Selecione"))) {
-                //cboItinerarioAlteracaoDestinoOculto.setSelectedIndex(cboItinerarioAlteracaoDestino.getSelectedIndex());
-            }
-        }
-    }
-
-    /* Remocao */
-    private void btnItinerarioRemoverClick(ActionEvent evt) {
-        int confirma = 0;
-        if (cboItinerarioRemocaoIdItinerario.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Itinerario para remover.");
-            cboItinerarioRemocaoIdItinerario.requestFocus();
-        } else {
-            confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
-            if (confirma == JOptionPane.YES_OPTION) {
-                itinerario.setItinerarioId(arraylistItinerarios.get(cboItinerarioRemocaoIdItinerario.getSelectedIndex() - 1).getItinerarioId());
-                boolean verifica = daoItinerario.removerItinerario(itinerario);
-                if (verifica) {
-                    JOptionPane.showMessageDialog(null, "Itinerario removido com sucesso!");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Nao foi possivel remover o itinerario. Ele pertence a uma viagem.");
-                }
-                cboItinerarioRemocaoIdItinerario.setSelectedItem("Selecione");
-                cboItinerarioRemocaoIdItinerario.requestFocus();
-            } else {
-                cboItinerarioRemocaoIdItinerario.setSelectedItem("Selecione");
-                cboItinerarioRemocaoIdItinerario.requestFocus();
-            }
-            carregaCombosCidade();
-            carregaCombosItinerario();
-        }
-    }
-
-    private void cboItinerarioRemocaoIdItinerarioClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboItinerarioRemocaoIdItinerario.getSelectedItem().equals("Selecione"))) {
-                //cboItinerarioRemocaoIdItinerarioOculto.setSelectedIndex(cboItinerarioRemocaoIdItinerario.getSelectedIndex());
-                //itinerario.setId(Integer.parseInt(String.valueOf(cboItinerarioRemocaoIdItinerarioOculto.getSelectedItem())));
-                itinerario.setItinerarioId(arraylistItinerarios.get(cboItinerarioRemocaoIdItinerario.getSelectedIndex() - 1).getItinerarioId());
-                itinerario = daoItinerario.consultaItinerario(itinerario);
-            }
-        }
-    }
     //------- Geral
     int cont = 0;
     ArrayList<Cidade> arrayListCidade;

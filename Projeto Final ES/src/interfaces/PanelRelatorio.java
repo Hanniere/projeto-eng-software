@@ -71,7 +71,59 @@ public class PanelRelatorio extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                gerarClick(evt);
+                if (cboDia.getSelectedIndex() == 0) {
+                    JOptionPane.showMessageDialog(null, "Selecione um dia.");
+                    cboDia.requestFocus();
+                } else if (cboMes.getSelectedIndex() == 0) {
+                    JOptionPane.showMessageDialog(null, "Selecione um mes.");
+                    cboMes.requestFocus();
+                } else if (cboAno.getSelectedIndex() == 0) {
+                    JOptionPane.showMessageDialog(null, "Selecione um ano.");
+                    cboAno.requestFocus();
+                } else {
+                    String local = System.getProperty("user.dir");
+                    //escreve relatorio
+                    try {
+                        ArrayList<ArrayList<String>> passagens = daoPassagem.consultarTodasPassagensDoDia(String.valueOf(cboDia.getSelectedItem()) + "/" + String.valueOf(cboMes.getSelectedItem()) + "/" + String.valueOf(cboAno.getSelectedItem()));
+                        if(passagens.isEmpty()){
+                            JOptionPane.showMessageDialog(null, "Nao ha passagens compradas nesta data.");      
+                        } else {
+                            FileWriter f0 = new FileWriter(local + "/src/imagens/ComprovanteCompra.txt");
+                            f0.write("Relatorio do dia " + String.valueOf(cboDia.getSelectedItem()) + "/" + String.valueOf(cboMes.getSelectedItem()) + "/" + String.valueOf(cboAno.getSelectedItem()) + barraN + barraN + barraN);
+                            for (int i = 0; i < passagens.size()-1; i++) {
+                                int j = i;
+                                while ((passagens.get(j).get(1).equals(passagens.get(j + 1).get(1))) && (passagens.get(j).get(13).equals(passagens.get(j + 1).get(13))) && (passagens.get(j).get(3).equals(passagens.get(j + 1).get(3)))) {
+                                    j++;
+                                    if (j == passagens.size()-1) {
+                                        break;
+                                    }
+                                }
+                                f0.write(barraN + "Passageiro: " + passagens.get(i).get(2));
+                                f0.write(barraN + "CPF: " + passagens.get(i).get(1));
+                                f0.write(barraN + "Assento comprado: " + passagens.get(i).get(3));
+                                f0.write(barraN + "Viagem: " + passagens.get(i).get(7) + "-" + passagens.get(i).get(8) + " até " + passagens.get(j).get(9) + "-" + passagens.get(j).get(10));
+                                f0.write(barraN + "Horario de Saida: " + passagens.get(i).get(4));
+                                f0.write(barraN + "Horario de Chegada: " + passagens.get(j).get(5));
+                                f0.write(barraN + "Placa do Onibus que fez esta viagem: " + passagens.get(i).get(11));
+                                //f0.write(barraN+"Motorista que fez esta viagem: "+passagens.get(i).get(12));
+
+
+                                f0.write(barraN + barraN);
+                                i = j;
+                                System.out.println("i modificado: "+ i);
+                            }
+                            f0.close();
+                            java.awt.Desktop.getDesktop().open(new File(local + "/src/imagens/ComprovanteCompra.txt"));
+                            cboDia.setSelectedIndex(0);
+                            cboMes.setSelectedIndex(0);
+                            cboAno.setSelectedIndex(0);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
 
@@ -85,65 +137,10 @@ public class PanelRelatorio extends JFrame {
 
     }
 
-    private void gerarClick(ActionEvent evt) {
-        if (cboDia.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, "Selecione um dia.");
-            cboDia.requestFocus();
-        } else if (cboMes.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, "Selecione um mes.");
-            cboMes.requestFocus();
-        } else if (cboAno.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, "Selecione um ano.");
-            cboAno.requestFocus();
-        } else {
-            String local = System.getProperty("user.dir");
-            //escreve relatorio
-            try {
-                ArrayList<ArrayList<String>> passagens = daoPassagem.consultarTodasPassagensDoDia(String.valueOf(cboDia.getSelectedItem()) + "/" + String.valueOf(cboMes.getSelectedItem()) + "/" + String.valueOf(cboAno.getSelectedItem()));
-                if(passagens.isEmpty()){
-                    JOptionPane.showMessageDialog(null, "Nao ha passagens compradas nesta data.");      
-                } else {
-                    FileWriter f0 = new FileWriter(local + "/src/imagens/ComprovanteCompra.txt");
-                    f0.write("Relatorio do dia " + String.valueOf(cboDia.getSelectedItem()) + "/" + String.valueOf(cboMes.getSelectedItem()) + "/" + String.valueOf(cboAno.getSelectedItem()) + barraN + barraN + barraN);
-                    for (int i = 0; i < passagens.size()-1; i++) {
-                        int j = i;
-                        while ((passagens.get(j).get(1).equals(passagens.get(j + 1).get(1))) && (passagens.get(j).get(13).equals(passagens.get(j + 1).get(13))) && (passagens.get(j).get(3).equals(passagens.get(j + 1).get(3)))) {
-                            j++;
-                            if (j == passagens.size()-1) {
-                                break;
-                            }
-                        }
-                        f0.write(barraN + "Passageiro: " + passagens.get(i).get(2));
-                        f0.write(barraN + "CPF: " + passagens.get(i).get(1));
-                        f0.write(barraN + "Assento comprado: " + passagens.get(i).get(3));
-                        f0.write(barraN + "Viagem: " + passagens.get(i).get(7) + "-" + passagens.get(i).get(8) + " até " + passagens.get(j).get(9) + "-" + passagens.get(j).get(10));
-                        f0.write(barraN + "Horario de Saida: " + passagens.get(i).get(4));
-                        f0.write(barraN + "Horario de Chegada: " + passagens.get(j).get(5));
-                        f0.write(barraN + "Placa do Onibus que fez esta viagem: " + passagens.get(i).get(11));
-                        //f0.write(barraN+"Motorista que fez esta viagem: "+passagens.get(i).get(12));
-                        
-                        
-                        f0.write(barraN + barraN);
-                        i = j;
-                        System.out.println("i modificado: "+ i);
-                    }
-                    f0.close();
-                    java.awt.Desktop.getDesktop().open(new File(local + "/src/imagens/ComprovanteCompra.txt"));
-                    cboDia.setSelectedIndex(0);
-                    cboMes.setSelectedIndex(0);
-                    cboAno.setSelectedIndex(0);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private void fecharClick(ActionEvent evt) {
         this.setVisible(false);
     }
+    
     private DaoPassagem daoPassagem;
     private JLabel lblSelecioneData;
     private JComboBox cboDia;

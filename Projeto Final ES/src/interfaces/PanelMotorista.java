@@ -210,7 +210,47 @@ public class PanelMotorista extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnMotoristaCadastrarClick(evt);
+                if (txtMotoristaCadastroNome.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um nome.");
+                    txtMotoristaCadastroNome.requestFocus();
+                } else if (txtMotoristaCadastroRg.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um RG.");
+                    txtMotoristaCadastroRg.requestFocus();
+                } else if (txtMotoristaCadastroCpf.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um CPF.");
+                    txtMotoristaCadastroCpf.requestFocus();
+                } else if (txtMotoristaCadastroEnd.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um endereco.");
+                    txtMotoristaCadastroEnd.requestFocus();
+                } else {
+                    motorista.setMotoristaNome(txtMotoristaCadastroNome.getText());
+                    motorista.setMotoristaRg(removeCaracteres(txtMotoristaCadastroRg.getText()));
+                    motorista.setMotoristaCpf(txtMotoristaCadastroCpf.getText());
+                    motorista.setMotoristaEnd(txtMotoristaCadastroEnd.getText());
+                    motorista.setMotoristaTel(txtMotoristaCadastroTel.getText());
+                    motorista.setMotoristaEmail(txtMotoristaCadastroEmail.getText());
+                    int verifica = daoMotorista.cadastrarMotorista(motorista);
+                    if (verifica == 0) {
+                        JOptionPane.showMessageDialog(null, "Motorista cadastrado com sucesso!");
+                        txtMotoristaCadastroNome.setText("");
+                        txtMotoristaCadastroRg.setText("");
+                        txtMotoristaCadastroCpf.setValue("");
+                        txtMotoristaCadastroEnd.setText("");
+                        txtMotoristaCadastroTel.setValue("");
+                        txtMotoristaCadastroEmail.setText("");
+                        carregaCombosMotorista(2);
+                        carregaCombosMotorista(3);
+                        txtMotoristaCadastroNome.requestFocus();
+                    } else if (verifica == 1) {
+                        JOptionPane.showMessageDialog(null, "RG ja existe para outro motorista!");
+                        txtMotoristaCadastroRg.setText("");
+                        txtMotoristaCadastroRg.requestFocus();
+                    } else if (verifica == 2) {
+                        JOptionPane.showMessageDialog(null, "CPF ja existe para outro motorista!");
+                        txtMotoristaCadastroCpf.setValue("");
+                        txtMotoristaCadastroCpf.requestFocus();
+                    }
+                }
             }
         });
 
@@ -218,7 +258,13 @@ public class PanelMotorista extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnMotoristaCadastroLimpaClick(evt);
+                txtMotoristaCadastroCpf.setValue("");
+                txtMotoristaCadastroEmail.setText("");
+                txtMotoristaCadastroEnd.setText("");
+                txtMotoristaCadastroNome.setText("");
+                txtMotoristaCadastroRg.setText("");
+                txtMotoristaCadastroTel.setValue("");
+                txtMotoristaCadastroNome.requestFocus();
             }
         });
 
@@ -226,7 +272,53 @@ public class PanelMotorista extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnMotoristaAlterarClick(evt);
+                if (cboMotoristaAlteracaoNome.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione um motorista.");
+                    cboMotoristaAlteracaoNome.requestFocus();
+                } else if (txtMotoristaAlteracaoNome.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um nome.");
+                    txtMotoristaAlteracaoNome.requestFocus();
+                } else if (txtMotoristaAlteracaoRg.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um RG.");
+                    txtMotoristaAlteracaoRg.requestFocus();
+                } else if (txtMotoristaAlteracaoCpf.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um CPF.");
+                    txtMotoristaAlteracaoCpf.requestFocus();
+                } else if (txtMotoristaAlteracaoEnd.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um endereco.");
+                    txtMotoristaAlteracaoEnd.requestFocus();
+                } else {
+                    motorista.setMotoristaId(Integer.parseInt(String.valueOf(cboMotoristaAlteracaoIdOculto.getSelectedItem())));
+                    motorista.setMotoristaNome(txtMotoristaAlteracaoNome.getText());
+                    motorista.setMotoristaRg(removeCaracteres(txtMotoristaAlteracaoRg.getText()));
+                    motorista.setMotoristaCpf(txtMotoristaAlteracaoCpf.getText());
+                    motorista.setMotoristaEnd(txtMotoristaAlteracaoEnd.getText());
+                    motorista.setMotoristaTel(txtMotoristaAlteracaoTel.getText());
+                    motorista.setMotoristaEmail(txtMotoristaAlteracaoEmail.getText());
+                    int verifica = daoMotorista.alterarMotorista(motorista);
+                    if (verifica == 0) {
+                        JOptionPane.showMessageDialog(null, "Motorista alterado com sucesso!");
+                        txtMotoristaAlteracaoNome.setText("");
+                        txtMotoristaAlteracaoRg.setText("");
+                        txtMotoristaAlteracaoCpf.setValue("");
+                        txtMotoristaAlteracaoEnd.setText("");
+                        txtMotoristaAlteracaoTel.setValue("");
+                        txtMotoristaAlteracaoEmail.setText("");
+                        cboMotoristaAlteracaoNome.setSelectedItem("Selecione");
+                        cboMotoristaAlteracaoIdOculto.setSelectedItem("Selecione");
+                        carregaCombosMotorista(2);
+                        carregaCombosMotorista(3);
+                        cboMotoristaAlteracaoNome.requestFocus();
+                    } else if (verifica == 1) {
+                        JOptionPane.showMessageDialog(null, "RG ja existe para outro motorista!");
+                        txtMotoristaAlteracaoRg.setText("");
+                        txtMotoristaAlteracaoRg.requestFocus();
+                    } else if (verifica == 2) {
+                        JOptionPane.showMessageDialog(null, "CPF ja existe para outro motorista!");
+                        txtMotoristaAlteracaoCpf.setValue("");
+                        txtMotoristaAlteracaoCpf.requestFocus();
+                    }
+                }
             }
         });
 
@@ -234,7 +326,28 @@ public class PanelMotorista extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnMotoristaRemoverClick(evt);
+                int confirma = 0;
+                if (cboMotoristaRemocaoNome.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione um motorista para remover.");
+                    cboMotoristaRemocaoNome.requestFocus();
+                } else {
+                    confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
+                    if (confirma == JOptionPane.YES_OPTION) {
+                        motorista.setMotoristaId(Integer.parseInt(String.valueOf(cboMotoristaRemocaoIdOculto.getSelectedItem())));
+                        boolean verifica = daoMotorista.removerMotorista(motorista);
+                        if(verifica) JOptionPane.showMessageDialog(null, "Motorista removido com sucesso!");
+                        else JOptionPane.showMessageDialog(null, "Nao foi possivel remover o motorista. Ele esta cadastrado em algum itinerario.");
+                        cboMotoristaRemocaoNome.setSelectedItem("Selecione");
+                        cboMotoristaRemocaoIdOculto.setSelectedItem("Selecione");
+                        carregaCombosMotorista(2);
+                        carregaCombosMotorista(3);
+                        cboMotoristaRemocaoNome.requestFocus();
+                    } else {
+                        cboMotoristaRemocaoNome.setSelectedItem("Selecione");
+                        cboMotoristaRemocaoIdOculto.setSelectedItem("Selecione");
+                        cboMotoristaRemocaoNome.requestFocus();
+                    }
+                }
             }
         });
 
@@ -242,7 +355,26 @@ public class PanelMotorista extends JPanel {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboMotoristaAlteracaoNomeClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboMotoristaAlteracaoNome.getSelectedItem().equals("Selecione"))) {
+                        cboMotoristaAlteracaoIdOculto.setSelectedIndex(cboMotoristaAlteracaoNome.getSelectedIndex());
+                        motorista.setMotoristaId(Integer.parseInt(String.valueOf(cboMotoristaAlteracaoIdOculto.getSelectedItem())));                Motorista aux = daoMotorista.consultarMotorista(motorista);
+                        txtMotoristaAlteracaoNome.setText(aux.getMotoristaNome());
+                        txtMotoristaAlteracaoRg.setText(aux.getMotoristaRg());
+                        txtMotoristaAlteracaoCpf.setText(aux.getMotoristaCpf());
+                        txtMotoristaAlteracaoTel.setText(aux.getMotoristaTel());
+                        txtMotoristaAlteracaoEnd.setText(aux.getMotoristaEnd());
+                        txtMotoristaAlteracaoEmail.setText(aux.getMotoristaEmail());
+                    } else {
+                        txtMotoristaAlteracaoNome.setText("");
+                        txtMotoristaAlteracaoRg.setText("");
+                        txtMotoristaAlteracaoCpf.setValue("");
+                        txtMotoristaAlteracaoTel.setValue("");
+                        txtMotoristaAlteracaoEnd.setText("");
+                        txtMotoristaAlteracaoEmail.setText("");
+                        cboMotoristaAlteracaoIdOculto.setSelectedItem("Selecione");
+                    }
+                }
             }
         });
 
@@ -250,9 +382,28 @@ public class PanelMotorista extends JPanel {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboMotoristaRemocaoNomeClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboMotoristaRemocaoNome.getSelectedItem().equals("Selecione"))) {
+                        cboMotoristaRemocaoIdOculto.setSelectedIndex(cboMotoristaRemocaoNome.getSelectedIndex());
+                        motorista.setMotoristaId(Integer.parseInt(String.valueOf(cboMotoristaRemocaoIdOculto.getSelectedItem())));
+                        Motorista aux = daoMotorista.consultarMotorista(motorista);
+                        lblMotoristaRemocaoRgR.setText(aux.getMotoristaRg());
+                        lblMotoristaRemocaoCpfR.setText(aux.getMotoristaCpf());
+                        lblMotoristaRemocaoTelR.setText(aux.getMotoristaTel());
+                        lblMotoristaRemocaoEndR.setText(aux.getMotoristaEnd());
+                        lblMotoristaRemocaoEmailR.setText(aux.getMotoristaEmail());
+                    } else {
+                        lblMotoristaRemocaoRgR.setText("");
+                        lblMotoristaRemocaoCpfR.setText("");
+                        lblMotoristaRemocaoTelR.setText("");
+                        lblMotoristaRemocaoEndR.setText("");
+                        lblMotoristaRemocaoEmailR.setText("");
+                        cboMotoristaRemocaoIdOculto.setSelectedIndex(cboMotoristaRemocaoNome.getSelectedIndex());
+                    }
+                }
             }
         });
+        
         return pnlMotorista;
     }
 
@@ -305,179 +456,6 @@ public class PanelMotorista extends JPanel {
         return temp.replaceAll("-", "");
     }
 
-    private void btnMotoristaCadastrarClick(ActionEvent evt) {
-        if (txtMotoristaCadastroNome.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite um nome.");
-            txtMotoristaCadastroNome.requestFocus();
-        } else if (txtMotoristaCadastroRg.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite um RG.");
-            txtMotoristaCadastroRg.requestFocus();
-        } else if (txtMotoristaCadastroCpf.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite um CPF.");
-            txtMotoristaCadastroCpf.requestFocus();
-        } else if (txtMotoristaCadastroEnd.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite um endereco.");
-            txtMotoristaCadastroEnd.requestFocus();
-        } else {
-            motorista.setMotoristaNome(txtMotoristaCadastroNome.getText());
-            motorista.setMotoristaRg(removeCaracteres(txtMotoristaCadastroRg.getText()));
-            motorista.setMotoristaCpf(txtMotoristaCadastroCpf.getText());
-            motorista.setMotoristaEnd(txtMotoristaCadastroEnd.getText());
-            motorista.setMotoristaTel(txtMotoristaCadastroTel.getText());
-            motorista.setMotoristaEmail(txtMotoristaCadastroEmail.getText());
-            int verifica = daoMotorista.cadastrarMotorista(motorista);
-            if (verifica == 0) {
-                JOptionPane.showMessageDialog(this, "Motorista cadastrado com sucesso!");
-                txtMotoristaCadastroNome.setText("");
-                txtMotoristaCadastroRg.setText("");
-                txtMotoristaCadastroCpf.setValue("");
-                txtMotoristaCadastroEnd.setText("");
-                txtMotoristaCadastroTel.setValue("");
-                txtMotoristaCadastroEmail.setText("");
-                carregaCombosMotorista(2);
-                carregaCombosMotorista(3);
-                txtMotoristaCadastroNome.requestFocus();
-            } else if (verifica == 1) {
-                JOptionPane.showMessageDialog(this, "RG ja existe para outro motorista!");
-                txtMotoristaCadastroRg.setText("");
-                txtMotoristaCadastroRg.requestFocus();
-            } else if (verifica == 2) {
-                JOptionPane.showMessageDialog(this, "CPF ja existe para outro motorista!");
-                txtMotoristaCadastroCpf.setValue("");
-                txtMotoristaCadastroCpf.requestFocus();
-            }
-        }
-    }
-
-    private void btnMotoristaCadastroLimpaClick(ActionEvent evt) {
-        txtMotoristaCadastroCpf.setValue("");
-        txtMotoristaCadastroEmail.setText("");
-        txtMotoristaCadastroEnd.setText("");
-        txtMotoristaCadastroNome.setText("");
-        txtMotoristaCadastroRg.setText("");
-        txtMotoristaCadastroTel.setValue("");
-        txtMotoristaCadastroNome.requestFocus();
-    }
-
-    private void btnMotoristaAlterarClick(ActionEvent evt) {
-        if (cboMotoristaAlteracaoNome.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(this, "Selecione um motorista.");
-            cboMotoristaAlteracaoNome.requestFocus();
-        } else if (txtMotoristaAlteracaoNome.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite um nome.");
-            txtMotoristaAlteracaoNome.requestFocus();
-        } else if (txtMotoristaAlteracaoRg.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite um RG.");
-            txtMotoristaAlteracaoRg.requestFocus();
-        } else if (txtMotoristaAlteracaoCpf.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite um CPF.");
-            txtMotoristaAlteracaoCpf.requestFocus();
-        } else if (txtMotoristaAlteracaoEnd.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "Digite um endereco.");
-            txtMotoristaAlteracaoEnd.requestFocus();
-        } else {
-            motorista.setMotoristaId(Integer.parseInt(String.valueOf(cboMotoristaAlteracaoIdOculto.getSelectedItem())));
-            motorista.setMotoristaNome(txtMotoristaAlteracaoNome.getText());
-            motorista.setMotoristaRg(removeCaracteres(txtMotoristaAlteracaoRg.getText()));
-            motorista.setMotoristaCpf(txtMotoristaAlteracaoCpf.getText());
-            motorista.setMotoristaEnd(txtMotoristaAlteracaoEnd.getText());
-            motorista.setMotoristaTel(txtMotoristaAlteracaoTel.getText());
-            motorista.setMotoristaEmail(txtMotoristaAlteracaoEmail.getText());
-            int verifica = daoMotorista.alterarMotorista(motorista);
-            if (verifica == 0) {
-                JOptionPane.showMessageDialog(this, "Motorista alterado com sucesso!");
-                txtMotoristaAlteracaoNome.setText("");
-                txtMotoristaAlteracaoRg.setText("");
-                txtMotoristaAlteracaoCpf.setValue("");
-                txtMotoristaAlteracaoEnd.setText("");
-                txtMotoristaAlteracaoTel.setValue("");
-                txtMotoristaAlteracaoEmail.setText("");
-                cboMotoristaAlteracaoNome.setSelectedItem("Selecione");
-                cboMotoristaAlteracaoIdOculto.setSelectedItem("Selecione");
-                carregaCombosMotorista(2);
-                carregaCombosMotorista(3);
-                cboMotoristaAlteracaoNome.requestFocus();
-            } else if (verifica == 1) {
-                JOptionPane.showMessageDialog(this, "RG ja existe para outro motorista!");
-                txtMotoristaAlteracaoRg.setText("");
-                txtMotoristaAlteracaoRg.requestFocus();
-            } else if (verifica == 2) {
-                JOptionPane.showMessageDialog(this, "CPF ja existe para outro motorista!");
-                txtMotoristaAlteracaoCpf.setValue("");
-                txtMotoristaAlteracaoCpf.requestFocus();
-            }
-        }
-    }
-
-    private void btnMotoristaRemoverClick(ActionEvent evt) {
-        int confirma = 0;
-        if (cboMotoristaRemocaoNome.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(this, "Selecione um motorista para remover.");
-            cboMotoristaRemocaoNome.requestFocus();
-        } else {
-            confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
-            if (confirma == JOptionPane.YES_OPTION) {
-                motorista.setMotoristaId(Integer.parseInt(String.valueOf(cboMotoristaRemocaoIdOculto.getSelectedItem())));
-                boolean verifica = daoMotorista.removerMotorista(motorista);
-                if(verifica) JOptionPane.showMessageDialog(null, "Motorista removido com sucesso!");
-                else JOptionPane.showMessageDialog(null, "Nao foi possivel remover o motorista. Ele esta cadastrado em algum itinerario.");
-                cboMotoristaRemocaoNome.setSelectedItem("Selecione");
-                cboMotoristaRemocaoIdOculto.setSelectedItem("Selecione");
-                carregaCombosMotorista(2);
-                carregaCombosMotorista(3);
-                cboMotoristaRemocaoNome.requestFocus();
-            } else {
-                cboMotoristaRemocaoNome.setSelectedItem("Selecione");
-                cboMotoristaRemocaoIdOculto.setSelectedItem("Selecione");
-                cboMotoristaRemocaoNome.requestFocus();
-            }
-        }
-    }
-
-    private void cboMotoristaAlteracaoNomeClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboMotoristaAlteracaoNome.getSelectedItem().equals("Selecione"))) {
-                cboMotoristaAlteracaoIdOculto.setSelectedIndex(cboMotoristaAlteracaoNome.getSelectedIndex());
-                motorista.setMotoristaId(Integer.parseInt(String.valueOf(cboMotoristaAlteracaoIdOculto.getSelectedItem())));                Motorista aux = daoMotorista.consultarMotorista(motorista);
-                txtMotoristaAlteracaoNome.setText(aux.getMotoristaNome());
-                txtMotoristaAlteracaoRg.setText(aux.getMotoristaRg());
-                txtMotoristaAlteracaoCpf.setText(aux.getMotoristaCpf());
-                txtMotoristaAlteracaoTel.setText(aux.getMotoristaTel());
-                txtMotoristaAlteracaoEnd.setText(aux.getMotoristaEnd());
-                txtMotoristaAlteracaoEmail.setText(aux.getMotoristaEmail());
-            } else {
-                txtMotoristaAlteracaoNome.setText("");
-                txtMotoristaAlteracaoRg.setText("");
-                txtMotoristaAlteracaoCpf.setValue("");
-                txtMotoristaAlteracaoTel.setValue("");
-                txtMotoristaAlteracaoEnd.setText("");
-                txtMotoristaAlteracaoEmail.setText("");
-                cboMotoristaAlteracaoIdOculto.setSelectedItem("Selecione");
-            }
-        }
-    }
-
-    private void cboMotoristaRemocaoNomeClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboMotoristaRemocaoNome.getSelectedItem().equals("Selecione"))) {
-                cboMotoristaRemocaoIdOculto.setSelectedIndex(cboMotoristaRemocaoNome.getSelectedIndex());
-                motorista.setMotoristaId(Integer.parseInt(String.valueOf(cboMotoristaRemocaoIdOculto.getSelectedItem())));
-                Motorista aux = daoMotorista.consultarMotorista(motorista);
-                lblMotoristaRemocaoRgR.setText(aux.getMotoristaRg());
-                lblMotoristaRemocaoCpfR.setText(aux.getMotoristaCpf());
-                lblMotoristaRemocaoTelR.setText(aux.getMotoristaTel());
-                lblMotoristaRemocaoEndR.setText(aux.getMotoristaEnd());
-                lblMotoristaRemocaoEmailR.setText(aux.getMotoristaEmail());
-            } else {
-                lblMotoristaRemocaoRgR.setText("");
-                lblMotoristaRemocaoCpfR.setText("");
-                lblMotoristaRemocaoTelR.setText("");
-                lblMotoristaRemocaoEndR.setText("");
-                lblMotoristaRemocaoEmailR.setText("");
-                cboMotoristaRemocaoIdOculto.setSelectedIndex(cboMotoristaRemocaoNome.getSelectedIndex());
-            }
-        }
-    }
     
     //------- Geral
     private Font fontePadrao;

@@ -144,7 +144,6 @@ public class PanelEstado {
             public void actionPerformed(ActionEvent evt) {
                 txtEstadoCadastroUf.setValue("");
                 txtEstadoCadastroUf.requestFocus();
-                btnEstadoCadastroLimpaClick(evt);
             }
         });
 
@@ -152,7 +151,28 @@ public class PanelEstado {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnEstadoAlterarClick(evt);
+                if (cboEstadoAlteracaoUf.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione um nome.");
+                    cboEstadoAlteracaoUf.requestFocus();
+                } else if (txtEstadoAlteracaoUf.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um nome.");
+                    txtEstadoAlteracaoUf.requestFocus();
+                } else {
+                    estado.setEstadoId(Integer.parseInt(String.valueOf(cboEstadoAlteracaoIdOculto.getSelectedItem())));
+                    estado.setEstadoUf(txtEstadoAlteracaoUf.getText());
+                    boolean verifica = daoEstado.alterarEstado(estado);
+                    if (verifica == true) {
+                        JOptionPane.showMessageDialog(null, "Estado alterado com sucesso!");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Estado ja existe!");
+                    }
+                    txtEstadoAlteracaoUf.setValue("");
+                    cboEstadoAlteracaoUf.setSelectedItem("Selecione");
+                    cboEstadoAlteracaoIdOculto.setSelectedItem("Selecione");
+                    carregaCombosEstado(2);
+                    carregaCombosEstado(3);
+                    cboEstadoAlteracaoUf.requestFocus();
+                }
             }
         });
 
@@ -160,7 +180,35 @@ public class PanelEstado {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnEstadoRemoverClick(evt);
+                int confirma = 0;
+                if (cboEstadoRemocaoUf.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione um Estado para remover.");
+                    cboEstadoRemocaoUf.requestFocus();
+                } else {
+                    confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
+                    if (confirma == JOptionPane.YES_OPTION) {
+                        cboEstadoRemocaoIdOculto.setSelectedIndex(cboEstadoRemocaoUf.getSelectedIndex());
+                        estado.setEstadoId(Integer.parseInt(String.valueOf(cboEstadoRemocaoIdOculto.getSelectedItem())));
+                        boolean verifica = daoEstado.removerEstado(estado);
+                        if (verifica == true) {
+                            JOptionPane.showMessageDialog(null, "Estado removido com sucesso!");
+                            cboEstadoRemocaoUf.setSelectedItem("Selecione");
+                            cboEstadoRemocaoIdOculto.setSelectedItem("Selecione");
+                            carregaCombosEstado(2);
+                            carregaCombosEstado(3);
+                            cboEstadoRemocaoUf.requestFocus();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Estado nao pode ser removido. Ha cidades relacionadas a ele.");
+                            cboEstadoRemocaoUf.setSelectedItem("Selecione");
+                            cboEstadoRemocaoIdOculto.setSelectedItem("Selecione");
+                            cboEstadoRemocaoUf.requestFocus();
+                        }
+                    } else {
+                        cboEstadoRemocaoUf.setSelectedItem("Selecione");
+                        cboEstadoRemocaoIdOculto.setSelectedItem("Selecione");
+                        cboEstadoRemocaoUf.requestFocus();
+                    }
+                }
             }
         });
 
@@ -168,7 +216,17 @@ public class PanelEstado {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboEstadoAlteracaoNomeClick(evt);
+                txtEstadoAlteracaoUf.requestFocus();
+                cboEstadoAlteracaoUf.requestFocus();
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboEstadoAlteracaoUf.getSelectedItem().equals("Selecione"))) {
+                        txtEstadoAlteracaoUf.setText(String.valueOf(cboEstadoAlteracaoUf.getSelectedItem()));
+                        cboEstadoAlteracaoIdOculto.setSelectedIndex(cboEstadoAlteracaoUf.getSelectedIndex());
+                    } else {
+                        txtEstadoAlteracaoUf.setValue("");
+                        cboEstadoAlteracaoIdOculto.setSelectedItem("Selecione");
+                    }
+                }
             }
         });
 
@@ -176,7 +234,7 @@ public class PanelEstado {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboEstadoRemocaoNomeClick(evt);
+                cboEstadoRemocaoIdOculto.setSelectedIndex(cboEstadoRemocaoUf.getSelectedIndex());
             }
         });
 
@@ -214,88 +272,6 @@ public class PanelEstado {
         }
     }
 
-    private void btnEstadoCadastrarClick(ActionEvent evt) {
-        
-    }
-
-    private void btnEstadoCadastroLimpaClick(ActionEvent evt) {
-        
-    }
-
-    private void btnEstadoAlterarClick(ActionEvent evt) {
-        if (cboEstadoAlteracaoUf.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um nome.");
-            cboEstadoAlteracaoUf.requestFocus();
-        } else if (txtEstadoAlteracaoUf.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Digite um nome.");
-            txtEstadoAlteracaoUf.requestFocus();
-        } else {
-            estado.setEstadoId(Integer.parseInt(String.valueOf(cboEstadoAlteracaoIdOculto.getSelectedItem())));
-            estado.setEstadoUf(txtEstadoAlteracaoUf.getText());
-            boolean verifica = daoEstado.alterarEstado(estado);
-            if (verifica == true) {
-                JOptionPane.showMessageDialog(null, "Estado alterado com sucesso!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Estado ja existe!");
-            }
-            txtEstadoAlteracaoUf.setValue("");
-            cboEstadoAlteracaoUf.setSelectedItem("Selecione");
-            cboEstadoAlteracaoIdOculto.setSelectedItem("Selecione");
-            carregaCombosEstado(2);
-            carregaCombosEstado(3);
-            cboEstadoAlteracaoUf.requestFocus();
-        }
-    }
-
-    private void btnEstadoRemoverClick(ActionEvent evt) {
-        int confirma = 0;
-        if (cboEstadoRemocaoUf.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Estado para remover.");
-            cboEstadoRemocaoUf.requestFocus();
-        } else {
-            confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
-            if (confirma == JOptionPane.YES_OPTION) {
-                cboEstadoRemocaoIdOculto.setSelectedIndex(cboEstadoRemocaoUf.getSelectedIndex());
-                estado.setEstadoId(Integer.parseInt(String.valueOf(cboEstadoRemocaoIdOculto.getSelectedItem())));
-                boolean verifica = daoEstado.removerEstado(estado);
-                if (verifica == true) {
-                    JOptionPane.showMessageDialog(null, "Estado removido com sucesso!");
-                    cboEstadoRemocaoUf.setSelectedItem("Selecione");
-                    cboEstadoRemocaoIdOculto.setSelectedItem("Selecione");
-                    carregaCombosEstado(2);
-                    carregaCombosEstado(3);
-                    cboEstadoRemocaoUf.requestFocus();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Estado nao pode ser removido. Ha cidades relacionadas a ele.");
-                    cboEstadoRemocaoUf.setSelectedItem("Selecione");
-                    cboEstadoRemocaoIdOculto.setSelectedItem("Selecione");
-                    cboEstadoRemocaoUf.requestFocus();
-                }
-            } else {
-                cboEstadoRemocaoUf.setSelectedItem("Selecione");
-                cboEstadoRemocaoIdOculto.setSelectedItem("Selecione");
-                cboEstadoRemocaoUf.requestFocus();
-            }
-        }
-    }
-
-    private void cboEstadoAlteracaoNomeClick(ItemEvent evt) {
-        txtEstadoAlteracaoUf.requestFocus();
-        cboEstadoAlteracaoUf.requestFocus();
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboEstadoAlteracaoUf.getSelectedItem().equals("Selecione"))) {
-                txtEstadoAlteracaoUf.setText(String.valueOf(cboEstadoAlteracaoUf.getSelectedItem()));
-                cboEstadoAlteracaoIdOculto.setSelectedIndex(cboEstadoAlteracaoUf.getSelectedIndex());
-            } else {
-                txtEstadoAlteracaoUf.setValue("");
-                cboEstadoAlteracaoIdOculto.setSelectedItem("Selecione");
-            }
-        }
-    }
-
-    private void cboEstadoRemocaoNomeClick(ItemEvent evt) {
-        cboEstadoRemocaoIdOculto.setSelectedIndex(cboEstadoRemocaoUf.getSelectedIndex());
-    }
     
     private JPanel pnlEstado;
     //------- Geral

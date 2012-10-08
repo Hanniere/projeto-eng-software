@@ -459,8 +459,10 @@ public class PanelRotaItinerario extends JPanel {
     private int rowIndexSelected;
     private int qtdeCliquesTabela = 0;
     private Font fontePadrao;
+    
     //JTextFields
     private JTextField txtCadastroOrigem;
+    
     //Jpanel
     private JPanel pnlCadastro;
     private JPanel pnlRemocao;
@@ -470,16 +472,19 @@ public class PanelRotaItinerario extends JPanel {
     private JPanel pnlRemocaoLista;
     private JPanel pnlRemocaoCampos;
     private JPanel pnlItinerario;
+    
     //JLbabels
     private JLabel lblItinerarioCadastro;
     private JLabel lblItinerarioRemocao;
     private JLabel lblCadastroOrigem;
     private JLabel lblCadastroDestino;
+    
     //JButtons
     private JButton btnCadastroAddRota;
     private JButton btnCadastrar;
     private JButton btnCadastroCancela;
     private JButton btnRemover;
+    
     //ComboBoxes
     private JComboBox cboItinerarioCadastro;
     private JComboBox cboItinerarioRemocao;
