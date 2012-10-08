@@ -12,15 +12,15 @@ import java.util.ArrayList;
 
 public class DaoRotaItinerario {
 
-public boolean cadastrarNovoRotaItinerario(RotaItinerario rotaItinerario){
+    public boolean cadastrarNovoRotaItinerario(RotaItinerario rotaItinerario) {
         BancoDados banco = new BancoDados();
         try {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "insert into RotaItinerario (RotaItinerarioId, Rotaitinerario_rotaId, Rotaitinerario_itinerarioId, RotaitinerarioOrdem)" +
-            		" VALUES ( '"+rotaItinerario.getRotaItinerarioId()+"','"+rotaItinerario.getRotaitinerario_rotaId()+
-            		"','"+rotaItinerario.getRotaitinerario_itinerarioId()+"','"+rotaItinerario.getRotaitinerarioOrdem()+"')";
+            String sql = "insert into RotaItinerario (RotaItinerarioId, Rotaitinerario_rotaId, Rotaitinerario_itinerarioId, RotaitinerarioOrdem)"
+                    + " VALUES ( '" + rotaItinerario.getRotaItinerarioId() + "','" + rotaItinerario.getRotaitinerario_rotaId()
+                    + "','" + rotaItinerario.getRotaitinerario_itinerarioId() + "','" + rotaItinerario.getRotaitinerarioOrdem() + "')";
             stmt.executeUpdate(sql);
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -30,7 +30,7 @@ public boolean cadastrarNovoRotaItinerario(RotaItinerario rotaItinerario){
             System.out.println("Problema com SQL.");
             ex.printStackTrace();
             return false;
-        } 
+        }
         return true;
     }
 
@@ -51,7 +51,7 @@ public boolean cadastrarNovoRotaItinerario(RotaItinerario rotaItinerario){
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Itinerario Itinerario = new Itinerario();
-                Itinerario.setId(rs.getInt("ItinerarioId"));
+                Itinerario.setItinerarioId(rs.getInt("ItinerarioId"));
                 Itinerario.setItinerario_cidadeOrigemId(rs.getInt("origem.CidadeId"));
                 Itinerario.setItinerario_cidadeDestinoId(rs.getInt("destino.CidadeId"));
                 Itinerario.setItinerario_cidadeOrigem(rs.getString("origem.CidadeNome"));
@@ -69,5 +69,29 @@ public boolean cadastrarNovoRotaItinerario(RotaItinerario rotaItinerario){
         }
         return arrayList;
     }
-
+    
+    public boolean removerRotaItinerario(Itinerario itinerario) {
+        BancoDados banco = new BancoDados();
+        try {
+            Class.forName(banco.getDriver());
+            Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT * FROM Horario WHERE Horario_RotaItinerarioId IN (SELECT RotaItinerarioId FROM RotaItinerario WHERE RotaItinerario_ItinerarioId =" + itinerario.getItinerarioId() + ")";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                return false;
+            }
+            sql = "DELETE FROM RotaItinerario WHERE RotaItinerario_ItinerarioId =" + itinerario.getItinerarioId();
+            stmt.executeUpdate(sql);
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Não foi possivel carregar o driver.");
+            ex.printStackTrace();
+            return false;
+        } catch (SQLException ex) {
+            System.out.println("Problema com SQL.");
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 }

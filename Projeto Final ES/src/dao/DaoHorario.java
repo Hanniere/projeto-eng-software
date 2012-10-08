@@ -26,20 +26,20 @@ public class DaoHorario {
             ResultSet rs = stmt.executeQuery(sql2);
             if (rs.first()) {//Se existir first, ent�o j� existe no BD
                 String sq13 = "update horario set HorarioPreco = " + horario.getHorarioPreco() + ""
-                        + " , Horario_MotoristaId = " + horario.getHorario_MotoristaId() + ""
-                        + " , Horario_OnibusId = " + horario.getHorario_OnibusId() + ""
+                        + " , Horario_MotoristaId = " + horario.getHorario_motoristaId() + ""
+                        + " , Horario_OnibusId = " + horario.getHorario_onibusId() + ""
                         + " , Horario_usado = 1"
                         + " where HorarioDiaId = " + horario.getHorarioDiaId() + ""
                         + " and HorarioSaida = '" + horario.getHorarioSaida() + "'"
-                        + " and Horario_RotaItinerarioId = " + horario.getHorario_RotaItinerarioId() + "";
+                        + " and Horario_RotaItinerarioId = " + horario.getHorario_rotaItinerarioId() + "";
                 stmt.executeUpdate(sq13);
             } else {
                 System.out.println("INSERINDO HORARIO");
                 String sql = "insert into Horario (HorarioDiaId, Horario_RotaItinerarioId, HorarioSaida, HorarioChegada, HorarioPreco,"
                         + " Horario_MotoristaId, Horario_OnibusId, Horario_usado)"
-                        + " VALUES ( '" + horario.getHorarioDiaId() + "','" + horario.getHorario_RotaItinerarioId()
+                        + " VALUES ( '" + horario.getHorarioDiaId() + "','" + horario.getHorario_rotaItinerarioId()
                         + "','" + horario.getHorarioSaida() + "','" + horario.getHorarioChegada() + "','" + horario.getHorarioPreco()
-                        + "','" + horario.getHorario_MotoristaId() + "','" + horario.getHorario_OnibusId() + "', 1)";
+                        + "','" + horario.getHorario_motoristaId() + "','" + horario.getHorario_onibusId() + "', 1)";
                 stmt.executeUpdate(sql);
             }
             rs.close();
@@ -57,91 +57,6 @@ public class DaoHorario {
         return true;
     }
 
-    /*ArrayList<Horario> arraylist = new ArrayList<Horario>();
-    BancoDados banco = new BancoDados();
-    try {
-    Class.forName(banco.getDriver());
-    Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
-    Statement stmt = conn.createStatement();
-    String sql = "SELECT horarioId FROM Horario INNER JOIN RotaItinerario ON (Horario_RotaItinerarioId = RotaItinerarioId) INNER JOIN Itinerario ON (RotaItinerario_ItinerarioId = ItinerarioId) WHERE ItinerarioId=" + idItinerario + " AND horarioSaida = '"+ horarioSaida +"'";
-    ResultSet rs = stmt.executeQuery(sql);
-    rs.next();
-    int idHorario = rs.getInt("horarioId");
-    System.out.println("idHorario " + idHorario);
-    int horarioIdAux = idHorario;
-    System.out.println("idHorarioAux " + horarioIdAux);
-    int destinoFinal = descobreCidadeDestinoFinal(idItinerario);
-    int cidadeIntermediaria = descobreCidadeDestino(idHorario);
-    System.out.println("destino final " + destinoFinal);
-    System.out.println("intermedi " + cidadeIntermediaria);
-    if (cidadeIntermediaria == destinoFinal) {
-    System.out.println("entrou no if");
-    sql = "SELECT * FROM Horario WHERE HorarioId = " + horarioIdAux;
-    rs = stmt.executeQuery(sql);
-    while (rs.next()) {
-    Horario horario = new Horario();
-    horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
-    horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
-    horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
-    horario.setHorarioSaida(rs.getString("horarioSaida"));
-    horario.setHorarioChegada(rs.getString("horarioChegada"));
-    horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
-    horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
-    horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
-    horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
-    horario.setHorarioPreco(rs.getDouble("horarioPreco"));
-    horario.setHorarioSaida(rs.getString("horarioSaida"));
-    arraylist.add(horario);
-    }
-    } else {
-    while (cidadeIntermediaria != destinoFinal) {
-    sql = "SELECT * FROM Horario WHERE HorarioId = " + horarioIdAux;
-    rs = stmt.executeQuery(sql);
-    while (rs.next()) {
-    Horario horario = new Horario();
-    horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
-    horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
-    horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
-    horario.setHorarioSaida(rs.getString("horarioSaida"));
-    horario.setHorarioChegada(rs.getString("horarioChegada"));
-    horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
-    horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
-    horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
-    horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
-    horario.setHorarioPreco(rs.getDouble("horarioPreco"));
-    horario.setHorarioSaida(rs.getString("horarioSaida"));
-    arraylist.add(horario);
-    }
-    horarioIdAux++;
-    System.out.println("horarioAux++ " + horarioIdAux);
-    cidadeIntermediaria = descobreCidadeDestino(horarioIdAux);
-    }
-    sql = "SELECT * FROM Horario WHERE HorarioId = " + horarioIdAux;
-    rs = stmt.executeQuery(sql);
-    while (rs.next()) {
-    Horario horario = new Horario();
-    horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
-    horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
-    horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
-    horario.setHorarioSaida(rs.getString("horarioSaida"));
-    horario.setHorarioChegada(rs.getString("horarioChegada"));
-    horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
-    horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
-    horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
-    horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
-    horario.setHorarioPreco(rs.getDouble("horarioPreco"));
-    horario.setHorarioSaida(rs.getString("horarioSaida"));
-    arraylist.add(horario);
-    }
-    }
-    } catch (ClassNotFoundException ex) {
-    System.out.println("Nao foi possivel carregar o driver.");
-    ex.printStackTrace();
-    } catch (SQLException ex) {
-    System.out.println("Problema com SQL.");
-    ex.printStackTrace();
-    }
-    return arraylist;*/
     public boolean atualizarHorario(Horario horario, int idItinerario, String horarioSaida) {
         BancoDados banco = new BancoDados();
         try {
@@ -158,16 +73,16 @@ public class DaoHorario {
             if (cidadeIntermediaria == destinoFinal) {
                 System.out.println("entrou no if");
                 sql = "update horario set HorarioPreco = " + horario.getHorarioPreco() + ""
-                    + " , Horario_MotoristaId = " + horario.getHorario_MotoristaId() + ""
-                    + " , Horario_OnibusId = " + horario.getHorario_OnibusId() + ""
+                    + " , Horario_MotoristaId = " + horario.getHorario_motoristaId() + ""
+                    + " , Horario_OnibusId = " + horario.getHorario_onibusId() + ""
                     + " , Horario_usado = 0 "
                     + " where HorarioId = " + horarioIdAux;
                 stmt.executeUpdate(sql);
             } else {
                 while (cidadeIntermediaria != destinoFinal) {
                     sql = "update horario set HorarioPreco = " + horario.getHorarioPreco() + ""
-                    + " , Horario_MotoristaId = " + horario.getHorario_MotoristaId() + ""
-                    + " , Horario_OnibusId = " + horario.getHorario_OnibusId() + ""
+                    + " , Horario_MotoristaId = " + horario.getHorario_motoristaId() + ""
+                    + " , Horario_OnibusId = " + horario.getHorario_onibusId() + ""
                     + " , Horario_usado = 0"
                     + " where HorarioId = " + horarioIdAux;
                     stmt.executeUpdate(sql);
@@ -176,8 +91,8 @@ public class DaoHorario {
                     cidadeIntermediaria = descobreCidadeDestino(horarioIdAux);
                 }
                 sql = "update horario set HorarioPreco = " + horario.getHorarioPreco() + ""
-                    + " , Horario_MotoristaId = " + horario.getHorario_MotoristaId() + ""
-                    + " , Horario_OnibusId = " + horario.getHorario_OnibusId() + ""
+                    + " , Horario_MotoristaId = " + horario.getHorario_motoristaId() + ""
+                    + " , Horario_OnibusId = " + horario.getHorario_onibusId() + ""
                     + " , Horario_usado = 0"
                     + " where HorarioId = " + horarioIdAux;
                 stmt.executeUpdate(sql);                
@@ -248,15 +163,15 @@ public class DaoHorario {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Horario horario = new Horario();
-                horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
+                horario.setHorario_rotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
                 horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
-                horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
+                horario.setHorarioDiaId(Integer.parseInt(rs.getString("horarioDiaId")));
                 horario.setHorarioSaida(rs.getString("horarioSaida"));
                 horario.setHorarioChegada(rs.getString("horarioChegada"));
                 horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
-                horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
-                horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
-                horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
+                horario.setHorario_motoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
+                horario.setHorario_onibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
+                horario.setHorarioUsado(Integer.parseInt(rs.getString("horario_usado")));
                 arrayHorario.add(horario);
             }
         } catch (ClassNotFoundException ex) {
@@ -289,14 +204,14 @@ public class DaoHorario {
             while (rs.next()) {
                 Horario horario = new Horario();
                 horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
-                horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
-                horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
+                horario.setHorarioDiaId(Integer.parseInt(rs.getString("horarioDiaId")));
+                horario.setHorario_rotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
                 horario.setHorarioSaida(rs.getString("horarioSaida"));
                 horario.setHorarioChegada(rs.getString("horarioChegada"));
                 horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
-                horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
-                horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
-                horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
+                horario.setHorario_motoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
+                horario.setHorario_onibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
+                horario.setHorarioUsado(Integer.parseInt(rs.getString("horario_usado")));
                 arrayHorario.add(horario);
             }
         } catch (ClassNotFoundException ex) {
@@ -335,15 +250,15 @@ public class DaoHorario {
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     Horario horario = new Horario();
-                    horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
+                    horario.setHorario_rotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
                     horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
-                    horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
+                    horario.setHorarioDiaId(Integer.parseInt(rs.getString("horarioDiaId")));
                     horario.setHorarioSaida(rs.getString("horarioSaida"));
                     horario.setHorarioChegada(rs.getString("horarioChegada"));
                     horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
-                    horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
-                    horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
-                    horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
+                    horario.setHorario_motoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
+                    horario.setHorario_onibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
+                    horario.setHorarioUsado(Integer.parseInt(rs.getString("horario_usado")));
                     horario.setHorarioPreco(rs.getDouble("horarioPreco"));
                     horario.setHorarioSaida(rs.getString("horarioSaida"));
                     arraylist.add(horario);
@@ -354,15 +269,15 @@ public class DaoHorario {
                     rs = stmt.executeQuery(sql);
                     while (rs.next()) {
                         Horario horario = new Horario();
-                        horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
+                        horario.setHorario_rotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
                         horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
-                        horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
+                        horario.setHorarioDiaId(Integer.parseInt(rs.getString("horarioDiaId")));
                         horario.setHorarioSaida(rs.getString("horarioSaida"));
                         horario.setHorarioChegada(rs.getString("horarioChegada"));
                         horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
-                        horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
-                        horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
-                        horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
+                        horario.setHorario_motoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
+                        horario.setHorario_onibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
+                        horario.setHorarioUsado(Integer.parseInt(rs.getString("horario_usado")));
                         horario.setHorarioPreco(rs.getDouble("horarioPreco"));
                         horario.setHorarioSaida(rs.getString("horarioSaida"));
                         arraylist.add(horario);
@@ -375,15 +290,15 @@ public class DaoHorario {
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     Horario horario = new Horario();
-                    horario.setHorario_RotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
+                    horario.setHorario_rotaItinerarioId(Integer.parseInt(rs.getString("horario_RotaItinerarioId")));
                     horario.setHorarioId(Integer.parseInt(rs.getString("horarioId")));
-                    horario.setHorarioDia(Integer.parseInt(rs.getString("horarioDiaId")));
+                    horario.setHorarioDiaId(Integer.parseInt(rs.getString("horarioDiaId")));
                     horario.setHorarioSaida(rs.getString("horarioSaida"));
                     horario.setHorarioChegada(rs.getString("horarioChegada"));
                     horario.setHorarioPreco(Double.parseDouble(rs.getString("horarioPreco")));
-                    horario.setHorario_MotoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
-                    horario.setHorario_OnibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
-                    horario.setHorario_usado(Integer.parseInt(rs.getString("horario_usado")));
+                    horario.setHorario_motoristaId(Integer.parseInt(rs.getString("horario_MotoristaId")));
+                    horario.setHorario_onibusId(Integer.parseInt(rs.getString("horario_OnibusId")));
+                    horario.setHorarioUsado(Integer.parseInt(rs.getString("horario_usado")));
                     horario.setHorarioPreco(rs.getDouble("horarioPreco"));
                     horario.setHorarioSaida(rs.getString("horarioSaida"));
                     arraylist.add(horario);

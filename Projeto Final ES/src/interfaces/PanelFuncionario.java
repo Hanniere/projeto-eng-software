@@ -272,8 +272,8 @@ public class PanelFuncionario extends JPanel {
         cboFuncionarioAlteracaoIdOculto.removeAllItems();
         cboFuncionarioAlteracaoIdOculto.addItem("Selecione");
         for (int i = 0; i < aux2.size(); i++) {
-            cboFuncionarioAlteracaoIdOculto.addItem(aux2.get(i).getId());
-            cboFuncionarioAlteracaoNome.addItem(aux2.get(i).getNome());
+            cboFuncionarioAlteracaoIdOculto.addItem(aux2.get(i).getFuncionarioId());
+            cboFuncionarioAlteracaoNome.addItem(aux2.get(i).getFuncionarioNome());
         }
         ArrayList<Funcionario> aux3 = daoFuncionario.consultarTodosFuncionarios();
         cboFuncionarioRemocaoNome.removeAllItems();
@@ -281,8 +281,8 @@ public class PanelFuncionario extends JPanel {
         cboFuncionarioRemocaoIdOculto.removeAllItems();
         cboFuncionarioRemocaoIdOculto.addItem("Selecione");
         for (int i = 0; i < aux3.size(); i++) {
-            cboFuncionarioRemocaoNome.addItem(aux3.get(i).getNome());
-            cboFuncionarioRemocaoIdOculto.addItem(aux3.get(i).getId());
+            cboFuncionarioRemocaoNome.addItem(aux3.get(i).getFuncionarioNome());
+            cboFuncionarioRemocaoIdOculto.addItem(aux3.get(i).getFuncionarioId());
         }
         ArrayList<Funcionario> aux4 = daoFuncionario.consultarTodosFuncionarios();
         cboFuncionarioConsultaNome.removeAllItems();
@@ -290,8 +290,8 @@ public class PanelFuncionario extends JPanel {
         cboFuncionarioConsultaIdOculto.removeAllItems();
         cboFuncionarioConsultaIdOculto.addItem("Selecione");
         for (int i = 0; i < aux4.size(); i++) {
-            cboFuncionarioConsultaNome.addItem(aux4.get(i).getNome());
-            cboFuncionarioConsultaIdOculto.addItem(aux4.get(i).getId());
+            cboFuncionarioConsultaNome.addItem(aux4.get(i).getFuncionarioNome());
+            cboFuncionarioConsultaIdOculto.addItem(aux4.get(i).getFuncionarioId());
         }
 
     }
@@ -323,14 +323,14 @@ public class PanelFuncionario extends JPanel {
             JOptionPane.showMessageDialog(this, "Digite uma senha.");
             txtFuncionarioCadastroSenha.requestFocus();
         } else {
-            funcionario.setNome(txtFuncionarioCadastroNome.getText());
-            funcionario.setCpf(txtFuncionarioCadastroCpf.getText());
-            funcionario.setSenha(txtFuncionarioCadastroSenha.getText());
-            funcionario.setEmail(txtFuncionarioCadastroEmail.getText());
+            funcionario.setFuncionarioNome(txtFuncionarioCadastroNome.getText());
+            funcionario.setFuncionarioCpf(txtFuncionarioCadastroCpf.getText());
+            funcionario.setFuncionarioSenha(txtFuncionarioCadastroSenha.getText());
+            funcionario.setFuncionarioEmail(txtFuncionarioCadastroEmail.getText());
             if (chBxFuncionarioCadastroAdmin.isSelected()) {
-                funcionario.setAcesso(1);
+                funcionario.setFuncionarioAcesso(1);
             } else {
-                funcionario.setAcesso(0);
+                funcionario.setFuncionarioAcesso(0);
             }
             boolean verifica = daoFuncionario.cadastrarFuncionario(funcionario);
             if (verifica) {
@@ -376,15 +376,15 @@ public class PanelFuncionario extends JPanel {
             JOptionPane.showMessageDialog(this, "Digite uma senha.");
             txtFuncionarioAlteracaoSenha.requestFocus();
         } else {
-            funcionario.setId(Integer.parseInt(String.valueOf(cboFuncionarioAlteracaoIdOculto.getSelectedItem())));
-            funcionario.setNome(txtFuncionarioAlteracaoNome.getText());
-            funcionario.setCpf(txtFuncionarioAlteracaoCpf.getText());
-            funcionario.setSenha(txtFuncionarioAlteracaoSenha.getText());
-            funcionario.setEmail(txtFuncionarioAlteracaoEmail.getText());
+            funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioAlteracaoIdOculto.getSelectedItem())));
+            funcionario.setFuncionarioNome(txtFuncionarioAlteracaoNome.getText());
+            funcionario.setFuncionarioCpf(txtFuncionarioAlteracaoCpf.getText());
+            funcionario.setFuncionarioSenha(txtFuncionarioAlteracaoSenha.getText());
+            funcionario.setFuncionarioEmail(txtFuncionarioAlteracaoEmail.getText());
             if (chBxFuncionarioAlteracaoAdmin.isSelected()) {
-                funcionario.setAcesso(1);
+                funcionario.setFuncionarioAcesso(1);
             } else {
-                funcionario.setAcesso(0);
+                funcionario.setFuncionarioAcesso(0);
             }
             boolean verifica = daoFuncionario.alterarFuncionario(funcionario);
             if (verifica) {
@@ -418,7 +418,7 @@ public class PanelFuncionario extends JPanel {
         } else {
             confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
             if (confirma == JOptionPane.YES_OPTION) {
-                funcionario.setId(Integer.parseInt(String.valueOf(cboFuncionarioRemocaoIdOculto.getSelectedItem())));
+                funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioRemocaoIdOculto.getSelectedItem())));
                 boolean verifica = daoFuncionario.removerFuncionario(funcionario);
                 if (verifica) {
                     JOptionPane.showMessageDialog(null, "Funcionario removido com sucesso!");
@@ -447,13 +447,13 @@ public class PanelFuncionario extends JPanel {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboFuncionarioAlteracaoNome.getSelectedItem().equals("Selecione"))) {
                 cboFuncionarioAlteracaoIdOculto.setSelectedIndex(cboFuncionarioAlteracaoNome.getSelectedIndex());
-                funcionario.setId(Integer.parseInt(String.valueOf(cboFuncionarioAlteracaoIdOculto.getSelectedItem())));
+                funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioAlteracaoIdOculto.getSelectedItem())));
                 Funcionario aux = daoFuncionario.consultarFuncionario(funcionario);
-                txtFuncionarioAlteracaoNome.setText(aux.getNome());
-                txtFuncionarioAlteracaoCpf.setText(aux.getCpf());
-                txtFuncionarioAlteracaoSenha.setText(aux.getSenha());
-                txtFuncionarioAlteracaoEmail.setText(aux.getEmail());
-                if (aux.getAcesso() == 1) {
+                txtFuncionarioAlteracaoNome.setText(aux.getFuncionarioNome());
+                txtFuncionarioAlteracaoCpf.setText(aux.getFuncionarioCpf());
+                txtFuncionarioAlteracaoSenha.setText(aux.getFuncionarioSenha());
+                txtFuncionarioAlteracaoEmail.setText(aux.getFuncionarioEmail());
+                if (aux.getFuncionarioAcesso() == 1) {
                     chBxFuncionarioAlteracaoAdmin.setSelected(true);
                 } else {
                     chBxFuncionarioAlteracaoAdmin.setSelected(false);
@@ -472,11 +472,11 @@ public class PanelFuncionario extends JPanel {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboFuncionarioRemocaoNome.getSelectedItem().equals("Selecione"))) {
                 cboFuncionarioRemocaoIdOculto.setSelectedIndex(cboFuncionarioRemocaoNome.getSelectedIndex());
-                funcionario.setId(Integer.parseInt(String.valueOf(cboFuncionarioRemocaoIdOculto.getSelectedItem())));
+                funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioRemocaoIdOculto.getSelectedItem())));
                 Funcionario aux = daoFuncionario.consultarFuncionario(funcionario);
-                lblFuncionarioRemocaoCpfR.setText(aux.getCpf());
-                lblFuncionarioRemocaoEmailR.setText(aux.getEmail());
-                if (aux.getAcesso() == 1) {
+                lblFuncionarioRemocaoCpfR.setText(aux.getFuncionarioCpf());
+                lblFuncionarioRemocaoEmailR.setText(aux.getFuncionarioEmail());
+                if (aux.getFuncionarioAcesso() == 1) {
                     lblFuncionarioRemocaoAdmin.setText("Administrador do Sistema.");
                 } else {
                     lblFuncionarioRemocaoAdmin.setText("Nao e Administrador do Sistema.");
@@ -494,11 +494,11 @@ public class PanelFuncionario extends JPanel {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboFuncionarioConsultaNome.getSelectedItem().equals("Selecione"))) {
                 cboFuncionarioConsultaIdOculto.setSelectedIndex(cboFuncionarioConsultaNome.getSelectedIndex());
-                funcionario.setId(Integer.parseInt(String.valueOf(cboFuncionarioConsultaIdOculto.getSelectedItem())));
+                funcionario.setFuncionarioId(Integer.parseInt(String.valueOf(cboFuncionarioConsultaIdOculto.getSelectedItem())));
                 Funcionario aux = daoFuncionario.consultarFuncionario(funcionario);
-                lblFuncionarioConsultaCpfR.setText(aux.getCpf());
-                lblFuncionarioConsultaEmailR.setText(aux.getEmail());
-                if (aux.getAcesso() == 1) {
+                lblFuncionarioConsultaCpfR.setText(aux.getFuncionarioCpf());
+                lblFuncionarioConsultaEmailR.setText(aux.getFuncionarioEmail());
+                if (aux.getFuncionarioAcesso() == 1) {
                     lblFuncionarioConsultaAdmin.setText("Administrador do Sistema.");
                 } else {
                     lblFuncionarioConsultaAdmin.setText("Nao e Administrador do Sistema.");

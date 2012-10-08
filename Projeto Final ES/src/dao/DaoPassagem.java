@@ -23,7 +23,7 @@ public class DaoPassagem {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "INSERT INTO Passagem VALUES (0, '" + passagem.getData() + "', " + passagem.getHorario()+ ", " + passagem.getDiaId()+ ", '" + passagem.getClienteCpf()+ "', '" + passagem.getClienteNome()+ "', " + passagem.getAssentoComprado()+ ")";
+            String sql = "INSERT INTO Passagem VALUES (0, '" + passagem.getPassagemData() + "', " + passagem.getPassagem_horarioId()+ ", " + passagem.getPassagem_horarioDiaId()+ ", '" + passagem.getPassagemClienteCpf()+ "', '" + passagem.getPassagemClienteNome()+ "', " + passagem.getPassagemNumAssentoComprado()+ ")";
             stmt.executeUpdate(sql);
         } catch (ClassNotFoundException ex) {
             System.out.println("Nao foi possivel carregar o driver.");
@@ -48,8 +48,8 @@ public class DaoPassagem {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Cidade cidade = new Cidade();
-                cidade.setId(rs.getInt("CidadeId"));
-                cidade.setNome(rs.getString("CidadeNome"));
+                cidade.setCidadeId(rs.getInt("CidadeId"));
+                cidade.setCidadeNome(rs.getString("CidadeNome"));
                 arraylist.add(cidade);
             }
         } catch (ClassNotFoundException ex) {
@@ -70,7 +70,7 @@ public class DaoPassagem {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "SELECT ItinerarioId, RotaItinerarioOrdem, RotaItinerarioId from Itinerario Join RotaItinerario ON (ItinerarioId = RotaItinerario_ItinerarioId) Join Rota ON (RotaItinerario_RotaId = RotaId) Join Cidade ON (Rota_CidadeOrigem = CidadeId) and cidadeId =" + origem.getId();
+            String sql = "SELECT ItinerarioId, RotaItinerarioOrdem, RotaItinerarioId from Itinerario Join RotaItinerario ON (ItinerarioId = RotaItinerario_ItinerarioId) Join Rota ON (RotaItinerario_RotaId = RotaId) Join Cidade ON (Rota_CidadeOrigem = CidadeId) and cidadeId =" + origem.getCidadeId();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 RotaItinerario RI = new RotaItinerario();
@@ -84,9 +84,9 @@ public class DaoPassagem {
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     Cidade cidade = new Cidade();
-                    cidade.setId(rs.getInt("CidadeId"));
-                    cidade.setNome(rs.getString("CidadeNome"));
-                    cidade.setEstado(String.valueOf(arraylist.get(i).getRotaItinerarioId()));
+                    cidade.setCidadeId(rs.getInt("CidadeId"));
+                    cidade.setCidadeNome(rs.getString("CidadeNome"));
+                    cidade.setCidade_estadoId(arraylist.get(i).getRotaItinerarioId());
                     cidades.add(cidade);
                 }
             }
@@ -243,11 +243,13 @@ public class DaoPassagem {
             Statement stmt = conn.createStatement();
             if (cidadeIntermediaria == cidadeDestino) {
                 System.out.println("entrou no if");
-                String sql = "SELECT horarioPreco, horarioSaida, horarioChegada FROM Horario INNER JOIN Passagem ON (Passagem_HorarioId = HorarioId) WHERE Passagem_HorarioDiaId = " + diaSemana +" AND ( HorarioId = " + horarioIdAux + " ) group by horarioSaida, horarioChegada";
+                String sql = "SELECT horarioPreco, horarioChegada FROM Horario WHERE HorarioDiaId = " + diaSemana +" AND HorarioId = " + horarioIdAux;
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
+                    System.out.println("preco " +rs.getDouble("horarioPreco"));
                     preco += rs.getDouble("horarioPreco");
                     horarioChegada = rs.getString("horarioChegada");
+                    System.out.println(rs.getString("horarioChegada"));
                 }
                 retorno.setHorarioChegada(horarioChegada);
                 retorno.setHorarioPreco(preco);
@@ -255,11 +257,13 @@ public class DaoPassagem {
                 System.out.println("Entrou no ELSE");
                 while (cidadeIntermediaria != cidadeDestino) {
                     System.out.println("Entrou no WHILE");
-                    String sql = "SELECT horarioPreco, horarioChegada FROM Horario INNER JOIN Passagem ON (Passagem_HorarioId = HorarioId)  WHERE Passagem_HorarioDiaId = " + diaSemana +" AND ( HorarioId = " + horarioIdAux + " ) group by horarioSaida, horarioChegada";
+                    String sql = "SELECT horarioPreco, horarioChegada FROM Horario WHERE HorarioDiaId = " + diaSemana +" AND HorarioId = " + horarioIdAux;
                     ResultSet rs = stmt.executeQuery(sql);
                     while (rs.next()) {
+                        System.out.println("preco " +rs.getDouble("horarioPreco"));
                         preco += rs.getDouble("horarioPreco");
                         horarioChegada = rs.getString("horarioChegada");
+                        System.out.println(rs.getString("horarioChegada"));
                     }
                     retorno.setHorarioChegada(horarioChegada);
                     retorno.setHorarioPreco(preco);
@@ -271,14 +275,17 @@ public class DaoPassagem {
                     System.out.println("Nova cidade Intermediaria: " + cidadeIntermediaria+"\n\n\n");
                 }
                 System.out.println("\n\n\nId Horario gambiarra:" + horarioIdAux);
-                String sql = "SELECT horarioPreco, horarioChegada FROM Horario INNER JOIN Passagem ON (Passagem_HorarioId = HorarioId) WHERE Passagem_HorarioDiaId = " + diaSemana +" AND ( HorarioId = " + horarioIdAux + " ) group by horarioSaida, horarioChegada";
+                String sql = "SELECT horarioPreco, horarioChegada FROM Horario WHERE HorarioDiaId = " + diaSemana +" AND HorarioId = " + horarioIdAux;
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
+                    System.out.println("preco " +rs.getDouble("horarioPreco"));
                     preco += rs.getDouble("horarioPreco");
                     horarioChegada = rs.getString("horarioChegada");
+                    System.out.println("horarioAAAAA "+rs.getString("horarioChegada"));
                 }
                 retorno.setHorarioChegada(horarioChegada);
-             retorno.setHorarioPreco(preco);
+                retorno.setHorarioPreco(preco);
+                //System.out.println(preco);
             }
         } catch (ClassNotFoundException ex) {
             System.out.println("Nao foi possivel carregar o driver.");

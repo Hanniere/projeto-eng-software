@@ -24,17 +24,17 @@ public class DaoRota {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) { // criando arrayList de itinerario
                 Rota rota = new Rota();
-                rota.setId(rs.getInt("rotaId"));
+                rota.setRotaId(rs.getInt("rotaId"));
                 rota.setRota_cidadeOrigemId(rs.getInt("rota_cidadeOrigem"));
                 rota.setRota_cidadeDestinoId(rs.getInt("rota_cidadeDestino"));
                 DaoCidade daoCidade = new DaoCidade();
                 Cidade cidade = new Cidade();
-                cidade.setId(rs.getInt("rota_cidadeOrigem"));
+                cidade.setCidadeId(rs.getInt("rota_cidadeOrigem"));
                 cidade = daoCidade.consultaCidade(cidade);
-                rota.setRota_cidadeOrigem(cidade.getNome());
-                cidade.setId(rs.getInt("rota_cidadeDestino"));
+                rota.setRota_cidadeOrigem(cidade.getCidadeNome());
+                cidade.setCidadeId(rs.getInt("rota_cidadeDestino"));
                 cidade = daoCidade.consultaCidade(cidade);
-                rota.setRota_cidadeDestino(cidade.getNome());
+                rota.setRota_cidadeDestino(cidade.getCidadeNome());
                 arrayList.add(rota);
             }
         } catch (ClassNotFoundException ex) {
@@ -86,13 +86,13 @@ public class DaoRota {
             if (rs.next()) {
                 return 1;
             }
-            sql = "SELECT * FROM RotaItinerario WHERE RotaItinerario_RotaId = " + rota.getId();
+            sql = "SELECT * FROM RotaItinerario WHERE RotaItinerario_RotaId = " + rota.getRotaId();
             rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 return 2;
             }
             if (rota.getRota_cidadeOrigemId() != rota.getRota_cidadeDestinoId()) {
-                sql = "UPDATE Rota SET Rota_CidadeOrigem = " + rota.getRota_cidadeOrigemId() + ", Rota_CidadeDestino = " + rota.getRota_cidadeDestinoId() + ", RotaDuracao = '" + rota.getRotaDuracao() + "' WHERE RotaId = " + rota.getId();
+                sql = "UPDATE Rota SET Rota_CidadeOrigem = " + rota.getRota_cidadeOrigemId() + ", Rota_CidadeDestino = " + rota.getRota_cidadeDestinoId() + ", RotaDuracao = '" + rota.getRotaDuracao() + "' WHERE RotaId = " + rota.getRotaId();
                 stmt.executeUpdate(sql);
             } else {
                 return 3;
@@ -113,12 +113,12 @@ public class DaoRota {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "SELECT * FROM RotaItinerario WHERE RotaItinerario_RotaId = " + rota.getId();
+            String sql = "SELECT * FROM RotaItinerario WHERE RotaItinerario_RotaId = " + rota.getRotaId();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
                 return false;
             }
-            sql = "DELETE FROM Rota WHERE RotaId = " + rota.getId();
+            sql = "DELETE FROM Rota WHERE RotaId = " + rota.getRotaId();
             stmt.executeUpdate(sql);
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -139,7 +139,7 @@ public class DaoRota {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "SELECT * FROM Rota WHERE RotaId = " + rota.getId() + "";
+            String sql = "SELECT * FROM Rota WHERE RotaId = " + rota.getRotaId() + "";
             ResultSet rs = stmt.executeQuery(sql);
             rs.next();
             dadosRota.setRota_cidadeOrigemId(rs.getInt("Rota_CidadeOrigem"));
@@ -169,7 +169,7 @@ public class DaoRota {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Rota rota = new Rota();
-                rota.setId(rs.getInt("RotaId"));
+                rota.setRotaId(rs.getInt("RotaId"));
                 rota.setRota_cidadeOrigemId(rs.getInt("origem.CidadeId"));
                 rota.setRota_cidadeDestinoId(rs.getInt("destino.CidadeId"));
                 rota.setRota_cidadeOrigem(rs.getString("origem.CidadeNome"));

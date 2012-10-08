@@ -2,108 +2,86 @@ package entidades;
 
 public class Horario implements Cloneable {
 
-    private int HorarioId;
-    private int HorarioDiaId;
-    private int Horario_RotaItinerarioId;
-    private String HorarioSaida;
-    private String HorarioChegada;
-    private double HorarioPreco; //DECIMAL NOT NULL,
-    private int Horario_MotoristaId;
-    private int Horario_OnibusId;
-    private int Horario_usado;
-
-    public Horario(int horarioId, int horarioDiaId,
-            int horario_RotaItinerarioId, String horarioSaida,
-            String horarioChegada, double horarioPreco,
-            int horario_MotoristaId, int horario_OnibusId) {
-
-        HorarioId = horarioId;
-        HorarioDiaId = horarioDiaId;
-        Horario_RotaItinerarioId = horario_RotaItinerarioId;
-        HorarioSaida = horarioSaida;
-        HorarioChegada = horarioChegada;
-        HorarioPreco = horarioPreco;
-        Horario_MotoristaId = horario_MotoristaId;
-        Horario_OnibusId = horario_OnibusId;
-    }
-
-    public Horario() {
-    }
+    private int horarioId;
+    private int horarioDiaId;
+    private int horario_rotaItinerarioId;
+    private String horarioSaida;
+    private String horarioChegada;
+    private double horarioPreco; //DECIMAL NOT NULL,
+    private int horario_motoristaId;
+    private int horario_onibusId;
+    private int horarioUsado;
 
     public int getHorarioId() {
-        return HorarioId;
+        return horarioId;
     }
 
     public void setHorarioId(int horarioId) {
-        HorarioId = horarioId;
+        this.horarioId = horarioId;
     }
 
     public int getHorarioDiaId() {
-        return HorarioDiaId;
+        return horarioDiaId;
     }
 
-    public void setHorarioDia(int horarioDia) {
-        HorarioDiaId = horarioDia;
+    public void setHorarioDiaId(int horarioDiaId) {
+        this.horarioDiaId = horarioDiaId;
     }
 
-    public int getHorario_RotaItinerarioId() {
-        return Horario_RotaItinerarioId;
+    public int getHorario_rotaItinerarioId() {
+        return horario_rotaItinerarioId;
     }
 
-    public void setHorario_RotaItinerarioId(int horario_RotaItinerarioId) {
-        Horario_RotaItinerarioId = horario_RotaItinerarioId;
+    public void setHorario_rotaItinerarioId(int horario_rotaItinerarioId) {
+        horario_rotaItinerarioId = horario_rotaItinerarioId;
     }
 
     public String getHorarioSaida() {
-        return HorarioSaida;
+        return horarioSaida;
     }
 
     public void setHorarioSaida(String horarioSaida) {
-        HorarioSaida = horarioSaida;
+        this.horarioSaida = horarioSaida;
     }
 
     public String getHorarioChegada() {
-        return HorarioChegada;
+        return horarioChegada;
     }
 
     public void setHorarioChegada(String horarioChegada) {
-        HorarioChegada = horarioChegada;
+        this.horarioChegada = horarioChegada;
     }
 
     public double getHorarioPreco() {
-        return HorarioPreco;
+        return horarioPreco;
     }
 
     public void setHorarioPreco(double horarioPreco) {
-        HorarioPreco = horarioPreco;
+        this.horarioPreco = horarioPreco;
     }
 
-    public int getHorario_MotoristaId() {
-        return Horario_MotoristaId;
+    public int getHorario_motoristaId() {
+        return horario_motoristaId;
     }
 
-    public void setHorario_MotoristaId(int horario_MotoristaId) {
-        Horario_MotoristaId = horario_MotoristaId;
+    public void setHorario_motoristaId(int horario_motoristaId) {
+        horario_motoristaId = horario_motoristaId;
     }
 
-    public int getHorario_OnibusId() {
-        return Horario_OnibusId;
+    public int getHorario_onibusId() {
+        return horario_onibusId;
     }
 
-    public void setHorario_OnibusId(int horario_OnibusId) {
-        Horario_OnibusId = horario_OnibusId;
+    public void setHorario_onibusId(int horario_onibusId) {
+        this.horario_onibusId = horario_onibusId;
     }
 
-	public int getHorario_usado() {
-		return Horario_usado;
-	}
+    public int getHorarioUsado() {
+        return horarioUsado;
+    }
 
-	public void setHorario_usado(int horario_usado) {
-		Horario_usado = horario_usado;
-	}
+    public void setHorarioUsado(int horarioUsado) {
+        this.horarioUsado = horarioUsado;
+    }
 
-	public void setHorarioDiaId(int horarioDiaId) {
-		HorarioDiaId = horarioDiaId;
-	}
-   
 }

@@ -2,59 +2,59 @@ package entidades;
 
 public class Funcionario {
 
-    private int id;
-    private String nome;
-    private String cpf;
-    private String senha;
-    private String email;
-    private int acesso; //0 funcionario normal, 1 funcionario adm
+    private int funcionarioId;
+    private String funcionarioNome;
+    private String funcionarioCpf;
+    private String funcionarioSenha;
+    private String funcionarioEmail;
+    private int funcionarioAcesso; //0 funcionario normal, 1 funcionario adm
 
-    public int getAcesso() {
-        return acesso;
+    public int getFuncionarioAcesso() {
+        return funcionarioAcesso;
     }
 
-    public void setAcesso(int acesso) {
-        this.acesso = acesso;
+    public void setFuncionarioAcesso(int acesso) {
+        this.funcionarioAcesso = acesso;
     }
 
-    public String getCpf() {
-        return cpf;
+    public String getFuncionarioCpf() {
+        return funcionarioCpf;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void setFuncionarioCpf(String cpf) {
+        this.funcionarioCpf = cpf;
     }
 
-    public String getEmail() {
-        return email;
+    public String getFuncionarioEmail() {
+        return funcionarioEmail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setFuncionarioEmail(String email) {
+        this.funcionarioEmail = email;
     }
 
-    public String getSenha() {
-        return senha;
+    public String getFuncionarioSenha() {
+        return funcionarioSenha;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setFuncionarioSenha(String senha) {
+        this.funcionarioSenha = senha;
     }
 
-    public int getId() {
-        return id;
+    public int getFuncionarioId() {
+        return funcionarioId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setFuncionarioId(int id) {
+        this.funcionarioId = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getFuncionarioNome() {
+        return funcionarioNome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setFuncionarioNome(String nome) {
+        this.funcionarioNome = nome;
     }
     
 }

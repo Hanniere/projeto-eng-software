@@ -16,8 +16,8 @@ public class DaoLogin {
             String sql = "select * from Funcionario";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                if(rs.getString("funcionarioEmail").equals(funcionario.getEmail())){
-                    if(rs.getString("funcionarioSenha").equals(funcionario.getSenha())){
+                if(rs.getString("funcionarioEmail").equals(funcionario.getFuncionarioEmail())){
+                    if(rs.getString("funcionarioSenha").equals(funcionario.getFuncionarioSenha())){
                         if(rs.getInt("funcionarioAcesso")==1) {
                             return 0;
                         } else {

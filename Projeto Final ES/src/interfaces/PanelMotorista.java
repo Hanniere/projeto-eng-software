@@ -269,8 +269,8 @@ public class PanelMotorista extends JPanel {
                 cboMotoristaAlteracaoIdOculto.removeAllItems();
                 cboMotoristaAlteracaoIdOculto.addItem("Selecione");
                 for (int i = 0; i < aux2.size(); i++) {
-                    cboMotoristaAlteracaoIdOculto.addItem(aux2.get(i).getId());
-                    cboMotoristaAlteracaoNome.addItem(aux2.get(i).getNome());
+                    cboMotoristaAlteracaoIdOculto.addItem(aux2.get(i).getMotoristaId());
+                    cboMotoristaAlteracaoNome.addItem(aux2.get(i).getMotoristaNome());
                 }
                 break;
             case 3: //remocao
@@ -280,8 +280,8 @@ public class PanelMotorista extends JPanel {
                 cboMotoristaRemocaoIdOculto.removeAllItems();
                 cboMotoristaRemocaoIdOculto.addItem("Selecione");
                 for (int i = 0; i < aux3.size(); i++) {
-                    cboMotoristaRemocaoNome.addItem(aux3.get(i).getNome());
-                    cboMotoristaRemocaoIdOculto.addItem(aux3.get(i).getId());
+                    cboMotoristaRemocaoNome.addItem(aux3.get(i).getMotoristaNome());
+                    cboMotoristaRemocaoIdOculto.addItem(aux3.get(i).getMotoristaId());
                 }
                 break;
         }
@@ -319,12 +319,12 @@ public class PanelMotorista extends JPanel {
             JOptionPane.showMessageDialog(this, "Digite um endereco.");
             txtMotoristaCadastroEnd.requestFocus();
         } else {
-            motorista.setNome(txtMotoristaCadastroNome.getText());
-            motorista.setRg(removeCaracteres(txtMotoristaCadastroRg.getText()));
-            motorista.setCpf(txtMotoristaCadastroCpf.getText());
-            motorista.setEndereco(txtMotoristaCadastroEnd.getText());
-            motorista.setTelefone(txtMotoristaCadastroTel.getText());
-            motorista.setEmail(txtMotoristaCadastroEmail.getText());
+            motorista.setMotoristaNome(txtMotoristaCadastroNome.getText());
+            motorista.setMotoristaRg(removeCaracteres(txtMotoristaCadastroRg.getText()));
+            motorista.setMotoristaCpf(txtMotoristaCadastroCpf.getText());
+            motorista.setMotoristaEnd(txtMotoristaCadastroEnd.getText());
+            motorista.setMotoristaTel(txtMotoristaCadastroTel.getText());
+            motorista.setMotoristaEmail(txtMotoristaCadastroEmail.getText());
             int verifica = daoMotorista.cadastrarMotorista(motorista);
             if (verifica == 0) {
                 JOptionPane.showMessageDialog(this, "Motorista cadastrado com sucesso!");
@@ -376,13 +376,13 @@ public class PanelMotorista extends JPanel {
             JOptionPane.showMessageDialog(this, "Digite um endereco.");
             txtMotoristaAlteracaoEnd.requestFocus();
         } else {
-            motorista.setId(Integer.parseInt(String.valueOf(cboMotoristaAlteracaoIdOculto.getSelectedItem())));
-            motorista.setNome(txtMotoristaAlteracaoNome.getText());
-            motorista.setRg(removeCaracteres(txtMotoristaAlteracaoRg.getText()));
-            motorista.setCpf(txtMotoristaAlteracaoCpf.getText());
-            motorista.setEndereco(txtMotoristaAlteracaoEnd.getText());
-            motorista.setTelefone(txtMotoristaAlteracaoTel.getText());
-            motorista.setEmail(txtMotoristaAlteracaoEmail.getText());
+            motorista.setMotoristaId(Integer.parseInt(String.valueOf(cboMotoristaAlteracaoIdOculto.getSelectedItem())));
+            motorista.setMotoristaNome(txtMotoristaAlteracaoNome.getText());
+            motorista.setMotoristaRg(removeCaracteres(txtMotoristaAlteracaoRg.getText()));
+            motorista.setMotoristaCpf(txtMotoristaAlteracaoCpf.getText());
+            motorista.setMotoristaEnd(txtMotoristaAlteracaoEnd.getText());
+            motorista.setMotoristaTel(txtMotoristaAlteracaoTel.getText());
+            motorista.setMotoristaEmail(txtMotoristaAlteracaoEmail.getText());
             int verifica = daoMotorista.alterarMotorista(motorista);
             if (verifica == 0) {
                 JOptionPane.showMessageDialog(this, "Motorista alterado com sucesso!");
@@ -417,7 +417,7 @@ public class PanelMotorista extends JPanel {
         } else {
             confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
             if (confirma == JOptionPane.YES_OPTION) {
-                motorista.setId(Integer.parseInt(String.valueOf(cboMotoristaRemocaoIdOculto.getSelectedItem())));
+                motorista.setMotoristaId(Integer.parseInt(String.valueOf(cboMotoristaRemocaoIdOculto.getSelectedItem())));
                 boolean verifica = daoMotorista.removerMotorista(motorista);
                 if(verifica) JOptionPane.showMessageDialog(null, "Motorista removido com sucesso!");
                 else JOptionPane.showMessageDialog(null, "Nao foi possivel remover o motorista. Ele esta cadastrado em algum itinerario.");
@@ -438,13 +438,13 @@ public class PanelMotorista extends JPanel {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboMotoristaAlteracaoNome.getSelectedItem().equals("Selecione"))) {
                 cboMotoristaAlteracaoIdOculto.setSelectedIndex(cboMotoristaAlteracaoNome.getSelectedIndex());
-                motorista.setId(Integer.parseInt(String.valueOf(cboMotoristaAlteracaoIdOculto.getSelectedItem())));                Motorista aux = daoMotorista.consultarMotorista(motorista);
-                txtMotoristaAlteracaoNome.setText(aux.getNome());
-                txtMotoristaAlteracaoRg.setText(aux.getRg());
-                txtMotoristaAlteracaoCpf.setText(aux.getCpf());
-                txtMotoristaAlteracaoTel.setText(aux.getTelefone());
-                txtMotoristaAlteracaoEnd.setText(aux.getEndereco());
-                txtMotoristaAlteracaoEmail.setText(aux.getEmail());
+                motorista.setMotoristaId(Integer.parseInt(String.valueOf(cboMotoristaAlteracaoIdOculto.getSelectedItem())));                Motorista aux = daoMotorista.consultarMotorista(motorista);
+                txtMotoristaAlteracaoNome.setText(aux.getMotoristaNome());
+                txtMotoristaAlteracaoRg.setText(aux.getMotoristaRg());
+                txtMotoristaAlteracaoCpf.setText(aux.getMotoristaCpf());
+                txtMotoristaAlteracaoTel.setText(aux.getMotoristaTel());
+                txtMotoristaAlteracaoEnd.setText(aux.getMotoristaEnd());
+                txtMotoristaAlteracaoEmail.setText(aux.getMotoristaEmail());
             } else {
                 txtMotoristaAlteracaoNome.setText("");
                 txtMotoristaAlteracaoRg.setText("");
@@ -461,13 +461,13 @@ public class PanelMotorista extends JPanel {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboMotoristaRemocaoNome.getSelectedItem().equals("Selecione"))) {
                 cboMotoristaRemocaoIdOculto.setSelectedIndex(cboMotoristaRemocaoNome.getSelectedIndex());
-                motorista.setId(Integer.parseInt(String.valueOf(cboMotoristaRemocaoIdOculto.getSelectedItem())));
+                motorista.setMotoristaId(Integer.parseInt(String.valueOf(cboMotoristaRemocaoIdOculto.getSelectedItem())));
                 Motorista aux = daoMotorista.consultarMotorista(motorista);
-                lblMotoristaRemocaoRgR.setText(aux.getRg());
-                lblMotoristaRemocaoCpfR.setText(aux.getCpf());
-                lblMotoristaRemocaoTelR.setText(aux.getTelefone());
-                lblMotoristaRemocaoEndR.setText(aux.getEndereco());
-                lblMotoristaRemocaoEmailR.setText(aux.getEmail());
+                lblMotoristaRemocaoRgR.setText(aux.getMotoristaRg());
+                lblMotoristaRemocaoCpfR.setText(aux.getMotoristaCpf());
+                lblMotoristaRemocaoTelR.setText(aux.getMotoristaTel());
+                lblMotoristaRemocaoEndR.setText(aux.getMotoristaEnd());
+                lblMotoristaRemocaoEmailR.setText(aux.getMotoristaEmail());
             } else {
                 lblMotoristaRemocaoRgR.setText("");
                 lblMotoristaRemocaoCpfR.setText("");

@@ -1,0 +1,17 @@
+Comprovante de Compra
+
+
+Origem: Itatiba
+Destino: Campinas
+
+
+Assento:      11
+Nome Passageiro: Victor
+CPF Passageiro: 55676765545
+
+
+Assento:      12
+Nome Passageiro: Hanniere
+CPF Passageiro: 34567456789
+
+

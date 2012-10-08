@@ -17,13 +17,13 @@ public class DaoMotorista {
             String sql = "select * from Motorista";
             ResultSet rsV = stmt.executeQuery(sql);
             while (rsV.next()) {
-                if (rsV.getString("motoristaRg").equals(motorista.getRg())) {
+                if (rsV.getString("motoristaRg").equals(motorista.getMotoristaRg())) {
                     return 1;
-                } else if (rsV.getString("motoristaCpf").equals(motorista.getCpf())) {
+                } else if (rsV.getString("motoristaCpf").equals(motorista.getMotoristaCpf())) {
                     return 2;
                 }
             }
-            sql = "INSERT INTO Motorista VALUES (0, '" + motorista.getNome() + "', '" + motorista.getRg() + "', '" + motorista.getCpf() + "', '" + motorista.getEndereco() + "', '" + motorista.getTelefone() + "', '" + motorista.getEmail() + "')";
+            sql = "INSERT INTO Motorista VALUES (0, '" + motorista.getMotoristaNome() + "', '" + motorista.getMotoristaRg() + "', '" + motorista.getMotoristaCpf() + "', '" + motorista.getMotoristaEnd() + "', '" + motorista.getMotoristaTel() + "', '" + motorista.getMotoristaEmail() + "')";
             stmt.executeUpdate(sql);
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -44,15 +44,15 @@ public class DaoMotorista {
             String sql = "select * from Motorista";
             ResultSet rsV = stmt.executeQuery(sql);
             while (rsV.next()) {
-                if (rsV.getString("motoristaRg").equals(motorista.getRg()) && rsV.getInt("motoristaId") != motorista.getId()) {
+                if (rsV.getString("motoristaRg").equals(motorista.getMotoristaRg()) && rsV.getInt("motoristaId") != motorista.getMotoristaId()) {
                     return 1;
-                } else if (rsV.getString("motoristaCpf").equals(motorista.getCpf()) && rsV.getInt("motoristaId") != motorista.getId()) {
+                } else if (rsV.getString("motoristaCpf").equals(motorista.getMotoristaCpf()) && rsV.getInt("motoristaId") != motorista.getMotoristaId()) {
                     return 2;
                 }
             }
-            sql = "UPDATE Motorista set motoristaNome = '" + motorista.getNome() + "', motoristaRg = '" + motorista.getRg() + "', "
-                    + "motoristaCpf = '" + motorista.getCpf() + "', motoristaTel = '" + motorista.getTelefone() + "', motoristaEnd = '" + motorista.getEndereco() + "',"
-                    + "motoristaEmail = '" + motorista.getEmail() + "' where motoristaId = " + motorista.getId();
+            sql = "UPDATE Motorista set motoristaNome = '" + motorista.getMotoristaNome() + "', motoristaRg = '" + motorista.getMotoristaRg() + "', "
+                    + "motoristaCpf = '" + motorista.getMotoristaCpf() + "', motoristaTel = '" + motorista.getMotoristaTel() + "', motoristaEnd = '" + motorista.getMotoristaEnd() + "',"
+                    + "motoristaEmail = '" + motorista.getMotoristaEmail() + "' where motoristaId = " + motorista.getMotoristaId();
             stmt.executeUpdate(sql);
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -70,12 +70,12 @@ public class DaoMotorista {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "select * from Horario where horario_motoristaId in (Select motoristaId from Motorista where motoristaId = "+motorista.getId()+")";
+            String sql = "select * from Horario where horario_motoristaId in (Select motoristaId from Motorista where motoristaId = "+motorista.getMotoristaId()+")";
             ResultSet rs = stmt.executeQuery(sql);
             if(rs.next()){
                 return false;
             }
-            sql = "DELETE FROM Motorista where motoristaId = " + motorista.getId();
+            sql = "DELETE FROM Motorista where motoristaId = " + motorista.getMotoristaId();
             stmt.executeUpdate(sql);
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -96,15 +96,15 @@ public class DaoMotorista {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "select * from Motorista where motoristaId = " + motorista.getId();
+            String sql = "select * from Motorista where motoristaId = " + motorista.getMotoristaId();
             ResultSet rs = stmt.executeQuery(sql);
             rs.next();
-            dadosMotorista.setRg(rs.getString("motoristaRg"));
-            dadosMotorista.setCpf(rs.getString("motoristaCpf"));
-            dadosMotorista.setTelefone(rs.getString("motoristaTel"));
-            dadosMotorista.setEndereco(rs.getString("motoristaEnd"));
-            dadosMotorista.setEmail(rs.getString("motoristaEmail"));
-            dadosMotorista.setNome(rs.getString("motoristaNome"));
+            dadosMotorista.setMotoristaRg(rs.getString("motoristaRg"));
+            dadosMotorista.setMotoristaCpf(rs.getString("motoristaCpf"));
+            dadosMotorista.setMotoristaTel(rs.getString("motoristaTel"));
+            dadosMotorista.setMotoristaEnd(rs.getString("motoristaEnd"));
+            dadosMotorista.setMotoristaEmail(rs.getString("motoristaEmail"));
+            dadosMotorista.setMotoristaNome(rs.getString("motoristaNome"));
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
             ex.printStackTrace();
@@ -126,8 +126,8 @@ public class DaoMotorista {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Motorista motorista = new Motorista();
-                motorista.setId(rs.getInt("motoristaId"));
-                motorista.setNome(rs.getString("motoristaNome") + " - " + rs.getString("motoristaCpf"));
+                motorista.setMotoristaId(rs.getInt("motoristaId"));
+                motorista.setMotoristaNome(rs.getString("motoristaNome") + " - " + rs.getString("motoristaCpf"));
                 arrayList.add(motorista);
             }
         } catch (ClassNotFoundException ex) {
@@ -151,8 +151,8 @@ public class DaoMotorista {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Motorista motorista = new Motorista();
-                motorista.setId(rs.getInt("motoristaId"));
-                motorista.setNome(rs.getString("motoristaNome") + " - " + rs.getString("motoristaCpf"));
+                motorista.setMotoristaId(rs.getInt("motoristaId"));
+                motorista.setMotoristaNome(rs.getString("motoristaNome") + " - " + rs.getString("motoristaCpf"));
                 arrayList.add(motorista);
             }
         } catch (ClassNotFoundException ex) {

@@ -2,59 +2,59 @@ package entidades;
 
 public class Onibus {
    
-    private int id;
-    private String placa;
-    private String modelo;
-    private String marca;
-    private int ano;
-    private int qtdeAssentos;
+    private int onibusId;
+    private String onibusPlaca;
+    private String onibusModelo;
+    private String onibusMarca;
+    private int onibusAno;
+    private int onibusQtdeAssentos;
     
-    public int getAno() {
-        return ano;
+    public int getOnibusAno() {
+        return onibusAno;
     }
 
-    public void setAno(int ano) {
-        this.ano = ano;
+    public void setOnibusAno(int ano) {
+        this.onibusAno = ano;
     }
 
-    public int getId() {
-        return id;
+    public int getOnibusId() {
+        return onibusId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setOnibusId(int id) {
+        this.onibusId = id;
     }
 
-    public String getMarca() {
-        return marca;
+    public String getOnibusMarca() {
+        return onibusMarca;
     }
 
-    public void setMarca(String marca) {
-        this.marca = marca;
+    public void setOnibusMarca(String marca) {
+        this.onibusMarca = marca;
     }
 
-    public String getModelo() {
-        return modelo;
+    public String getOnibusModelo() {
+        return onibusModelo;
     }
 
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
+    public void setOnibusModelo(String modelo) {
+        this.onibusModelo = modelo;
     }
 
-    public String getPlaca() {
-        return placa;
+    public String getOnibusPlaca() {
+        return onibusPlaca;
     }
 
-    public void setPlaca(String placa) {
-        this.placa = placa;
+    public void setOnibusPlaca(String placa) {
+        this.onibusPlaca = placa;
     }
 
-    public int getQtdeAssentos() {
-        return qtdeAssentos;
+    public int getOnibusQtdeAssentos() {
+        return onibusQtdeAssentos;
     }
 
-    public void setQtdeAssentos(int qtdeAssentos) {
-        this.qtdeAssentos = qtdeAssentos;
+    public void setOnibusQtdeAssentos(int qtdeAssentos) {
+        this.onibusQtdeAssentos = qtdeAssentos;
     }
     
 }

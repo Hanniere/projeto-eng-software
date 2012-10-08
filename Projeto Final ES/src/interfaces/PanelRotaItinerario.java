@@ -205,11 +205,11 @@ public class PanelRotaItinerario extends JPanel {
                     JOptionPane.showMessageDialog(null, "Selecione um destino!");
                     cboCadastroDestino.requestFocus();
                 } else {
-                    int idRota = arrayRotaAtualCadastro.get(cboCadastroDestino.getSelectedIndex() - 1).getId();
+                    int idRota = arrayRotaAtualCadastro.get(cboCadastroDestino.getSelectedIndex() - 1).getRotaId();
                     Rota rotaAux = arrayRotaAtualCadastro.get(cboCadastroDestino.getSelectedIndex() - 1);
                     arrayRotasAddicionadasCadastro.add(rotaAux); //salvando Array de rotas Para possivel utilizacao
                     tbmCadastro.addRow(new Object[]{rotaAux.getRota_cidadeOrigem(), rotaAux.getRota_cidadeDestino()});
-                    int idItinerario = arrayItinerario.get(selectedCboIndexItinerario).getId();
+                    int idItinerario = arrayItinerario.get(selectedCboIndexItinerario).getItinerarioId();
                     if (arrayRotaItinerarioCadastro.isEmpty()) {
                         ordemRota++;
                     } else {
@@ -228,9 +228,9 @@ public class PanelRotaItinerario extends JPanel {
                     int idCidadeOrigemAux = arrayRotaAtualCadastro.get(cboCadastroDestino.getSelectedIndex() - 1).getRota_cidadeDestinoId(); //salvando id da nova cidade Origem
                     DaoCidade daoCidade = new DaoCidade();
                     Cidade cidade = new Cidade();
-                    cidade.setId(idCidadeOrigemAux);
+                    cidade.setCidadeId(idCidadeOrigemAux);
                     cidade = daoCidade.consultaCidade(cidade);
-                    txtCadastroOrigem.setText(cidade.getNome()); //atualizando txt origem
+                    txtCadastroOrigem.setText(cidade.getCidadeNome()); //atualizando txt origem
                     carregaComboDestino(idCidadeOrigemAux); //remotando comboDestino
 
                     tableRotasCadastro.setVisible(true);
@@ -341,7 +341,7 @@ public class PanelRotaItinerario extends JPanel {
                 if(cboItinerarioRemocao.getSelectedIndex() == 0){
                     JOptionPane.showMessageDialog(null, "Selecione um itinerario.");
                 } else {
-                    boolean verifica = daoItinerario.removerRotaItinerario(arrayItinerarioRemocao.get(selectIndexItinerarioRemover));
+                    boolean verifica = daoRotaItinerario.removerRotaItinerario(arrayItinerarioRemocao.get(selectIndexItinerarioRemover));
                     if(verifica == false) {
                         JOptionPane.showMessageDialog(null, "Nao e possivel remover. Existem horarios associados a este itinerario.");
                     } else {

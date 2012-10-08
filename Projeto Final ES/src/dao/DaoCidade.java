@@ -14,18 +14,14 @@ public class DaoCidade {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "select estadoId from Estado where estadoUF = '" + cidade.getEstado() + "'";
-            ResultSet rsE = stmt.executeQuery(sql);
-            rsE.next();
-            cidade.setEstado(rsE.getString("EstadoId"));
-            sql = "select * from Cidade";
+            String sql = "select * from Cidade";
             ResultSet rsV = stmt.executeQuery(sql);
             while (rsV.next()) {
-                if (rsV.getString("cidadeNome").equals(cidade.getNome()) && rsV.getString("cidade_EstadoId").equals(cidade.getEstado())) {
+                if (rsV.getString("cidadeNome").equals(cidade.getCidadeNome()) && rsV.getString("cidade_EstadoId").equals(cidade.getCidade_estadoId())) {
                     return false;
                 }
             }
-            sql = "INSERT INTO Cidade VALUES (0, '" + cidade.getNome() + "', '" + cidade.getEstado() + "')";
+            sql = "INSERT INTO Cidade VALUES (0, '" + cidade.getCidadeNome() + "', '" + cidade.getCidade_estadoId() + "')";
             stmt.executeUpdate(sql);
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -45,18 +41,14 @@ public class DaoCidade {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "select estadoId from Estado where estadoUF = '" + cidade.getEstado() + "'";
-            ResultSet rsE = stmt.executeQuery(sql);
-            rsE.next();
-            cidade.setEstado(rsE.getString("EstadoId"));
-            sql = "select * from Cidade";
+            String sql = "select * from Cidade";
             ResultSet rsV = stmt.executeQuery(sql);
             while (rsV.next()) {
-                if (rsV.getString("cidadeNome").equals(cidade.getNome()) && rsV.getString("cidade_EstadoId").equals(cidade.getEstado()) && rsV.getInt("cidadeId") != cidade.getId()) {
+                if (rsV.getString("cidadeNome").equals(cidade.getCidadeNome()) && rsV.getString("cidade_EstadoId").equals(cidade.getCidade_estadoId()) && rsV.getInt("cidadeId") != cidade.getCidadeId()) {
                     return false;
                 }
             }
-            sql = "UPDATE Cidade set cidadeNome = '" + cidade.getNome() + "', cidade_EstadoId = '" + cidade.getEstado() + "' where cidadeId = " + cidade.getId();
+            sql = "UPDATE Cidade set cidadeNome = '" + cidade.getCidadeNome() + "', cidade_EstadoId = '" + cidade.getCidade_estadoId() + "' where cidadeId = " + cidade.getCidadeId();
             stmt.executeUpdate(sql);
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -76,17 +68,17 @@ public class DaoCidade {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "select * from Rota where rota_cidadeOrigem in (Select cidadeId from Cidade where cidadeId = "+cidade.getId()+") OR rota_cidadeDestino in (Select cidadeId from Cidade where cidadeId = "+cidade.getId()+")";
+            String sql = "select * from Rota where rota_cidadeOrigem in (Select cidadeId from Cidade where cidadeId = "+cidade.getCidadeId()+") OR rota_cidadeDestino in (Select cidadeId from Cidade where cidadeId = "+cidade.getCidadeId()+")";
             ResultSet rs = stmt.executeQuery(sql);
             if(rs.next()){
                 return false;
             }
-            sql = "select * from Itinerario where itinerario_cidadeOrigem in (Select cidadeId from Cidade where cidadeId = "+cidade.getId()+") OR itinerario_cidadeDestino in (Select cidadeId from Cidade where cidadeId = "+cidade.getId()+")";
+            sql = "select * from Itinerario where itinerario_cidadeOrigem in (Select cidadeId from Cidade where cidadeId = "+cidade.getCidadeId()+") OR itinerario_cidadeDestino in (Select cidadeId from Cidade where cidadeId = "+cidade.getCidadeId()+")";
             rs = stmt.executeQuery(sql);
             if(rs.next()){
                 return false;
             }
-            sql = "DELETE FROM Cidade where cidadeId = " + cidade.getId();
+            sql = "DELETE FROM Cidade where cidadeId = " + cidade.getCidadeId();
             stmt.executeUpdate(sql);
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -107,11 +99,11 @@ public class DaoCidade {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "select C.cidadeNome, E.estadoUF from Cidade C, Estado E where cidadeId = " + cidade.getId() + " and E.estadoId = C.cidade_EstadoId";
+            String sql = "select C.cidadeNome, E.estadoId from Cidade C, Estado E where cidadeId = " + cidade.getCidadeId() + " and E.estadoId = C.cidade_EstadoId";
             ResultSet rs = stmt.executeQuery(sql);
             rs.next();
-            dadosCidade.setNome(rs.getString("cidadeNome"));
-            dadosCidade.setEstado(rs.getString("estadoUF"));
+            dadosCidade.setCidadeNome(rs.getString("cidadeNome"));
+            dadosCidade.setCidade_estadoId(rs.getInt("estadoId"));
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
             ex.printStackTrace();
@@ -133,8 +125,8 @@ public class DaoCidade {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Cidade cidade = new Cidade();
-                cidade.setId(rs.getInt("cidadeId"));
-                cidade.setNome(rs.getString("cidadeNome") + " - " + rs.getString("estadoUF"));
+                cidade.setCidadeId(rs.getInt("cidadeId"));
+                cidade.setCidadeNome(rs.getString("cidadeNome") + " - " + rs.getString("estadoUF"));
                 arrayList.add(cidade);
             }
         } catch (ClassNotFoundException ex) {

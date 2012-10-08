@@ -2,68 +2,68 @@ package entidades;
 
 public class Motorista {
     
-    private int id;
-    private String nome;
-    private String rg;
-    private String cpf;
-    private String endereco;
-    private String telefone;
-    private String email;
+    private int motoristaId;
+    private String motoristaNome;
+    private String motoristaRg;
+    private String motoristaCpf;
+    private String motoristaEnd;
+    private String motoristaTel;
+    private String motoristaEmail;
 
-    public String getCpf() {
-        return cpf;
+    public String getMotoristaCpf() {
+        return motoristaCpf;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void setMotoristaCpf(String cpf) {
+        this.motoristaCpf = cpf;
     }
 
-    public String getEmail() {
-        return email;
+    public String getMotoristaEmail() {
+        return motoristaEmail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMotoristaEmail(String email) {
+        this.motoristaEmail = email;
     }
 
-    public String getEndereco() {
-        return endereco;
+    public String getMotoristaEnd() {
+        return motoristaEnd;
     }
 
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
+    public void setMotoristaEnd(String endereco) {
+        this.motoristaEnd = endereco;
     }
 
-    public int getId() {
-        return id;
+    public int getMotoristaId() {
+        return motoristaId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setMotoristaId(int id) {
+        this.motoristaId = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getMotoristaNome() {
+        return motoristaNome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setMotoristaNome(String nome) {
+        this.motoristaNome = nome;
     }
 
-    public String getRg() {
-        return rg;
+    public String getMotoristaRg() {
+        return motoristaRg;
     }
 
-    public void setRg(String rg) {
-        this.rg = rg;
+    public void setMotoristaRg(String rg) {
+        this.motoristaRg = rg;
     }
 
-    public String getTelefone() {
-        return telefone;
+    public String getMotoristaTel() {
+        return motoristaTel;
     }
 
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
+    public void setMotoristaTel(String telefone) {
+        this.motoristaTel = telefone;
     }
     
 }

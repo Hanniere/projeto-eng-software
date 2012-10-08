@@ -2,55 +2,68 @@ package entidades;
 
 public class Passagem {
 
-	private int id;
-	private String data;
-	private String clienteCpf;
-	private String clienteNome;
-	private int assentoComprado;
-	private int horario;
-        private int diaId;
+	private int passagemId;
+	private String passagemData;
+	private String passagemClienteCpf;
+	private String passagemClienteNome;
+	private int passagemNumAssentoComprado;
+	private int passagem_horarioId;
+        private int passagem_horarioDiaId;
 	
-	public int getId() {
-		return id;
+	public int getPassagemId() {
+		return passagemId;
 	}
-	public void setId(int id) {
-		this.id = id;
+	
+        public void setPassagemId(int id) {
+		this.passagemId = id;
 	}
-        public int getDiaId() {
-		return diaId;
+        
+        public int getPassagem_horarioDiaId() {
+		return passagem_horarioDiaId;
 	}
-	public void setDiaId(int diaId) {
-		this.diaId = diaId;
+	
+        public void setPassagem_horarioDiaId(int diaId) {
+		this.passagem_horarioDiaId = diaId;
 	}
-	public String getData() {
-		return data;
+	
+        public String getPassagemData() {
+		return passagemData;
 	}
-	public void setData(String data) {
-		this.data = data;
+	
+        public void setPassagemData(String data) {
+		this.passagemData = data;
 	}
-	public String getClienteCpf() {
-		return clienteCpf;
+	
+        public String getPassagemClienteCpf() {
+		return passagemClienteCpf;
 	}
-	public void setClienteCpf(String clienteCpf) {
-		this.clienteCpf = clienteCpf;
+	
+        public void setPassagemClienteCpf(String clienteCpf) {
+		this.passagemClienteCpf = clienteCpf;
 	}
-	public String getClienteNome() {
-		return clienteNome;
+	
+        public String getPassagemClienteNome() {
+		return passagemClienteNome;
 	}
-	public void setClienteNome(String clienteNome) {
-		this.clienteNome = clienteNome;
+	
+        public void setPassagemClienteNome(String clienteNome) {
+		this.passagemClienteNome = clienteNome;
 	}
-	public int getAssentoComprado() {
-		return assentoComprado;
+	
+        public int getPassagemNumAssentoComprado() {
+		return passagemNumAssentoComprado;
 	}
-	public void setAssentoComprado(int assentoComprado) {
-		this.assentoComprado = assentoComprado;
+	
+        public void setPassagemNumAssentoComprado(int assentoComprado) {
+		this.passagemNumAssentoComprado = assentoComprado;
 	}
-	public int getHorario() {
-		return horario;
+	
+        public int getPassagem_horarioId() {
+		return passagem_horarioId;
 	}
-	public void setHorario(int horario) {
-		this.horario = horario;
+	
+        public void setPassagem_horarioId(int horario) {
+		this.passagem_horarioId = horario;
 	}
 	
 }

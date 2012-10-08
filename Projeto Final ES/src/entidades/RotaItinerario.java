@@ -2,40 +2,40 @@ package entidades;
 
 public class RotaItinerario {
 
-    private int RotaItinerarioId;
-    private int rotaitinerario_rotaId;
-    private int rotaitinerario_itinerarioId;
-    private int rotaitinerarioOrdem;
+    private int rotaItinerarioId;
+    private int rotaItinerario_rotaId;
+    private int rotaItinerario_itinerarioId;
+    private int rotaItinerarioOrdem;
 
     public int getRotaItinerarioId() {
-        return RotaItinerarioId;
+        return rotaItinerarioId;
     }
 
     public void setRotaItinerarioId(int rotaItinerarioId) {
-        RotaItinerarioId = rotaItinerarioId;
+        this.rotaItinerarioId = rotaItinerarioId;
     }
 
     public int getRotaitinerario_rotaId() {
-        return rotaitinerario_rotaId;
+        return rotaItinerario_rotaId;
     }
 
     public void setRotaitinerario_rotaId(int rotaitinerario_rotaId) {
-        this.rotaitinerario_rotaId = rotaitinerario_rotaId;
+        this.rotaItinerario_rotaId = rotaitinerario_rotaId;
     }
 
     public int getRotaitinerario_itinerarioId() {
-        return rotaitinerario_itinerarioId;
+        return rotaItinerario_itinerarioId;
     }
 
     public void setRotaitinerario_itinerarioId(int rotaitinerario_itinerarioId) {
-        this.rotaitinerario_itinerarioId = rotaitinerario_itinerarioId;
+        this.rotaItinerario_itinerarioId = rotaitinerario_itinerarioId;
     }
 
     public int getRotaitinerarioOrdem() {
-        return rotaitinerarioOrdem;
+        return rotaItinerarioOrdem;
     }
 
     public void setRotaitinerarioOrdem(int rotaitinerarioOrdem) {
-        this.rotaitinerarioOrdem = rotaitinerarioOrdem;
+        this.rotaItinerarioOrdem = rotaitinerarioOrdem;
     }
 }

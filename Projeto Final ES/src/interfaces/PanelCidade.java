@@ -15,7 +15,6 @@ import javax.swing.border.TitledBorder;
 import entidades.Cidade;
 import entidades.Estado;
 
-
 public class PanelCidade {
 
     public JPanel inserirPnlCidade() throws ParseException {
@@ -29,7 +28,7 @@ public class PanelCidade {
         cidade = new Cidade();
         daoCidade = new DaoCidade();
         daoEstado = new DaoEstado();
-        
+
         pnlCidade = new JPanel(gridLayout3_1);
         pnlCidade.setVisible(false);
         pnlCidade.setBorder(BorderFactory.createTitledBorder(null, " CIDADE ", TitledBorder.CENTER, TitledBorder.TOP, fontePadrao));
@@ -136,7 +135,29 @@ public class PanelCidade {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnCidadeCadastrarClick(evt);
+                if (txtCidadeCadastroNome.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um nome.");
+                    txtCidadeCadastroNome.requestFocus();
+                } else if (cboCidadeCadastroEstado.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione um Estado.");
+                    cboCidadeCadastroEstado.requestFocus();
+                } else {
+                    cidade.setCidadeNome(txtCidadeCadastroNome.getText());
+                    cidade.setCidade_estadoId(daoEstado.selecionaEstadoId(String.valueOf(cboCidadeCadastroEstado.getSelectedItem())));
+                    boolean verifica = daoCidade.cadastrarCidade(cidade);
+                    if (verifica == true) {
+                        JOptionPane.showMessageDialog(null, "Cidade cadastrada com sucesso!");
+                        txtCidadeCadastroNome.setText("");
+                        cboCidadeCadastroEstado.setSelectedItem("Selecione");
+                        carregaCombosCidade(2);
+                        carregaCombosCidade(3);
+                        txtCidadeCadastroNome.requestFocus();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Cidade ja existe no Estado escolhido.");
+                        cboCidadeCadastroEstado.setSelectedItem("Selecione");
+                        cboCidadeCadastroEstado.requestFocus();
+                    }
+                }
             }
         });
 
@@ -144,7 +165,9 @@ public class PanelCidade {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnCidadeCadastroLimpaClick(evt);
+                txtCidadeCadastroNome.setText("");
+                cboCidadeCadastroEstado.setSelectedItem("Selecione");
+                txtCidadeCadastroNome.requestFocus();
             }
         });
 
@@ -152,7 +175,33 @@ public class PanelCidade {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnCidadeAlterarClick(evt);
+                if (cboCidadeAlteracaoNome.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione um nome.");
+                    cboCidadeAlteracaoNome.requestFocus();
+                } else if (txtCidadeAlteracaoNome.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um nome.");
+                    txtCidadeAlteracaoNome.requestFocus();
+                } else if (cboCidadeAlteracaoEstado.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione um Estado.");
+                    cboCidadeAlteracaoEstado.requestFocus();
+                } else {
+                    cidade.setCidadeId(Integer.parseInt(String.valueOf(cboCidadeAlteracaoIdOculto.getSelectedItem())));
+                    cidade.setCidadeNome(txtCidadeAlteracaoNome.getText());
+                    cidade.setCidade_estadoId(daoEstado.selecionaEstadoId(String.valueOf(cboCidadeAlteracaoEstado.getSelectedItem())));
+                    boolean verifica = daoCidade.alterarCidade(cidade);
+                    if (verifica == true) {
+                        JOptionPane.showMessageDialog(null, "Cidade alterada com sucesso!");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Cidade ja existe!");
+                    }
+                    txtCidadeAlteracaoNome.setText("");
+                    cboCidadeAlteracaoNome.setSelectedItem("Selecione");
+                    cboCidadeAlteracaoEstado.setSelectedItem("Selecione");
+                    cboCidadeAlteracaoIdOculto.setSelectedItem("Selecione");
+                    carregaCombosCidade(2);
+                    carregaCombosCidade(3);
+                    cboCidadeAlteracaoNome.requestFocus();
+                }
             }
         });
 
@@ -160,7 +209,31 @@ public class PanelCidade {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnCidadeRemoverClick(evt);
+                int confirma = 0;
+                if (cboCidadeRemocaoNome.getSelectedItem().equals("Selecione")) {
+                    JOptionPane.showMessageDialog(null, "Selecione uma cidade para remover.");
+                    cboCidadeRemocaoNome.requestFocus();
+                } else {
+                    confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
+                    if (confirma == JOptionPane.YES_OPTION) {
+                        cidade.setCidadeId(Integer.parseInt(String.valueOf(cboCidadeRemocaoIdOculto.getSelectedItem())));
+                        boolean verifica = daoCidade.removerCidade(cidade);
+                        if (verifica) {
+                            JOptionPane.showMessageDialog(null, "Cidade removida com sucesso!");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Nao foi possivel remover cidade. Ela esta sendo usada por alguma rota.");
+                        }
+                        cboCidadeRemocaoNome.setSelectedItem("Selecione");
+                        cboCidadeRemocaoIdOculto.setSelectedItem("Selecione");
+                        carregaCombosCidade(2);
+                        carregaCombosCidade(3);
+                        cboCidadeRemocaoNome.requestFocus();
+                    } else {
+                        cboCidadeRemocaoNome.setSelectedItem("Selecione");
+                        cboCidadeRemocaoIdOculto.setSelectedItem("Selecione");
+                        cboCidadeRemocaoNome.requestFocus();
+                    }
+                }
             }
         });
 
@@ -168,7 +241,20 @@ public class PanelCidade {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboCidadeAlteracaoNomeClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboCidadeAlteracaoNome.getSelectedItem().equals("Selecione"))) {
+                        cboCidadeAlteracaoIdOculto.setSelectedIndex(cboCidadeAlteracaoNome.getSelectedIndex());
+                        cidade.setCidadeId(Integer.parseInt(String.valueOf(cboCidadeAlteracaoIdOculto.getSelectedItem())));
+                        Cidade aux = daoCidade.consultaCidade(cidade);
+                        txtCidadeAlteracaoNome.setText(aux.getCidadeNome());
+                        System.out.println(aux.getCidade_estadoId());
+                        cboCidadeAlteracaoEstado.setSelectedItem(daoEstado.selecionaEstadoUF(Integer.parseInt(String.valueOf(aux.getCidade_estadoId()))));
+                    } else {
+                        txtCidadeAlteracaoNome.setText("");
+                        cboCidadeAlteracaoEstado.setSelectedItem("Selecione");
+                        cboCidadeAlteracaoIdOculto.setSelectedItem("Selecione");
+                    }
+                }
             }
         });
 
@@ -176,7 +262,17 @@ public class PanelCidade {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboCidadeRemocaoNomeClick(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboCidadeRemocaoNome.getSelectedItem().equals("Selecione"))) {
+                        cboCidadeRemocaoIdOculto.setSelectedIndex(cboCidadeRemocaoNome.getSelectedIndex());
+                        cidade.setCidadeId(Integer.parseInt(String.valueOf(cboCidadeRemocaoIdOculto.getSelectedItem())));
+                        Cidade aux = daoCidade.consultaCidade(cidade);
+                        lblCidadeRemocaoEstadoR.setText(daoEstado.selecionaEstadoUF(Integer.parseInt(String.valueOf(aux.getCidade_estadoId()))));
+                    } else {
+                        lblCidadeRemocaoEstadoR.setText("");
+                        cboCidadeRemocaoIdOculto.setSelectedIndex(cboCidadeRemocaoNome.getSelectedIndex());
+                    }
+                }
             }
         });
         return pnlCidade;
@@ -195,8 +291,8 @@ public class PanelCidade {
                 cboCidadeAlteracaoIdOculto.removeAllItems();
                 cboCidadeAlteracaoIdOculto.addItem("Selecione");
                 for (int i = 0; i < aux2.size(); i++) {
-                    cboCidadeAlteracaoNome.addItem(aux2.get(i).getNome());
-                    cboCidadeAlteracaoIdOculto.addItem(aux2.get(i).getId());
+                    cboCidadeAlteracaoNome.addItem(aux2.get(i).getCidadeNome());
+                    cboCidadeAlteracaoIdOculto.addItem(aux2.get(i).getCidadeId());
                 }
                 break;
             case 3: //remocao
@@ -206,8 +302,8 @@ public class PanelCidade {
                 cboCidadeRemocaoIdOculto.removeAllItems();
                 cboCidadeRemocaoIdOculto.addItem("Selecione");
                 for (int i = 0; i < aux3.size(); i++) {
-                    cboCidadeRemocaoNome.addItem(aux3.get(i).getNome());
-                    cboCidadeRemocaoIdOculto.addItem(aux3.get(i).getId());
+                    cboCidadeRemocaoNome.addItem(aux3.get(i).getCidadeNome());
+                    cboCidadeRemocaoIdOculto.addItem(aux3.get(i).getCidadeId());
                 }
                 break;
         }
@@ -221,7 +317,7 @@ public class PanelCidade {
                 cboCidadeAlteracaoEstado.removeAllItems();
                 cboCidadeAlteracaoEstado.addItem("Selecione");
                 for (int i = 0; i < aux5.size(); i++) {
-                    cboCidadeAlteracaoEstado.addItem(aux5.get(i).getUF());
+                    cboCidadeAlteracaoEstado.addItem(aux5.get(i).getEstadoUf());
                 }
                 break;
             case 6: //cadastro cidade
@@ -229,127 +325,9 @@ public class PanelCidade {
                 cboCidadeCadastroEstado.removeAllItems();
                 cboCidadeCadastroEstado.addItem("Selecione");
                 for (int i = 0; i < aux6.size(); i++) {
-                    cboCidadeCadastroEstado.addItem(aux6.get(i).getUF());
+                    cboCidadeCadastroEstado.addItem(aux6.get(i).getEstadoUf());
                 }
                 break;
-        }
-    }
-
-    private void btnCidadeCadastrarClick(ActionEvent evt) {
-        if (txtCidadeCadastroNome.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Digite um nome.");
-            txtCidadeCadastroNome.requestFocus();
-        } else if (cboCidadeCadastroEstado.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Estado.");
-            cboCidadeCadastroEstado.requestFocus();
-        } else {
-            cidade.setNome(txtCidadeCadastroNome.getText());
-            cidade.setEstado(String.valueOf(cboCidadeCadastroEstado.getSelectedItem()));
-            boolean verifica = daoCidade.cadastrarCidade(cidade);
-            if (verifica == true) {
-                JOptionPane.showMessageDialog(null, "Cidade cadastrada com sucesso!");
-                txtCidadeCadastroNome.setText("");
-                cboCidadeCadastroEstado.setSelectedItem("Selecione");
-                carregaCombosCidade(2);
-                carregaCombosCidade(3);
-                txtCidadeCadastroNome.requestFocus();
-            } else {
-                JOptionPane.showMessageDialog(null, "Cidade ja existe no Estado escolhido.");
-                cboCidadeCadastroEstado.setSelectedItem("Selecione");
-                cboCidadeCadastroEstado.requestFocus();
-            }
-        }
-    }
-
-    private void btnCidadeCadastroLimpaClick(ActionEvent evt) {
-        txtCidadeCadastroNome.setText("");
-        cboCidadeCadastroEstado.setSelectedItem("Selecione");
-        txtCidadeCadastroNome.requestFocus();
-    }
-
-    private void btnCidadeAlterarClick(ActionEvent evt) {
-        if (cboCidadeAlteracaoNome.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um nome.");
-            cboCidadeAlteracaoNome.requestFocus();
-        } else if (txtCidadeAlteracaoNome.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Digite um nome.");
-            txtCidadeAlteracaoNome.requestFocus();
-        } else if (cboCidadeAlteracaoEstado.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione um Estado.");
-            cboCidadeAlteracaoEstado.requestFocus();
-        } else {
-            cidade.setId(Integer.parseInt(String.valueOf(cboCidadeAlteracaoIdOculto.getSelectedItem())));
-            cidade.setNome(txtCidadeAlteracaoNome.getText());
-            cidade.setEstado(String.valueOf(cboCidadeAlteracaoEstado.getSelectedItem()));
-            boolean verifica = daoCidade.alterarCidade(cidade);
-            if (verifica == true) {
-                JOptionPane.showMessageDialog(null, "Cidade alterada com sucesso!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Cidade ja existe!");
-            }
-            txtCidadeAlteracaoNome.setText("");
-            cboCidadeAlteracaoNome.setSelectedItem("Selecione");
-            cboCidadeAlteracaoEstado.setSelectedItem("Selecione");
-            cboCidadeAlteracaoIdOculto.setSelectedItem("Selecione");
-            carregaCombosCidade(2);
-            carregaCombosCidade(3);
-            cboCidadeAlteracaoNome.requestFocus();
-        }
-    }
-
-    private void btnCidadeRemoverClick(ActionEvent evt) {
-        int confirma = 0;
-        if (cboCidadeRemocaoNome.getSelectedItem().equals("Selecione")) {
-            JOptionPane.showMessageDialog(null, "Selecione uma cidade para remover.");
-            cboCidadeRemocaoNome.requestFocus();
-        } else {
-            confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
-            if (confirma == JOptionPane.YES_OPTION) {
-                cidade.setId(Integer.parseInt(String.valueOf(cboCidadeRemocaoIdOculto.getSelectedItem())));
-                boolean verifica = daoCidade.removerCidade(cidade);
-                if (verifica) JOptionPane.showMessageDialog(null, "Cidade removida com sucesso!");
-                else JOptionPane.showMessageDialog(null, "Nao foi possivel remover cidade. Ela esta sendo usada por alguma rota.");
-                cboCidadeRemocaoNome.setSelectedItem("Selecione");
-                cboCidadeRemocaoIdOculto.setSelectedItem("Selecione");
-                carregaCombosCidade(2);
-                carregaCombosCidade(3);
-                cboCidadeRemocaoNome.requestFocus();
-            } else {
-                cboCidadeRemocaoNome.setSelectedItem("Selecione");
-                cboCidadeRemocaoIdOculto.setSelectedItem("Selecione");
-                cboCidadeRemocaoNome.requestFocus();
-            }
-        }
-    }
-
-    private void cboCidadeAlteracaoNomeClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboCidadeAlteracaoNome.getSelectedItem().equals("Selecione"))) {
-                cboCidadeAlteracaoIdOculto.setSelectedIndex(cboCidadeAlteracaoNome.getSelectedIndex());
-                cidade.setId(Integer.parseInt(String.valueOf(cboCidadeAlteracaoIdOculto.getSelectedItem())));
-                Cidade aux = daoCidade.consultaCidade(cidade);
-                txtCidadeAlteracaoNome.setText(aux.getNome());
-                System.out.println(aux.getEstado());
-                cboCidadeAlteracaoEstado.setSelectedItem(aux.getEstado());
-            } else {
-                txtCidadeAlteracaoNome.setText("");
-                cboCidadeAlteracaoEstado.setSelectedItem("Selecione");
-                cboCidadeAlteracaoIdOculto.setSelectedItem("Selecione");
-            }
-        }
-    }
-
-    private void cboCidadeRemocaoNomeClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboCidadeRemocaoNome.getSelectedItem().equals("Selecione"))) {
-                cboCidadeRemocaoIdOculto.setSelectedIndex(cboCidadeRemocaoNome.getSelectedIndex());
-                cidade.setId(Integer.parseInt(String.valueOf(cboCidadeRemocaoIdOculto.getSelectedItem())));
-                Cidade aux = daoCidade.consultaCidade(cidade);
-                lblCidadeRemocaoEstadoR.setText(aux.getEstado());
-            } else {
-                lblCidadeRemocaoEstadoR.setText("");
-                cboCidadeRemocaoIdOculto.setSelectedIndex(cboCidadeRemocaoNome.getSelectedIndex());
-            }
         }
     }
     //------- Geral

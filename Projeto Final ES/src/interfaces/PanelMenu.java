@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.text.ParseException;
 import javax.swing.*;
 
-import projetos.PrincipalFuncionario;
+import main.PrincipalFuncionario;
+
 import util.Backup;
-import util.Restore;
 
 public class PanelMenu extends JPanel {
 
@@ -365,6 +365,7 @@ public class PanelMenu extends JPanel {
         pnlRotaItinerario.setVisible(true);
         pnlFuncionario.setVisible(false);
         pnlHorario.setVisible(false);
+        rotaItinerarioPanel.carregaComboItinerarioCadastro();
         rotaItinerarioPanel.focusCboPrincipal();
     }
 
@@ -379,7 +380,6 @@ public class PanelMenu extends JPanel {
         pnlRotaItinerario.setVisible(false);
         pnlFuncionario.setVisible(false);
         pnlHorario.setVisible(true);
-        rotaItinerarioPanel.carregaComboItinerarioCadastro();
         horarioPanel.carregaComboItinerario();
     }
 
@@ -492,18 +492,27 @@ public class PanelMenu extends JPanel {
     }
 
     private void menuBackupFazerBackupClick(ActionEvent evt) {
-        Backup teste = new Backup();
-        teste.CriarBackup();
-        /*JFileChooser salvarComo = new JFileChooser();
-        salvarComo.showSaveDialog(this);
-        File caminhoBackup = salvarComo.getSelectedFile();
-        System.out.println(caminhoBackup);
-        http://javafree.uol.com.br/topic-2499-Copiar-arquivos.html*/
+        Backup fazerBackup = new Backup();
+        fazerBackup.CriarBackup();
     }
 
     private void menuBackupRestaurarBackupClick(ActionEvent evt) {
-        Restore r = new Restore();
-        r.RestaurarBackup();
+        Backup restaurarBackup = new Backup();
+        restaurarBackup.RestaurarBackup();
+        onibusPanel.carregaCombosOnibus(2);
+        onibusPanel.carregaCombosOnibus(3);
+        motoristaPanel.carregaCombosMotorista(2);
+        motoristaPanel.carregaCombosMotorista(3);
+        estadoPanel.carregaCombosEstado(2);
+        estadoPanel.carregaCombosEstado(3);
+        cidadePanel.carregaCombosCidade(2);
+        cidadePanel.carregaCombosCidade(3);
+        cidadePanel.carregaCombosEstado(5);
+        cidadePanel.carregaCombosEstado(6);
+        rotaItinerarioPanel.carregaComboItinerarioCadastro();
+        horarioPanel.carregaComboItinerario();
+        itinerarioRotaPanel.carregaCombosCidade();
+        itinerarioRotaPanel.carregaCombosItinerario();
     }
 
     private void menuSairUsuarioClick(ActionEvent evt) throws ParseException {
@@ -515,11 +524,6 @@ public class PanelMenu extends JPanel {
     private void menuSairFecharProgramaClick(ActionEvent evt) {
         System.exit(0);
     }
-
-    private void pnlMenuMouseClicked(java.awt.event.MouseEvent evt) {
-        relatorioFrame.setVisible(false);
-    }
-    
     private PanelHome homePanel;
     private PanelOnibus onibusPanel;
     private PanelMotorista motoristaPanel;

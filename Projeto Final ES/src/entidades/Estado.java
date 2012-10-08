@@ -2,23 +2,23 @@ package entidades;
 
 public class Estado {
 
-    private int id;
-    private String uf;
+    private int estadoId;
+    private String estadoUf;
 
-    public int getId() {
-        return id;
+    public int getEstadoId() {
+        return estadoId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setEstadoId(int id) {
+        this.estadoId = id;
     }
 
-    public String getUF() {
-        return uf;
+    public String getEstadoUf() {
+        return estadoUf;
     }
 
-    public void setUF(String nome) {
-        this.uf = nome;
+    public void setEstadoUf(String uf) {
+        this.estadoUf = uf;
     }
     
 }

@@ -119,7 +119,22 @@ public class PanelEstado {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                btnEstadoCadastrarClick(evt);
+                if (txtEstadoCadastroUf.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Digite um nome.");
+            txtEstadoCadastroUf.requestFocus();
+        } else {
+            estado.setEstadoUf(txtEstadoCadastroUf.getText());
+            boolean verifica = daoEstado.cadastrarEstado(estado);
+            if (verifica == true) {
+                JOptionPane.showMessageDialog(null, "Estado cadastrado com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Estado ja existe!");
+            }
+            txtEstadoCadastroUf.setValue("");
+            carregaCombosEstado(2);
+            carregaCombosEstado(3);
+            txtEstadoCadastroUf.requestFocus();
+        }
             }
         });
 
@@ -127,6 +142,8 @@ public class PanelEstado {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
+                txtEstadoCadastroUf.setValue("");
+                txtEstadoCadastroUf.requestFocus();
                 btnEstadoCadastroLimpaClick(evt);
             }
         });
@@ -179,8 +196,8 @@ public class PanelEstado {
                 cboEstadoAlteracaoIdOculto.removeAllItems();
                 cboEstadoAlteracaoIdOculto.addItem("Selecione");
                 for (int i = 0; i < aux2.size(); i++) {
-                    cboEstadoAlteracaoUf.addItem(aux2.get(i).getUF());
-                    cboEstadoAlteracaoIdOculto.addItem(aux2.get(i).getId());
+                    cboEstadoAlteracaoUf.addItem(aux2.get(i).getEstadoUf());
+                    cboEstadoAlteracaoIdOculto.addItem(aux2.get(i).getEstadoId());
                 }
                 break;
             case 3: //remocao
@@ -190,35 +207,19 @@ public class PanelEstado {
                 cboEstadoRemocaoIdOculto.removeAllItems();
                 cboEstadoRemocaoIdOculto.addItem("Selecione");
                 for (int i = 0; i < aux3.size(); i++) {
-                    cboEstadoRemocaoUf.addItem(aux3.get(i).getUF());
-                    cboEstadoRemocaoIdOculto.addItem(aux3.get(i).getId());
+                    cboEstadoRemocaoUf.addItem(aux3.get(i).getEstadoUf());
+                    cboEstadoRemocaoIdOculto.addItem(aux3.get(i).getEstadoId());
                 }
                 break;
         }
     }
 
     private void btnEstadoCadastrarClick(ActionEvent evt) {
-        if (txtEstadoCadastroUf.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Digite um nome.");
-            txtEstadoCadastroUf.requestFocus();
-        } else {
-            estado.setUF(txtEstadoCadastroUf.getText());
-            boolean verifica = daoEstado.cadastrarEstado(estado);
-            if (verifica == true) {
-                JOptionPane.showMessageDialog(null, "Estado cadastrado com sucesso!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Estado ja existe!");
-            }
-            txtEstadoCadastroUf.setValue("");
-            carregaCombosEstado(2);
-            carregaCombosEstado(3);
-            txtEstadoCadastroUf.requestFocus();
-        }
+        
     }
 
     private void btnEstadoCadastroLimpaClick(ActionEvent evt) {
-        txtEstadoCadastroUf.setValue("");
-        txtEstadoCadastroUf.requestFocus();
+        
     }
 
     private void btnEstadoAlterarClick(ActionEvent evt) {
@@ -229,8 +230,8 @@ public class PanelEstado {
             JOptionPane.showMessageDialog(null, "Digite um nome.");
             txtEstadoAlteracaoUf.requestFocus();
         } else {
-            estado.setId(Integer.parseInt(String.valueOf(cboEstadoAlteracaoIdOculto.getSelectedItem())));
-            estado.setUF(txtEstadoAlteracaoUf.getText());
+            estado.setEstadoId(Integer.parseInt(String.valueOf(cboEstadoAlteracaoIdOculto.getSelectedItem())));
+            estado.setEstadoUf(txtEstadoAlteracaoUf.getText());
             boolean verifica = daoEstado.alterarEstado(estado);
             if (verifica == true) {
                 JOptionPane.showMessageDialog(null, "Estado alterado com sucesso!");
@@ -255,7 +256,7 @@ public class PanelEstado {
             confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
             if (confirma == JOptionPane.YES_OPTION) {
                 cboEstadoRemocaoIdOculto.setSelectedIndex(cboEstadoRemocaoUf.getSelectedIndex());
-                estado.setId(Integer.parseInt(String.valueOf(cboEstadoRemocaoIdOculto.getSelectedItem())));
+                estado.setEstadoId(Integer.parseInt(String.valueOf(cboEstadoRemocaoIdOculto.getSelectedItem())));
                 boolean verifica = daoEstado.removerEstado(estado);
                 if (verifica == true) {
                     JOptionPane.showMessageDialog(null, "Estado removido com sucesso!");

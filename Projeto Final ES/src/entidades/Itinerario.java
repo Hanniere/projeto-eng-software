@@ -2,18 +2,18 @@ package entidades;
 
 public class Itinerario {
 
-    private int id;
+    private int itinerarioId;
     private int itinerario_cidadeOrigemId;
     private int itinerario_cidadeDestinoId;
     private String itinerario_cidadeOrigem;
     private String itinerario_cidadeDestino;
 
-    public int getId() {
-        return id;
+    public int getItinerarioId() {
+        return itinerarioId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setItinerarioId(int itinerarioId) {
+        this.itinerarioId = itinerarioId;
     }
 
     public int getItinerario_cidadeOrigemId() {

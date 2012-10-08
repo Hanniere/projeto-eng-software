@@ -17,11 +17,11 @@ public class DaoFuncionario {
             String sql = "select * from Funcionario";
             ResultSet rsV = stmt.executeQuery(sql);
             while (rsV.next()) {
-                if (rsV.getString("funcionarioCpf").equals(funcionario.getCpf())) {
+                if (rsV.getString("funcionarioCpf").equals(funcionario.getFuncionarioCpf())) {
                     return false;
                 }
             }
-            sql = "INSERT INTO Funcionario VALUES (0, '" + funcionario.getNome() + "', '" + funcionario.getCpf() + "', '" + funcionario.getEmail() + "', '" + funcionario.getSenha() + "', " + funcionario.getAcesso() + ")";
+            sql = "INSERT INTO Funcionario VALUES (0, '" + funcionario.getFuncionarioNome() + "', '" + funcionario.getFuncionarioCpf() + "', '" + funcionario.getFuncionarioEmail() + "', '" + funcionario.getFuncionarioSenha() + "', " + funcionario.getFuncionarioAcesso() + ")";
             stmt.executeUpdate(sql);
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -42,14 +42,14 @@ public class DaoFuncionario {
             String sql = "select * from Funcionario";
             ResultSet rsV = stmt.executeQuery(sql);
             while (rsV.next()) {
-                if (rsV.getString("funcionarioCpf").equals(funcionario.getCpf()) && rsV.getInt("funcionarioId") != funcionario.getId()) {
+                if (rsV.getString("funcionarioCpf").equals(funcionario.getFuncionarioCpf()) && rsV.getInt("funcionarioId") != funcionario.getFuncionarioId()) {
                     return false;
                 }
             }
-            sql = "UPDATE Funcionario set funcionarioNome = '" + funcionario.getNome() + "', "
-                    + "funcionarioCpf = '" + funcionario.getCpf() + "', funcionarioSenha = '" + funcionario.getSenha() + "',"
-                    + "funcionarioEmail = '" + funcionario.getEmail() + "' ,"
-                    + "funcionarioAcesso = " + funcionario.getAcesso() + " where funcionarioId = " + funcionario.getId();
+            sql = "UPDATE Funcionario set funcionarioNome = '" + funcionario.getFuncionarioNome() + "', "
+                    + "funcionarioCpf = '" + funcionario.getFuncionarioCpf() + "', funcionarioSenha = '" + funcionario.getFuncionarioSenha() + "',"
+                    + "funcionarioEmail = '" + funcionario.getFuncionarioEmail() + "' ,"
+                    + "funcionarioAcesso = " + funcionario.getFuncionarioAcesso() + " where funcionarioId = " + funcionario.getFuncionarioId();
             stmt.executeUpdate(sql);
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -67,7 +67,7 @@ public class DaoFuncionario {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "DELETE FROM Funcionario where funcionarioId = " + funcionario.getId();
+            String sql = "DELETE FROM Funcionario where funcionarioId = " + funcionario.getFuncionarioId();
             stmt.executeUpdate(sql);
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
@@ -88,14 +88,14 @@ public class DaoFuncionario {
             Class.forName(banco.getDriver());
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
-            String sql = "select * from Funcionario where funcionarioId = " + funcionario.getId();
+            String sql = "select * from Funcionario where funcionarioId = " + funcionario.getFuncionarioId();
             ResultSet rs = stmt.executeQuery(sql);
             rs.next();
-            dadosFuncionario.setCpf(rs.getString("funcionarioCpf"));
-            dadosFuncionario.setSenha(rs.getString("funcionarioSenha"));
-            dadosFuncionario.setEmail(rs.getString("funcionarioEmail"));
-            dadosFuncionario.setNome(rs.getString("funcionarioNome"));
-            dadosFuncionario.setAcesso(rs.getInt("funcionarioAcesso"));
+            dadosFuncionario.setFuncionarioCpf(rs.getString("funcionarioCpf"));
+            dadosFuncionario.setFuncionarioSenha(rs.getString("funcionarioSenha"));
+            dadosFuncionario.setFuncionarioEmail(rs.getString("funcionarioEmail"));
+            dadosFuncionario.setFuncionarioNome(rs.getString("funcionarioNome"));
+            dadosFuncionario.setFuncionarioAcesso(rs.getInt("funcionarioAcesso"));
         } catch (ClassNotFoundException ex) {
             System.out.println("Não foi possivel carregar o driver.");
             ex.printStackTrace();
@@ -117,8 +117,8 @@ public class DaoFuncionario {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Funcionario funcionario = new Funcionario();
-                funcionario.setId(rs.getInt("funcionarioId"));
-                funcionario.setNome(rs.getString("funcionarioNome") + " - " + rs.getString("funcionarioCpf"));
+                funcionario.setFuncionarioId(rs.getInt("funcionarioId"));
+                funcionario.setFuncionarioNome(rs.getString("funcionarioNome") + " - " + rs.getString("funcionarioCpf"));
                 arrayList.add(funcionario);
             }
         } catch (ClassNotFoundException ex) {

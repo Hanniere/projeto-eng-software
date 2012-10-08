@@ -370,75 +370,24 @@ public class PanelConsulta {
         pnlConsulta.add(pnlConsultaHorario);
         pnlConsulta.add(pnlConsultaPassagem);
 
-        cboConsultaPassagemOrigem.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboConsultaPassagemOrigemClick(evt);
-            }
-        });
-
-        cboConsultaPassagemDestino.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboConsultaPassagemDestinoClick(evt);
-            }
-        });
-
-        cboConsultaPassagemDataAno.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboConsultaPassagemDataAnoClick(evt);
-            }
-        });
-
-        cboConsultaPassagemDataMes.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboConsultaPassagemDataMesClick(evt);
-            }
-        });
-
-        cboConsultaPassagemDataDia.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboConsultaPassagemDataDiaClick(evt);
-            }
-        });
-
-        cboConsultaPassagemHorario.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboConsultaPassagemHorarioClick(evt);
-            }
-        });
-
-        cboConsultaHorarios.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboConsultaHorariosClick(evt);
-            }
-        });
-
-        cboConsultaHorarioDia.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                cboConsultaHorarioDiaClick(evt);
-            }
-        });
-
         rBtnOnibus.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                rBtnOnibusClick(evt);
+                pnlConsultaOnibus.setVisible(true);
+                pnlConsultaMotorista.setVisible(false);
+                pnlConsultaEstado.setVisible(false);
+                pnlConsultaCidade.setVisible(false);
+                pnlConsultaRota.setVisible(false);
+                pnlConsultaItinerario.setVisible(false);
+                pnlConsultaPassagem.setVisible(false);
+                pnlConsultaHorario.setVisible(false);
+                carregaCombosOnibus();
+                lblConsultaOnibusQtdeAssentosR.setText("");
+                lblConsultaOnibusAnoR.setText("");
+                lblConsultaOnibusMarcaR.setText("");
+                lblConsultaOnibusModeloR.setText("");
+                cboConsultaOnibusPlaca.requestFocus();
             }
         });
 
@@ -446,7 +395,21 @@ public class PanelConsulta {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                rBtnMotoristaClick(evt);
+                pnlConsultaOnibus.setVisible(false);
+                pnlConsultaMotorista.setVisible(true);
+                pnlConsultaEstado.setVisible(false);
+                pnlConsultaCidade.setVisible(false);
+                pnlConsultaRota.setVisible(false);
+                pnlConsultaItinerario.setVisible(false);
+                pnlConsultaPassagem.setVisible(false);
+                pnlConsultaHorario.setVisible(false);
+                carregaCombosMotorista();
+                lblConsultaMotoristaCpfR.setText("");
+                lblConsultaMotoristaEmailR.setText("");
+                lblConsultaMotoristaEndR.setText("");
+                lblConsultaMotoristaRgR.setText("");
+                lblConsultaMotoristaTelR.setText("");
+                cboConsultaMotoristaNome.requestFocus();
             }
         });
 
@@ -454,7 +417,15 @@ public class PanelConsulta {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                rBtnEstadoClick(evt);
+                pnlConsultaOnibus.setVisible(false);
+                pnlConsultaMotorista.setVisible(false);
+                pnlConsultaEstado.setVisible(true);
+                pnlConsultaCidade.setVisible(false);
+                pnlConsultaRota.setVisible(false);
+                pnlConsultaItinerario.setVisible(false);
+                pnlConsultaPassagem.setVisible(false);
+                pnlConsultaHorario.setVisible(false);
+                carregaDadosConsultaEstado(daoEstado.ConsultarTodosEstados());
             }
         });
 
@@ -462,7 +433,15 @@ public class PanelConsulta {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                rBtnCidadeClick(evt);
+                pnlConsultaOnibus.setVisible(false);
+                pnlConsultaMotorista.setVisible(false);
+                pnlConsultaEstado.setVisible(false);
+                pnlConsultaCidade.setVisible(true);
+                pnlConsultaRota.setVisible(false);
+                pnlConsultaItinerario.setVisible(false);
+                pnlConsultaPassagem.setVisible(false);
+                pnlConsultaHorario.setVisible(false);
+                carregaDadosConsultaCidade(daoCidade.consultarTodasCidades());
             }
         });
 
@@ -470,7 +449,15 @@ public class PanelConsulta {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                rBtnRotaClick(evt);
+                pnlConsultaOnibus.setVisible(false);
+                pnlConsultaMotorista.setVisible(false);
+                pnlConsultaEstado.setVisible(false);
+                pnlConsultaCidade.setVisible(false);
+                pnlConsultaRota.setVisible(true);
+                pnlConsultaItinerario.setVisible(false);
+                pnlConsultaPassagem.setVisible(false);
+                pnlConsultaHorario.setVisible(false);
+                carregaDadosConsultaRota(daoRota.consultarTodasRotas());
             }
         });
 
@@ -478,7 +465,15 @@ public class PanelConsulta {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                rBtnItinerarioClick(evt);
+                pnlConsultaOnibus.setVisible(false);
+                pnlConsultaMotorista.setVisible(false);
+                pnlConsultaEstado.setVisible(false);
+                pnlConsultaCidade.setVisible(false);
+                pnlConsultaRota.setVisible(false);
+                pnlConsultaItinerario.setVisible(true);
+                pnlConsultaPassagem.setVisible(false);
+                pnlConsultaHorario.setVisible(false);
+                carregaDadosConsultaItinerario(daoItinerario.consultarTodosItinerarios());
             }
         });
 
@@ -486,7 +481,16 @@ public class PanelConsulta {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                rBtnHorarioClick(evt);
+                pnlConsultaOnibus.setVisible(false);
+                pnlConsultaMotorista.setVisible(false);
+                pnlConsultaEstado.setVisible(false);
+                pnlConsultaCidade.setVisible(false);
+                pnlConsultaRota.setVisible(false);
+                pnlConsultaItinerario.setVisible(false);
+                pnlConsultaPassagem.setVisible(false);
+                pnlConsultaHorario.setVisible(true);
+                cboConsultaHorarios.requestFocus();
+                carregaCombosHorario();
             }
         });
 
@@ -494,7 +498,21 @@ public class PanelConsulta {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                rBtnPassagemClick(evt);
+                pnlConsultaOnibus.setVisible(false);
+                pnlConsultaMotorista.setVisible(false);
+                pnlConsultaEstado.setVisible(false);
+                pnlConsultaCidade.setVisible(false);
+                pnlConsultaRota.setVisible(false);
+                pnlConsultaItinerario.setVisible(false);
+                pnlConsultaPassagem.setVisible(true);
+                pnlConsultaHorario.setVisible(false);
+                cboConsultaPassagemDataAno.setEnabled(false);
+                cboConsultaPassagemDataMes.setEnabled(false);
+                cboConsultaPassagemDataDia.setEnabled(false);
+                cboConsultaPassagemDestino.setEnabled(false);
+                cboConsultaPassagemHorario.setEnabled(false);
+                carregaDadosConsultaPassagem(daoPassagem.carregaCidadesOrigem());
+                cboConsultaPassagemOrigem.requestFocus();
             }
         });
 
@@ -502,7 +520,24 @@ public class PanelConsulta {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboConsultaMotoristaNomeItemStateChanged(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboConsultaMotoristaNome.getSelectedItem().equals("Selecione"))) {
+                        cboConsultaMotoristaIdOculto.setSelectedIndex(cboConsultaMotoristaNome.getSelectedIndex());
+                        motorista.setMotoristaId(Integer.parseInt(String.valueOf(cboConsultaMotoristaIdOculto.getSelectedItem())));
+                        Motorista aux = daoMotorista.consultarMotorista(motorista);
+                        lblConsultaMotoristaRgR.setText(aux.getMotoristaRg());
+                        lblConsultaMotoristaCpfR.setText(aux.getMotoristaCpf());
+                        lblConsultaMotoristaTelR.setText(aux.getMotoristaTel());
+                        lblConsultaMotoristaEndR.setText(aux.getMotoristaEnd());
+                        lblConsultaMotoristaEmailR.setText(aux.getMotoristaEmail());
+                    } else {
+                        lblConsultaMotoristaRgR.setText("");
+                        lblConsultaMotoristaCpfR.setText("");
+                        lblConsultaMotoristaTelR.setText("");
+                        lblConsultaMotoristaEndR.setText("");
+                        lblConsultaMotoristaEmailR.setText("");
+                    }
+                }
             }
         });
 
@@ -510,7 +545,308 @@ public class PanelConsulta {
 
             @Override
             public void itemStateChanged(ItemEvent evt) {
-                cboConsultaOnibusIdItemStateChanged(evt);
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboConsultaOnibusPlaca.getSelectedItem().equals("Selecione"))) {
+                        cboConsultaOnibusIdOculto.setSelectedIndex(cboConsultaOnibusPlaca.getSelectedIndex());
+                        onibus.setOnibusId(Integer.parseInt(String.valueOf(cboConsultaOnibusIdOculto.getSelectedItem())));
+                        Onibus aux = daoOnibus.consultaOnibus(onibus);
+                        lblConsultaOnibusModeloR.setText(aux.getOnibusModelo());
+                        lblConsultaOnibusMarcaR.setText(aux.getOnibusMarca());
+                        lblConsultaOnibusAnoR.setText(String.valueOf(aux.getOnibusAno()));
+                        lblConsultaOnibusQtdeAssentosR.setText(String.valueOf(aux.getOnibusQtdeAssentos()));
+                    } else {
+                        lblConsultaOnibusModeloR.setText("");
+                        lblConsultaOnibusMarcaR.setText("");
+                        lblConsultaOnibusAnoR.setText("");
+                        lblConsultaOnibusQtdeAssentosR.setText("");
+                    }
+                }
+            }
+        });
+
+        cboConsultaPassagemOrigem.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                cboConsultaPassagemDataAno.setEnabled(false);
+                cboConsultaPassagemDataAno.setSelectedItem("-");
+                cboConsultaPassagemDataDia.setEnabled(false);
+                cboConsultaPassagemDataDia.setSelectedItem("-");
+                cboConsultaPassagemDataMes.setEnabled(false);
+                cboConsultaPassagemDataMes.setSelectedItem("-");
+                cboConsultaPassagemDestino.setEnabled(false);
+                cboConsultaPassagemDestino.setSelectedItem("Selecione");
+                cboConsultaPassagemHorario.setEnabled(false);
+                cboConsultaPassagemHorario.setSelectedItem("Selecione");
+                listConsultaPassagem.removeAll();
+                listConsultaPassagem.updateUI();
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboConsultaPassagemOrigem.getSelectedItem().equals("Selecione"))) {
+                        cboConsultaPassagemDestino.setEnabled(true);
+                        Cidade cidade = new Cidade();
+                        cidade.setCidadeId(arrayCidadesOrigemId.get(cboConsultaPassagemOrigem.getSelectedIndex()));
+                        cidade.setCidadeNome(String.valueOf(cboConsultaPassagemOrigem.getSelectedItem()));
+                        ArrayList<Cidade> cidades = daoPassagem.carregaCidadesDestino(cidade);
+                        cboConsultaPassagemDestino.removeAllItems();
+                        cboConsultaPassagemDestino.addItem("Selecione");
+                        arrayRotaItinerarioIdCidadeDestino.clear();
+                        arrayCidadesDestinoId.clear();
+                        arrayRotaItinerarioIdCidadeDestino.add(0);
+                        for (int i = 0; i < cidades.size(); i++) {
+                            cboConsultaPassagemDestino.addItem(cidades.get(i).getCidadeNome());
+                            arrayCidadesDestinoId.add(cidades.get(i).getCidadeId());
+                            arrayRotaItinerarioIdCidadeDestino.add(cidades.get(i).getCidade_estadoId());
+                        }
+                        cboConsultaPassagemDestino.requestFocus();
+                    } else {
+                        listConsultaPassagem.removeAll();
+                        listConsultaPassagem.updateUI();
+                    }
+                }
+            }
+        });
+
+        cboConsultaPassagemDestino.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                cboConsultaPassagemDataAno.setEnabled(false);
+                cboConsultaPassagemDataAno.setSelectedItem("-");
+                cboConsultaPassagemDataDia.setEnabled(false);
+                cboConsultaPassagemDataDia.setSelectedItem("-");
+                cboConsultaPassagemDataMes.setEnabled(false);
+                cboConsultaPassagemDataMes.setSelectedItem("-");
+                cboConsultaPassagemHorario.setEnabled(false);
+                cboConsultaPassagemHorario.setSelectedItem("Selecione");
+                listConsultaPassagem.removeAll();
+                listConsultaPassagem.updateUI();
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboConsultaPassagemDestino.getSelectedItem().equals("Selecione"))) {
+                        cboConsultaPassagemDataAno.setEnabled(true);
+                        cboConsultaPassagemDataDia.setEnabled(true);
+                        cboConsultaPassagemDataMes.setEnabled(true);
+                        cboConsultaPassagemDataDia.requestFocus();
+                    }
+                } else {
+                    listConsultaPassagem.removeAll();
+                    listConsultaPassagem.updateUI();
+                }
+            }
+        });
+
+        cboConsultaPassagemDataAno.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboConsultaPassagemDataAno.getSelectedItem().equals("-"))) {
+                        if (!(cboConsultaPassagemDataDia.getSelectedItem().equals("-")) && !(cboConsultaPassagemDataMes.getSelectedItem().equals("-"))) {
+                            ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboConsultaPassagemDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboConsultaPassagemDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboConsultaPassagemDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboConsultaPassagemDataAno.getSelectedItem())));
+                            cboConsultaPassagemHorario.setEnabled(true);
+                            cboConsultaPassagemHorario.removeAllItems();
+                            cboConsultaPassagemHorario.addItem("Selecione");
+                            arrayHorariosChegada.clear();
+                            arrayHorariosChegada.add("");
+                            arrayPrecos.clear();
+                            arrayPrecos.add(0.0);
+                            arrayHorariosId.clear();
+                            arrayHorariosId.add(0);
+                            for (int i = 0; i < horarios.size(); i++) {
+                                cboConsultaPassagemHorario.addItem(horarios.get(i).getHorarioSaida());
+                                arrayHorariosChegada.add(horarios.get(i).getHorarioChegada());
+                                arrayPrecos.add(horarios.get(i).getHorarioPreco());
+                                arrayHorariosId.add(horarios.get(i).getHorarioId());
+                            }
+                            cboConsultaPassagemHorario.requestFocus();
+                        }
+                    } else {
+                        listConsultaPassagem.removeAll();
+                        listConsultaPassagem.updateUI();
+                    }
+                }
+            }
+        });
+
+        cboConsultaPassagemDataMes.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboConsultaPassagemDataMes.getSelectedItem().equals("-"))) {
+                        if (!(cboConsultaPassagemDataDia.getSelectedItem().equals("-")) && !(cboConsultaPassagemDataAno.getSelectedItem().equals("-"))) {
+                            ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboConsultaPassagemDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboConsultaPassagemDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboConsultaPassagemDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboConsultaPassagemDataAno.getSelectedItem())));
+                            cboConsultaPassagemHorario.setEnabled(true);
+                            cboConsultaPassagemHorario.removeAllItems();
+                            cboConsultaPassagemHorario.addItem("Selecione");
+                            arrayHorariosChegada.clear();
+                            arrayHorariosChegada.add("");
+                            arrayPrecos.clear();
+                            arrayPrecos.add(0.0);
+                            arrayHorariosId.clear();
+                            arrayHorariosId.add(0);
+                            for (int i = 0; i < horarios.size(); i++) {
+                                cboConsultaPassagemHorario.addItem(horarios.get(i).getHorarioSaida());
+                                arrayHorariosChegada.add(horarios.get(i).getHorarioChegada());
+                                arrayPrecos.add(horarios.get(i).getHorarioPreco());
+                                arrayHorariosId.add(horarios.get(i).getHorarioId());
+                            }
+                        }
+                        cboConsultaPassagemDataAno.requestFocus();
+                    } else {
+                        listConsultaPassagem.removeAll();
+                        listConsultaPassagem.updateUI();
+                    }
+                }
+            }
+        });
+
+        cboConsultaPassagemDataDia.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboConsultaPassagemDataDia.getSelectedItem().equals("-"))) {
+                        if (!(cboConsultaPassagemDataAno.getSelectedItem().equals("-")) && !(cboConsultaPassagemDataMes.getSelectedItem().equals("-"))) {
+                            ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboConsultaPassagemDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboConsultaPassagemDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboConsultaPassagemDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboConsultaPassagemDataAno.getSelectedItem())));
+                            cboConsultaPassagemHorario.setEnabled(true);
+                            cboConsultaPassagemHorario.removeAllItems();
+                            cboConsultaPassagemHorario.addItem("Selecione");
+                            arrayHorariosChegada.clear();
+                            arrayHorariosChegada.add("");
+                            arrayPrecos.clear();
+                            arrayPrecos.add(0.0);
+                            arrayHorariosId.clear();
+                            arrayHorariosId.add(0);
+                            for (int i = 0; i < horarios.size(); i++) {
+                                cboConsultaPassagemHorario.addItem(horarios.get(i).getHorarioSaida());
+                                arrayHorariosChegada.add(horarios.get(i).getHorarioChegada());
+                                arrayPrecos.add(horarios.get(i).getHorarioPreco());
+                                arrayHorariosId.add(horarios.get(i).getHorarioId());
+                            }
+                        }
+                        cboConsultaPassagemDataMes.requestFocus();
+                    } else {
+                        listConsultaPassagem.removeAll();
+                        listConsultaPassagem.updateUI();
+                    }
+                }
+            }
+        });
+
+        cboConsultaPassagemHorario.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    if (!(cboConsultaPassagemHorario.getSelectedItem().equals("Selecione"))) {
+                        arrayPoltronasOcupadas.clear();
+                        listConsultaPassagem.removeAll();
+                        listConsultaPassagem.updateUI();
+                        arrayPoltronasOcupadas = daoPassagem.consultaPoltronasCompradas(arrayHorariosId.get(cboConsultaPassagemHorario.getSelectedIndex()), (cboConsultaPassagemDataDia.getSelectedItem() + "/" + cboConsultaPassagemDataMes.getSelectedItem() + "/" + cboConsultaPassagemDataAno.getSelectedItem()), arrayCidadesDestinoId.get(cboConsultaPassagemDestino.getSelectedIndex() - 1));
+                        if (arrayPoltronasOcupadas.isEmpty()) {
+                            JLabel lblPassVendida = new JLabel("Não há passagens compradas nesta");
+                            lblPassVendida.setPreferredSize(new Dimension(250, 30));
+                            listConsultaPassagem.add(lblPassVendida);
+                            JLabel lblPassVendida2 = new JLabel("viagem.");
+                            lblPassVendida.setPreferredSize(new Dimension(250, 30));
+                            listConsultaPassagem.add(lblPassVendida2);
+                            listConsultaPassagem.updateUI();
+                        } else {
+                            JLabel lblPassVendida = new JLabel("Passagens Vendidas:");
+                            lblPassVendida.setPreferredSize(new Dimension(250, 30));
+                            listConsultaPassagem.add(lblPassVendida);
+                            Collections.sort(arrayPoltronasOcupadas);
+                            /*for(int i=0;i < arrayPoltronasOcupadas.size()-1;i++){
+                            if(arrayPoltronasOcupadas.get(i) == arrayPoltronasOcupadas.get(i+1)){
+                            arrayPoltronasOcupadas.remove(i);
+                            i = i--;
+                            }
+                            } */
+
+                            for (int i = 0; i < arrayPoltronasOcupadas.size(); i++) {
+                                System.out.println("poltrona ocupada22: " + arrayPoltronasOcupadas.get(i));
+                                listConsultaPassagem.add(new JLabel("" + arrayPoltronasOcupadas.get(i)));
+                            }
+                            listConsultaPassagem.updateUI();
+                        }
+                    } else {
+                        listConsultaPassagem.removeAll();
+                        listConsultaPassagem.updateUI();
+                    }
+                }
+            }
+        });
+
+        cboConsultaHorarios.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    cboConsultaHorariosIdOculto.setSelectedIndex(cboConsultaHorarios.getSelectedIndex());
+                    System.out.println(cboConsultaHorariosIdOculto.getSelectedItem());
+                    scrollPaneHorario.setVisible(false);
+                    cboConsultaHorarioDia.setVisible(false);
+                    lblConsultaHorarioSelecioneDia.setVisible(false);
+                    cboConsultaHorarioDia.setSelectedIndex(0);
+                    if (!(cboConsultaHorarios.getSelectedItem().equals("Selecione"))) {
+                        cboConsultaHorarioDia.setVisible(true);
+                        lblConsultaHorarioSelecioneDia.setVisible(true);
+                    }
+                }
+            }
+        });
+
+        cboConsultaHorarioDia.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent evt) {
+                if (evt.getStateChange() == ItemEvent.SELECTED) {
+                    cboConsultaHorariosIdOculto.setSelectedIndex(cboConsultaHorarios.getSelectedIndex());
+                    if (!(cboConsultaHorarioDia.getSelectedItem().equals("Selecione"))) {
+                        tbmHorario.getDataVector().removeAllElements();
+                        tbmHorario.fireTableDataChanged();
+                        tbmHorario.setColumnCount(0);
+                        int id = Integer.parseInt(String.valueOf(cboConsultaHorariosIdOculto.getSelectedItem()));
+                        ArrayList<ArrayList<String>> rota = daoHorario.consultarTodosHorarios(id, cboConsultaHorarioDia.getSelectedIndex());
+                        if (!rota.isEmpty()) {
+                            scrollPaneHorario.setVisible(true);
+                            int qtdeCidades = daoHorario.calculaTotalCidadesItinerario(id);
+                            for (int i = 0; i < qtdeCidades; i++) {
+                                tbmHorario.addColumn(rota.get(i).get(0));
+                            }
+                            for (int i = 0; i < qtdeCidades; i++) {
+                                if (qtdeCidades <= 5) {
+                                    tableHorario.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+                                } else {
+                                    TableColumn col = tableHorario.getColumnModel().getColumn(i);
+                                    int tamanho = rota.get(i).get(0).length() * 10;
+                                    col.setPreferredWidth(tamanho);
+                                }
+                            }
+                            Object add[] = new Object[qtdeCidades];
+                            int cont = 0;
+                            for (int i = 0; i < rota.size(); i++) {
+                                if (cont != qtdeCidades) {
+                                    add[cont] = rota.get(i).get(3);
+                                    System.out.println(add[cont]);
+                                    cont++;
+                                } else {
+                                    tbmHorario.addRow(add);
+                                    cont = 0;
+                                    i = i - 1;
+                                }
+                            }
+                            tbmHorario.addRow(add);
+                            tableHorario.setVisible(true);
+                        } else {
+                            scrollPaneHorario.setVisible(false);
+                            JOptionPane.showMessageDialog(null, "Nao existe horario cadastrado para este dia.");
+                            cboConsultaHorarioDia.requestFocus();
+                        }
+                    } else {
+                        scrollPaneHorario.setVisible(false);
+                    }
+                }
             }
         });
 
@@ -530,11 +866,11 @@ public class PanelConsulta {
         carregaDadosConsultaRota(daoRota.consultarTodasRotas());
     }
 
-    private void carregaDadosConsultaEstado(ArrayList<Estado> estados) {
+    public void carregaDadosConsultaEstado(ArrayList<Estado> estados) {
         acumuladorConsultaEstado = 0;
         listConsultaEstado.removeAll();
         for (int i = 0; i < estados.size(); i++) {
-            JLabel label = new JLabel(estados.get(i).getUF());
+            JLabel label = new JLabel(estados.get(i).getEstadoUf());
             label.setPreferredSize(new Dimension(150, 20));
             listConsultaEstado.add(label);
             acumuladorConsultaEstado++;
@@ -542,11 +878,11 @@ public class PanelConsulta {
         listConsultaEstado.setPreferredSize(new Dimension(150, acumuladorConsultaEstado * 25));
     }
 
-    private void carregaDadosConsultaCidade(ArrayList<Cidade> cidades) {
+    public void carregaDadosConsultaCidade(ArrayList<Cidade> cidades) {
         acumuladorConsultaCidade = 0;
         listConsultaCidade.removeAll();
         for (int i = 0; i < cidades.size(); i++) {
-            JLabel label = new JLabel(cidades.get(i).getNome());
+            JLabel label = new JLabel(cidades.get(i).getCidadeNome());
             label.setPreferredSize(new Dimension(250, 20));
             listConsultaCidade.add(label);
             acumuladorConsultaCidade++;
@@ -554,7 +890,7 @@ public class PanelConsulta {
         listConsultaCidade.setPreferredSize(new Dimension(150, acumuladorConsultaCidade * 25));
     }
 
-    private void carregaDadosConsultaRota(ArrayList<Rota> rotas) {
+    public void carregaDadosConsultaRota(ArrayList<Rota> rotas) {
         acumuladorConsultaRota = 0;
         listConsultaRota.removeAll();
         for (int i = 0; i < rotas.size(); i++) {
@@ -566,18 +902,18 @@ public class PanelConsulta {
         listConsultaRota.setPreferredSize(new Dimension(150, acumuladorConsultaRota * 25));
     }
 
-    private void carregaDadosConsultaPassagem(ArrayList<Cidade> cidade){
+    public void carregaDadosConsultaPassagem(ArrayList<Cidade> cidade) {
         cboConsultaPassagemOrigem.removeAllItems();
         cboConsultaPassagemOrigem.addItem("Selecione");
         arrayCidadesOrigemId.clear();
         arrayCidadesOrigemId.add(0);
         for (int i = 0; i < cidade.size(); i++) {
-            cboConsultaPassagemOrigem.addItem(cidade.get(i).getNome());
-            arrayCidadesOrigemId.add(cidade.get(i).getId());
+            cboConsultaPassagemOrigem.addItem(cidade.get(i).getCidadeNome());
+            arrayCidadesOrigemId.add(cidade.get(i).getCidadeId());
         }
     }
-    
-    private void carregaDadosConsultaItinerario(ArrayList<Itinerario> itinerarios) {
+
+    public void carregaDadosConsultaItinerario(ArrayList<Itinerario> itinerarios) {
         acumuladorConsultaItinerario = 0;
         listConsultaItinerario.removeAll();
         for (int i = 0; i < itinerarios.size(); i++) {
@@ -596,442 +932,33 @@ public class PanelConsulta {
         cboConsultaOnibusIdOculto.removeAllItems();
         cboConsultaOnibusIdOculto.addItem("Selecione");
         for (int i = 0; i < aux.size(); i++) {
-            cboConsultaOnibusPlaca.addItem(aux.get(i).getPlaca());
-            cboConsultaOnibusIdOculto.addItem(aux.get(i).getId());
+            cboConsultaOnibusPlaca.addItem(aux.get(i).getOnibusPlaca());
+            cboConsultaOnibusIdOculto.addItem(aux.get(i).getOnibusId());
         }
     }
 
-    private void carregaCombosMotorista() {
+    public void carregaCombosMotorista() {
         ArrayList<Motorista> aux = daoMotorista.consultarTodosMotoristas();
         cboConsultaMotoristaNome.removeAllItems();
         cboConsultaMotoristaNome.addItem("Selecione");
         cboConsultaMotoristaIdOculto.removeAllItems();
         cboConsultaMotoristaIdOculto.addItem("Selecione");
         for (int i = 0; i < aux.size(); i++) {
-            cboConsultaMotoristaNome.addItem(aux.get(i).getNome());
-            cboConsultaMotoristaIdOculto.addItem(aux.get(i).getId());
+            cboConsultaMotoristaNome.addItem(aux.get(i).getMotoristaNome());
+            cboConsultaMotoristaIdOculto.addItem(aux.get(i).getMotoristaId());
         }
     }
 
-    private void carregaCombosHorario() {
+    public void carregaCombosHorario() {
         ArrayList<Itinerario> itinerariosRotaItinerario = daoRotaItinerario.consultarItinerariosCadastrados();
         cboConsultaHorarios.removeAllItems();
         cboConsultaHorarios.addItem("Selecione");
         for (int i = 0; i < itinerariosRotaItinerario.size(); i++) {
             cboConsultaHorarios.addItem(itinerariosRotaItinerario.get(i).getItinerario_cidadeOrigem() + " - " + itinerariosRotaItinerario.get(i).getItinerario_cidadeDestino());
-            cboConsultaHorariosIdOculto.addItem(itinerariosRotaItinerario.get(i).getId());
+            cboConsultaHorariosIdOculto.addItem(itinerariosRotaItinerario.get(i).getItinerarioId());
         }
     }
 
-    private void rBtnOnibusClick(ActionEvent evt) {
-        pnlConsultaOnibus.setVisible(true);
-        pnlConsultaMotorista.setVisible(false);
-        pnlConsultaEstado.setVisible(false);
-        pnlConsultaCidade.setVisible(false);
-        pnlConsultaRota.setVisible(false);
-        pnlConsultaItinerario.setVisible(false);
-        pnlConsultaPassagem.setVisible(false);
-        pnlConsultaHorario.setVisible(false);
-        carregaCombosOnibus();
-        lblConsultaOnibusQtdeAssentosR.setText("");
-        lblConsultaOnibusAnoR.setText("");
-        lblConsultaOnibusMarcaR.setText("");
-        lblConsultaOnibusModeloR.setText("");
-        cboConsultaOnibusPlaca.requestFocus();
-    }
-
-    private void rBtnMotoristaClick(ActionEvent evt) {
-        pnlConsultaOnibus.setVisible(false);
-        pnlConsultaMotorista.setVisible(true);
-        pnlConsultaEstado.setVisible(false);
-        pnlConsultaCidade.setVisible(false);
-        pnlConsultaRota.setVisible(false);
-        pnlConsultaItinerario.setVisible(false);
-        pnlConsultaPassagem.setVisible(false);
-        pnlConsultaHorario.setVisible(false);
-        carregaCombosMotorista();
-        lblConsultaMotoristaCpfR.setText("");
-        lblConsultaMotoristaEmailR.setText("");
-        lblConsultaMotoristaEndR.setText("");
-        lblConsultaMotoristaRgR.setText("");
-        lblConsultaMotoristaTelR.setText("");
-        cboConsultaMotoristaNome.requestFocus();
-    }
-
-    private void rBtnEstadoClick(ActionEvent evt) {
-        pnlConsultaOnibus.setVisible(false);
-        pnlConsultaMotorista.setVisible(false);
-        pnlConsultaEstado.setVisible(true);
-        pnlConsultaCidade.setVisible(false);
-        pnlConsultaRota.setVisible(false);
-        pnlConsultaItinerario.setVisible(false);
-        pnlConsultaPassagem.setVisible(false);
-        pnlConsultaHorario.setVisible(false);
-        carregaDadosConsultaEstado(daoEstado.ConsultarTodosEstados());
-    }
-
-    private void rBtnCidadeClick(ActionEvent evt) {
-        pnlConsultaOnibus.setVisible(false);
-        pnlConsultaMotorista.setVisible(false);
-        pnlConsultaEstado.setVisible(false);
-        pnlConsultaCidade.setVisible(true);
-        pnlConsultaRota.setVisible(false);
-        pnlConsultaItinerario.setVisible(false);
-        pnlConsultaPassagem.setVisible(false);
-        pnlConsultaHorario.setVisible(false);
-        carregaDadosConsultaCidade(daoCidade.consultarTodasCidades());
-    }
-
-    private void rBtnRotaClick(ActionEvent evt) {
-        pnlConsultaOnibus.setVisible(false);
-        pnlConsultaMotorista.setVisible(false);
-        pnlConsultaEstado.setVisible(false);
-        pnlConsultaCidade.setVisible(false);
-        pnlConsultaRota.setVisible(true);
-        pnlConsultaItinerario.setVisible(false);
-        pnlConsultaPassagem.setVisible(false);
-        pnlConsultaHorario.setVisible(false);
-        carregaDadosConsultaRota(daoRota.consultarTodasRotas());
-    }
-
-    private void rBtnItinerarioClick(ActionEvent evt) {
-        pnlConsultaOnibus.setVisible(false);
-        pnlConsultaMotorista.setVisible(false);
-        pnlConsultaEstado.setVisible(false);
-        pnlConsultaCidade.setVisible(false);
-        pnlConsultaRota.setVisible(false);
-        pnlConsultaItinerario.setVisible(true);
-        pnlConsultaPassagem.setVisible(false);
-        pnlConsultaHorario.setVisible(false);
-        carregaDadosConsultaItinerario(daoItinerario.consultarTodosItinerarios2());
-    }
-
-    private void rBtnHorarioClick(ActionEvent evt) {
-        pnlConsultaOnibus.setVisible(false);
-        pnlConsultaMotorista.setVisible(false);
-        pnlConsultaEstado.setVisible(false);
-        pnlConsultaCidade.setVisible(false);
-        pnlConsultaRota.setVisible(false);
-        pnlConsultaItinerario.setVisible(false);
-        pnlConsultaPassagem.setVisible(false);
-        pnlConsultaHorario.setVisible(true);
-        cboConsultaHorarios.requestFocus();
-        carregaCombosHorario();
-    }
-
-    private void rBtnPassagemClick(ActionEvent evt) {
-        pnlConsultaOnibus.setVisible(false);
-        pnlConsultaMotorista.setVisible(false);
-        pnlConsultaEstado.setVisible(false);
-        pnlConsultaCidade.setVisible(false);
-        pnlConsultaRota.setVisible(false);
-        pnlConsultaItinerario.setVisible(false);
-        pnlConsultaPassagem.setVisible(true);
-        pnlConsultaHorario.setVisible(false);
-        cboConsultaPassagemDataAno.setEnabled(false);
-        cboConsultaPassagemDataMes.setEnabled(false);
-        cboConsultaPassagemDataDia.setEnabled(false);
-        cboConsultaPassagemDestino.setEnabled(false);
-        cboConsultaPassagemHorario.setEnabled(false);
-        carregaDadosConsultaPassagem(daoPassagem.carregaCidadesOrigem());
-        cboConsultaPassagemOrigem.requestFocus();
-    }
-
-    private void cboConsultaOnibusIdItemStateChanged(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboConsultaOnibusPlaca.getSelectedItem().equals("Selecione"))) {
-                cboConsultaOnibusIdOculto.setSelectedIndex(cboConsultaOnibusPlaca.getSelectedIndex());
-                onibus.setId(Integer.parseInt(String.valueOf(cboConsultaOnibusIdOculto.getSelectedItem())));
-                Onibus aux = daoOnibus.consultaOnibus(onibus);
-                lblConsultaOnibusModeloR.setText(aux.getModelo());
-                lblConsultaOnibusMarcaR.setText(aux.getMarca());
-                lblConsultaOnibusAnoR.setText(String.valueOf(aux.getAno()));
-                lblConsultaOnibusQtdeAssentosR.setText(String.valueOf(aux.getQtdeAssentos()));
-            } else {
-                lblConsultaOnibusModeloR.setText("");
-                lblConsultaOnibusMarcaR.setText("");
-                lblConsultaOnibusAnoR.setText("");
-                lblConsultaOnibusQtdeAssentosR.setText("");
-            }
-        }
-    }
-
-    private void cboConsultaMotoristaNomeItemStateChanged(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboConsultaMotoristaNome.getSelectedItem().equals("Selecione"))) {
-                cboConsultaMotoristaIdOculto.setSelectedIndex(cboConsultaMotoristaNome.getSelectedIndex());
-                motorista.setId(Integer.parseInt(String.valueOf(cboConsultaMotoristaIdOculto.getSelectedItem())));
-                Motorista aux = daoMotorista.consultarMotorista(motorista);
-                lblConsultaMotoristaRgR.setText(aux.getRg());
-                lblConsultaMotoristaCpfR.setText(aux.getCpf());
-                lblConsultaMotoristaTelR.setText(aux.getTelefone());
-                lblConsultaMotoristaEndR.setText(aux.getEndereco());
-                lblConsultaMotoristaEmailR.setText(aux.getEmail());
-            } else {
-                lblConsultaMotoristaRgR.setText("");
-                lblConsultaMotoristaCpfR.setText("");
-                lblConsultaMotoristaTelR.setText("");
-                lblConsultaMotoristaEndR.setText("");
-                lblConsultaMotoristaEmailR.setText("");
-            }
-        }
-    }
-
-    private void cboConsultaHorariosClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            cboConsultaHorariosIdOculto.setSelectedIndex(cboConsultaHorarios.getSelectedIndex());
-            System.out.println(cboConsultaHorariosIdOculto.getSelectedItem());
-            scrollPaneHorario.setVisible(false);
-            cboConsultaHorarioDia.setVisible(false);
-            lblConsultaHorarioSelecioneDia.setVisible(false);
-            cboConsultaHorarioDia.setSelectedIndex(0);
-            if (!(cboConsultaHorarios.getSelectedItem().equals("Selecione"))) {
-                cboConsultaHorarioDia.setVisible(true);
-                lblConsultaHorarioSelecioneDia.setVisible(true);
-            }
-        }
-    }
-
-    private void cboConsultaHorarioDiaClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            cboConsultaHorariosIdOculto.setSelectedIndex(cboConsultaHorarios.getSelectedIndex());
-            if (!(cboConsultaHorarioDia.getSelectedItem().equals("Selecione"))) {
-                tbmHorario.getDataVector().removeAllElements();
-                tbmHorario.fireTableDataChanged();
-                tbmHorario.setColumnCount(0);
-                int id = Integer.parseInt(String.valueOf(cboConsultaHorariosIdOculto.getSelectedItem()));
-                ArrayList<ArrayList<String>> rota = daoHorario.consultarTodosHorarios(id, cboConsultaHorarioDia.getSelectedIndex());
-                if(!rota.isEmpty()){
-                    scrollPaneHorario.setVisible(true);                
-                    int qtdeCidades = daoHorario.calculaTotalCidadesItinerario(id);
-                    for (int i = 0; i < qtdeCidades; i++) {
-                        tbmHorario.addColumn(rota.get(i).get(0));                        
-                    }
-                    for (int i = 0; i < qtdeCidades; i++) {
-                        if(qtdeCidades<=5){
-                            tableHorario.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-                        } else {
-                            TableColumn col = tableHorario.getColumnModel().getColumn(i);
-                            int tamanho = rota.get(i).get(0).length()*10;
-                            col.setPreferredWidth(tamanho);
-                        }
-                    }
-                    Object add[] = new Object[qtdeCidades];
-                    int cont = 0;
-                    for (int i = 0; i < rota.size(); i++) {
-                        if (cont != qtdeCidades) {
-                            add[cont] = rota.get(i).get(3);
-                            System.out.println(add[cont]);
-                            cont++;
-                        } else {
-                            tbmHorario.addRow(add);
-                            cont = 0;
-                            i = i - 1;
-                        }
-                    }
-                    tbmHorario.addRow(add);
-                    tableHorario.setVisible(true);
-                } else {
-                    scrollPaneHorario.setVisible(false);                
-                    JOptionPane.showMessageDialog(null, "Nao existe horario cadastrado para este dia.");
-                    cboConsultaHorarioDia.requestFocus();
-                }
-            } else {
-                scrollPaneHorario.setVisible(false);
-            }
-        }
-    }
-
-    private void cboConsultaPassagemOrigemClick(ItemEvent evt) {
-        cboConsultaPassagemDataAno.setEnabled(false);
-        cboConsultaPassagemDataAno.setSelectedItem("-");
-        cboConsultaPassagemDataDia.setEnabled(false);
-        cboConsultaPassagemDataDia.setSelectedItem("-");
-        cboConsultaPassagemDataMes.setEnabled(false);
-        cboConsultaPassagemDataMes.setSelectedItem("-");
-        cboConsultaPassagemDestino.setEnabled(false);
-        cboConsultaPassagemDestino.setSelectedItem("Selecione");
-        cboConsultaPassagemHorario.setEnabled(false);
-        cboConsultaPassagemHorario.setSelectedItem("Selecione");
-        listConsultaPassagem.removeAll();        
-        listConsultaPassagem.updateUI();
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboConsultaPassagemOrigem.getSelectedItem().equals("Selecione"))) {
-                cboConsultaPassagemDestino.setEnabled(true);
-                Cidade cidade = new Cidade();
-                cidade.setId(arrayCidadesOrigemId.get(cboConsultaPassagemOrigem.getSelectedIndex()));
-                cidade.setNome(String.valueOf(cboConsultaPassagemOrigem.getSelectedItem()));
-                ArrayList<Cidade> cidades = daoPassagem.carregaCidadesDestino(cidade);
-                cboConsultaPassagemDestino.removeAllItems();
-                cboConsultaPassagemDestino.addItem("Selecione");
-                arrayRotaItinerarioIdCidadeDestino.clear();
-                arrayCidadesDestinoId.clear();
-                arrayRotaItinerarioIdCidadeDestino.add(0);
-                for (int i = 0; i < cidades.size(); i++) {
-                    cboConsultaPassagemDestino.addItem(cidades.get(i).getNome());
-                    arrayCidadesDestinoId.add(cidades.get(i).getId());
-                    arrayRotaItinerarioIdCidadeDestino.add(Integer.parseInt(cidades.get(i).getEstado()));
-                }
-                cboConsultaPassagemDestino.requestFocus();
-            } else {
-                listConsultaPassagem.removeAll();
-                listConsultaPassagem.updateUI();
-            }
-        }
-    }
-
-    private void cboConsultaPassagemDestinoClick(ItemEvent evt) {
-        cboConsultaPassagemDataAno.setEnabled(false);
-        cboConsultaPassagemDataAno.setSelectedItem("-");
-        cboConsultaPassagemDataDia.setEnabled(false);
-        cboConsultaPassagemDataDia.setSelectedItem("-");
-        cboConsultaPassagemDataMes.setEnabled(false);
-        cboConsultaPassagemDataMes.setSelectedItem("-");
-        cboConsultaPassagemHorario.setEnabled(false);
-        cboConsultaPassagemHorario.setSelectedItem("Selecione");
-        listConsultaPassagem.removeAll();        
-        listConsultaPassagem.updateUI();
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboConsultaPassagemDestino.getSelectedItem().equals("Selecione"))) {
-                cboConsultaPassagemDataAno.setEnabled(true);
-                cboConsultaPassagemDataDia.setEnabled(true);
-                cboConsultaPassagemDataMes.setEnabled(true);
-                cboConsultaPassagemDataDia.requestFocus();
-            }
-        } else {
-            listConsultaPassagem.removeAll();        
-            listConsultaPassagem.updateUI();
-        }
-    }
-
-    private void cboConsultaPassagemDataAnoClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboConsultaPassagemDataAno.getSelectedItem().equals("-"))) {
-                if (!(cboConsultaPassagemDataDia.getSelectedItem().equals("-")) && !(cboConsultaPassagemDataMes.getSelectedItem().equals("-"))) {
-                    ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboConsultaPassagemDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboConsultaPassagemDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboConsultaPassagemDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboConsultaPassagemDataAno.getSelectedItem())));
-                    cboConsultaPassagemHorario.setEnabled(true);
-                    cboConsultaPassagemHorario.removeAllItems();
-                    cboConsultaPassagemHorario.addItem("Selecione");
-                    arrayHorariosChegada.clear();
-                    arrayHorariosChegada.add("");
-                    arrayPrecos.clear();
-                    arrayPrecos.add(0.0);
-                    arrayHorariosId.clear();
-                    arrayHorariosId.add(0);
-                    for (int i = 0; i < horarios.size(); i++) {
-                        cboConsultaPassagemHorario.addItem(horarios.get(i).getHorarioSaida());
-                        arrayHorariosChegada.add(horarios.get(i).getHorarioChegada());
-                        arrayPrecos.add(horarios.get(i).getHorarioPreco());
-                        arrayHorariosId.add(horarios.get(i).getHorarioId());
-                    }
-                    cboConsultaPassagemHorario.requestFocus();
-                }
-            } else {
-                listConsultaPassagem.removeAll();        
-                listConsultaPassagem.updateUI();
-            }
-        }
-    }
-
-    private void cboConsultaPassagemDataMesClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboConsultaPassagemDataMes.getSelectedItem().equals("-"))) {
-                if (!(cboConsultaPassagemDataDia.getSelectedItem().equals("-")) && !(cboConsultaPassagemDataAno.getSelectedItem().equals("-"))) {
-                    ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboConsultaPassagemDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboConsultaPassagemDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboConsultaPassagemDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboConsultaPassagemDataAno.getSelectedItem())));
-                    cboConsultaPassagemHorario.setEnabled(true);
-                    cboConsultaPassagemHorario.removeAllItems();
-                    cboConsultaPassagemHorario.addItem("Selecione");
-                    arrayHorariosChegada.clear();
-                    arrayHorariosChegada.add("");
-                    arrayPrecos.clear();
-                    arrayPrecos.add(0.0);
-                    arrayHorariosId.clear();
-                    arrayHorariosId.add(0);
-                    for (int i = 0; i < horarios.size(); i++) {
-                        cboConsultaPassagemHorario.addItem(horarios.get(i).getHorarioSaida());
-                        arrayHorariosChegada.add(horarios.get(i).getHorarioChegada());
-                        arrayPrecos.add(horarios.get(i).getHorarioPreco());
-                        arrayHorariosId.add(horarios.get(i).getHorarioId());
-                    }
-                }
-                cboConsultaPassagemDataAno.requestFocus();
-            } else {
-                listConsultaPassagem.removeAll();        
-                listConsultaPassagem.updateUI();
-            }
-        }
-    }
-
-    private void cboConsultaPassagemDataDiaClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboConsultaPassagemDataDia.getSelectedItem().equals("-"))) {
-                if (!(cboConsultaPassagemDataAno.getSelectedItem().equals("-")) && !(cboConsultaPassagemDataMes.getSelectedItem().equals("-"))) {
-                    ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboConsultaPassagemDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboConsultaPassagemDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboConsultaPassagemDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboConsultaPassagemDataAno.getSelectedItem())));
-                    cboConsultaPassagemHorario.setEnabled(true);
-                    cboConsultaPassagemHorario.removeAllItems();
-                    cboConsultaPassagemHorario.addItem("Selecione");
-                    arrayHorariosChegada.clear();
-                    arrayHorariosChegada.add("");
-                    arrayPrecos.clear();
-                    arrayPrecos.add(0.0);
-                    arrayHorariosId.clear();
-                    arrayHorariosId.add(0);
-                    for (int i = 0; i < horarios.size(); i++) {
-                        cboConsultaPassagemHorario.addItem(horarios.get(i).getHorarioSaida());
-                        arrayHorariosChegada.add(horarios.get(i).getHorarioChegada());
-                        arrayPrecos.add(horarios.get(i).getHorarioPreco());
-                        arrayHorariosId.add(horarios.get(i).getHorarioId());
-                    }
-                }
-                cboConsultaPassagemDataMes.requestFocus();
-            } else {
-                listConsultaPassagem.removeAll();        
-                listConsultaPassagem.updateUI();
-            }
-        }
-    }
-
-    private void cboConsultaPassagemHorarioClick(ItemEvent evt) {
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            if (!(cboConsultaPassagemHorario.getSelectedItem().equals("Selecione"))) {
-                arrayPoltronasOcupadas.clear();
-                listConsultaPassagem.removeAll();
-                listConsultaPassagem.updateUI();
-                arrayPoltronasOcupadas = daoPassagem.consultaPoltronasCompradas(arrayHorariosId.get(cboConsultaPassagemHorario.getSelectedIndex()), (cboConsultaPassagemDataDia.getSelectedItem() + "/" + cboConsultaPassagemDataMes.getSelectedItem() + "/" + cboConsultaPassagemDataAno.getSelectedItem()),arrayCidadesDestinoId.get(cboConsultaPassagemDestino.getSelectedIndex()-1));
-                if(arrayPoltronasOcupadas.isEmpty()){
-                    JLabel lblPassVendida = new JLabel("Não há passagens compradas nesta");
-                    lblPassVendida.setPreferredSize(new Dimension(250,30));
-                    listConsultaPassagem.add(lblPassVendida);
-                    JLabel lblPassVendida2 = new JLabel("viagem.");
-                    lblPassVendida.setPreferredSize(new Dimension(250,30));
-                    listConsultaPassagem.add(lblPassVendida2);
-                    listConsultaPassagem.updateUI();
-                } else {
-                    JLabel lblPassVendida = new JLabel("Passagens Vendidas:");
-                    lblPassVendida.setPreferredSize(new Dimension(250,30));
-                    listConsultaPassagem.add(lblPassVendida);
-                    Collections.sort(arrayPoltronasOcupadas);
-                    /*for(int i=0;i < arrayPoltronasOcupadas.size()-1;i++){
-                        if(arrayPoltronasOcupadas.get(i) == arrayPoltronasOcupadas.get(i+1)){
-                            arrayPoltronasOcupadas.remove(i);
-                            i = i--;
-                        }
-                    } */ 
-
-                    for(int i=0;i<arrayPoltronasOcupadas.size();i++){
-                        System.out.println("poltrona ocupada22: " + arrayPoltronasOcupadas.get(i));
-                        listConsultaPassagem.add(new JLabel(""+arrayPoltronasOcupadas.get(i)));
-                    }
-                    listConsultaPassagem.updateUI();
-                }
-            } else {
-                listConsultaPassagem.removeAll();
-                listConsultaPassagem.updateUI();
-            }            
-        }
-    }
-
-    
     //------- Geral
     private Font fontePadrao;
     private DaoOnibus daoOnibus;

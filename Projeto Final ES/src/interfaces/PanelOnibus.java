@@ -67,7 +67,9 @@ public class PanelOnibus {
         txtOnibusCadastroMarca = new JTextField("", 15);
         txtOnibusCadastroAno = new JFormattedTextField(mascaraAno);
         txtOnibusCadastroQtdeAssentos = new JFormattedTextField(mascaraQtdeAssentos);
-
+        txtOnibusCadastroQtdeAssentos.setEnabled(false);
+        txtOnibusCadastroQtdeAssentos.setValue("48");
+        
         txtOnibusCadastroAno.setPreferredSize(new Dimension(177, 30));
         txtOnibusCadastroQtdeAssentos.setPreferredSize(new Dimension(177, 30));
         txtOnibusCadastroPlaca.setPreferredSize(new Dimension(177, 30));
@@ -109,7 +111,9 @@ public class PanelOnibus {
         txtOnibusAlteracaoMarca = new JTextField("", 14);
         txtOnibusAlteracaoAno = new JFormattedTextField(mascaraAno);
         txtOnibusAlteracaoQtdeAssentos = new JFormattedTextField(mascaraQtdeAssentos);
-
+        txtOnibusAlteracaoQtdeAssentos.setEnabled(false);
+        txtOnibusAlteracaoQtdeAssentos.setValue("48");
+        
         txtOnibusAlteracaoAno.setPreferredSize(new Dimension(177, 30));
         txtOnibusAlteracaoQtdeAssentos.setPreferredSize(new Dimension(166, 30));
         txtOnibusAlteracaoPlaca.setPreferredSize(new Dimension(166, 30));
@@ -257,8 +261,8 @@ public class PanelOnibus {
                 cboOnibusAlteracaoIdOculto.removeAllItems();
                 cboOnibusAlteracaoIdOculto.addItem("Selecione");
                 for (int i = 0; i < aux2.size(); i++) {
-                    cboOnibusAlteracaoIdOculto.addItem(aux2.get(i).getId());
-                    cboOnibusAlteracaoPlaca.addItem(aux2.get(i).getPlaca());
+                    cboOnibusAlteracaoIdOculto.addItem(aux2.get(i).getOnibusId());
+                    cboOnibusAlteracaoPlaca.addItem(aux2.get(i).getOnibusPlaca());
                 }
                 break;
             case 3: //remocao
@@ -269,8 +273,8 @@ public class PanelOnibus {
                 cboOnibusRemocaoIdOculto.addItem("Selecione");
 
                 for (int i = 0; i < aux3.size(); i++) {
-                    cboOnibusRemocaoPlaca.addItem(aux3.get(i).getPlaca());
-                    cboOnibusRemocaoIdOculto.addItem(aux3.get(i).getId());
+                    cboOnibusRemocaoPlaca.addItem(aux3.get(i).getOnibusPlaca());
+                    cboOnibusRemocaoIdOculto.addItem(aux3.get(i).getOnibusId());
                 }
                 break;
         }
@@ -299,11 +303,11 @@ public class PanelOnibus {
                 auxAno = Integer.parseInt(txtOnibusCadastroAno.getText());
                 try {
                     auxQtdeAssentos = Integer.parseInt(txtOnibusCadastroQtdeAssentos.getText());
-                    onibus.setPlaca(txtOnibusCadastroPlaca.getText());
-                    onibus.setModelo(txtOnibusCadastroModelo.getText());
-                    onibus.setMarca(txtOnibusCadastroMarca.getText());
-                    onibus.setAno(Integer.parseInt(txtOnibusCadastroAno.getText()));
-                    onibus.setQtdeAssentos(Integer.parseInt(txtOnibusCadastroQtdeAssentos.getText()));
+                    onibus.setOnibusPlaca(txtOnibusCadastroPlaca.getText());
+                    onibus.setOnibusModelo(txtOnibusCadastroModelo.getText());
+                    onibus.setOnibusMarca(txtOnibusCadastroMarca.getText());
+                    onibus.setOnibusAno(Integer.parseInt(txtOnibusCadastroAno.getText()));
+                    onibus.setOnibusQtdeAssentos(Integer.parseInt(txtOnibusCadastroQtdeAssentos.getText()));
                     boolean verifica = daoOnibus.cadastrarOnibus(onibus);
                     if (verifica == true) {
                         JOptionPane.showMessageDialog(null, "Onibus cadastrado com sucesso!");
@@ -314,7 +318,7 @@ public class PanelOnibus {
                     txtOnibusCadastroModelo.setText("");
                     txtOnibusCadastroMarca.setText("");
                     txtOnibusCadastroAno.setValue("");
-                    txtOnibusCadastroQtdeAssentos.setValue("");
+                    txtOnibusCadastroQtdeAssentos.setValue("48");
                     carregaCombosOnibus(2);
                     carregaCombosOnibus(3);
                     txtOnibusCadastroPlaca.requestFocus();
@@ -337,7 +341,7 @@ public class PanelOnibus {
         txtOnibusCadastroPlaca.setValue("");
         txtOnibusCadastroMarca.setText("");
         txtOnibusCadastroModelo.setText("");
-        txtOnibusCadastroQtdeAssentos.setValue("");
+        txtOnibusCadastroQtdeAssentos.setValue("48");
         txtOnibusCadastroPlaca.requestFocus();
 
     }
@@ -368,12 +372,12 @@ public class PanelOnibus {
                 auxAno = Integer.parseInt(txtOnibusAlteracaoAno.getText());
                 try {
                     auxQtdeAssentos = Integer.parseInt(txtOnibusAlteracaoQtdeAssentos.getText());
-                    onibus.setId(Integer.parseInt(String.valueOf(cboOnibusAlteracaoIdOculto.getSelectedItem())));
-                    onibus.setPlaca(txtOnibusAlteracaoPlaca.getText());
-                    onibus.setModelo(txtOnibusAlteracaoModelo.getText());
-                    onibus.setMarca(txtOnibusAlteracaoMarca.getText());
-                    onibus.setAno(Integer.parseInt(txtOnibusAlteracaoAno.getText()));
-                    onibus.setQtdeAssentos(Integer.parseInt(txtOnibusAlteracaoQtdeAssentos.getText()));
+                    onibus.setOnibusId(Integer.parseInt(String.valueOf(cboOnibusAlteracaoIdOculto.getSelectedItem())));
+                    onibus.setOnibusPlaca(txtOnibusAlteracaoPlaca.getText());
+                    onibus.setOnibusModelo(txtOnibusAlteracaoModelo.getText());
+                    onibus.setOnibusMarca(txtOnibusAlteracaoMarca.getText());
+                    onibus.setOnibusAno(Integer.parseInt(txtOnibusAlteracaoAno.getText()));
+                    onibus.setOnibusQtdeAssentos(Integer.parseInt(txtOnibusAlteracaoQtdeAssentos.getText()));
                     boolean verifica = daoOnibus.alterarOnibus(onibus);
                     if (verifica == true) {
                         JOptionPane.showMessageDialog(null, "Onibus alterado com sucesso!");
@@ -381,7 +385,7 @@ public class PanelOnibus {
                         txtOnibusAlteracaoModelo.setText("");
                         txtOnibusAlteracaoMarca.setText("");
                         txtOnibusAlteracaoAno.setValue("");
-                        txtOnibusAlteracaoQtdeAssentos.setValue("");
+                        txtOnibusAlteracaoQtdeAssentos.setValue("48");
                         cboOnibusAlteracaoPlaca.setSelectedItem("Selecione");
                         cboOnibusAlteracaoIdOculto.setSelectedItem("Selecione");
                         carregaCombosOnibus(2);
@@ -415,7 +419,7 @@ public class PanelOnibus {
         } else {
             confirma = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o registro?");
             if (confirma == JOptionPane.YES_OPTION) {
-                onibus.setId(Integer.parseInt(String.valueOf(cboOnibusRemocaoIdOculto.getSelectedItem())));
+                onibus.setOnibusId(Integer.parseInt(String.valueOf(cboOnibusRemocaoIdOculto.getSelectedItem())));
                 boolean verifica = daoOnibus.removerOnibus(onibus);
                 if (verifica) JOptionPane.showMessageDialog(null, "Onibus removido com sucesso!");
                 else JOptionPane.showMessageDialog(null, "Nao foi possivel remover o onibus. Ele esta cadastrado em algum itinerario.");
@@ -438,19 +442,19 @@ public class PanelOnibus {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboOnibusAlteracaoPlaca.getSelectedItem().equals("Selecione"))) {
                 cboOnibusAlteracaoIdOculto.setSelectedIndex(cboOnibusAlteracaoPlaca.getSelectedIndex());
-                onibus.setId(Integer.parseInt(String.valueOf(cboOnibusAlteracaoIdOculto.getSelectedItem())));
+                onibus.setOnibusId(Integer.parseInt(String.valueOf(cboOnibusAlteracaoIdOculto.getSelectedItem())));
                 Onibus aux = daoOnibus.consultaOnibus(onibus);
-                txtOnibusAlteracaoPlaca.setText(aux.getPlaca());
-                txtOnibusAlteracaoModelo.setText(aux.getModelo());
-                txtOnibusAlteracaoMarca.setText(aux.getMarca());
-                txtOnibusAlteracaoAno.setText(String.valueOf(aux.getAno()));
-                txtOnibusAlteracaoQtdeAssentos.setText(String.valueOf(aux.getQtdeAssentos()));
+                txtOnibusAlteracaoPlaca.setText(aux.getOnibusPlaca());
+                txtOnibusAlteracaoModelo.setText(aux.getOnibusModelo());
+                txtOnibusAlteracaoMarca.setText(aux.getOnibusMarca());
+                txtOnibusAlteracaoAno.setText(String.valueOf(aux.getOnibusAno()));
+                txtOnibusAlteracaoQtdeAssentos.setText(String.valueOf(aux.getOnibusQtdeAssentos()));
             } else {
                 txtOnibusAlteracaoPlaca.setValue("");
                 txtOnibusAlteracaoModelo.setText("");
                 txtOnibusAlteracaoMarca.setText("");
                 txtOnibusAlteracaoAno.setValue("");
-                txtOnibusAlteracaoQtdeAssentos.setValue("");
+                txtOnibusAlteracaoQtdeAssentos.setValue("48");
                 cboOnibusAlteracaoIdOculto.setSelectedItem("Selecione");
             }
         }
@@ -460,12 +464,12 @@ public class PanelOnibus {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboOnibusRemocaoPlaca.getSelectedItem().equals("Selecione"))) {
                 cboOnibusRemocaoIdOculto.setSelectedIndex(cboOnibusRemocaoPlaca.getSelectedIndex());
-                onibus.setId(Integer.parseInt(String.valueOf(cboOnibusRemocaoIdOculto.getSelectedItem())));
+                onibus.setOnibusId(Integer.parseInt(String.valueOf(cboOnibusRemocaoIdOculto.getSelectedItem())));
                 Onibus aux = daoOnibus.consultaOnibus(onibus);
-                lblOnibusRemocaoModeloR.setText(aux.getModelo());
-                lblOnibusRemocaoMarcaR.setText(aux.getModelo());
-                lblOnibusRemocaoAnoR.setText(String.valueOf(aux.getAno()));
-                lblOnibusRemocaoQtdeAssentosR.setText(String.valueOf(aux.getQtdeAssentos()));
+                lblOnibusRemocaoModeloR.setText(aux.getOnibusModelo());
+                lblOnibusRemocaoMarcaR.setText(aux.getOnibusModelo());
+                lblOnibusRemocaoAnoR.setText(String.valueOf(aux.getOnibusAno()));
+                lblOnibusRemocaoQtdeAssentosR.setText(String.valueOf(aux.getOnibusQtdeAssentos()));
             } else {
                 lblOnibusRemocaoModeloR.setText("");
                 lblOnibusRemocaoMarcaR.setText("");
