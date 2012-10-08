@@ -1,11 +1,14 @@
 package util;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+
 import javax.swing.*;
 
 public class Backup {
 
-    public void CriarBackup() {
+
+    public void CriarBackup() throws URISyntaxException {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Selecione o caminho para realizar o backup");
 
@@ -18,7 +21,9 @@ public class Backup {
             if (System.getProperty("os.name").toUpperCase().compareTo("LINUX") == 0) {
                 commandDump = "/usr/bin/mysqldump";
             } else {
-                commandDump = "C:\\Program Files (x86)\\MySQL\\MySQL Server 5.1\\bin\\mysqldump.exe";
+            	final String uri;
+    	        String EnderecoDoJar = PastaCorrente();
+            	commandDump = EnderecoDoJar.concat("/mysqldump.exe");// =  getClass().getResource("/imagens/mysqldump.exe").getPath();
             }
             String location = fileChooser.getSelectedFile() + ".sql";
             ProcessBuilder pb = new ProcessBuilder(commandDump, "--user=root", "--password=root", "ProjES", "--result-file=" + location);
@@ -43,7 +48,15 @@ public class Backup {
                 cmd = "/bin/sh -c mysql --user=root --password=root --host=localhost ProjES < \"" + location + "\"";
             } else {
                 if (System.getProperty("os.name").toUpperCase().contains("WINDOWS")) {
-                    cmd = "cmd.exe /c \"C:\\Program Files (x86)\\MySQL\\MySQL Server 5.1\\bin\\mysql\" -hlocalhost -uroot -proot ProjES < " + location;
+                    JFileChooser fileChooserMysql = new JFileChooser();
+                    fileChooserMysql.setDialogTitle("Selecione o executavel do mysql");
+                    int variableChooser1 = fileChooserMysql.showOpenDialog(null);
+                    if (variableChooser1 == JFileChooser.APPROVE_OPTION) {
+                    	String locationMysql = fileChooserMysql.getSelectedFile().getAbsolutePath() + "";
+                    	locationMysql = locationMysql.substring(0, locationMysql.lastIndexOf(".exe"));
+                    	cmd = "cmd.exe /c \""+locationMysql+"\" -hlocalhost -uroot -proot ProjES < " + location;
+                    }
+                    cmd = "cmd.exe /c \"C:\\Program Files\\MySQL\\MySQL Server 5.5\\bin\\mysql\" -hlocalhost -uroot -proot ProjES < " + location;
                 }
             }
             try {
@@ -54,4 +67,9 @@ public class Backup {
             }
         }
     }
+    public String PastaCorrente() throws URISyntaxException {  
+        String caminho = Backup.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();  
+        caminho = caminho.substring(1, caminho.lastIndexOf('/') + 1);  
+        return caminho;
+}
 }

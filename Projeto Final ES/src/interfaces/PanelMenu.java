@@ -8,6 +8,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import javax.swing.*;
 
@@ -253,7 +254,12 @@ public class PanelMenu extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                menuBackupFazerBackupClick(evt);
+                try {
+					menuBackupFazerBackupClick(evt);
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
 
@@ -491,7 +497,7 @@ public class PanelMenu extends JPanel {
         funcionarioPanel.focusTxtConsulta();
     }
 
-    private void menuBackupFazerBackupClick(ActionEvent evt) {
+    private void menuBackupFazerBackupClick(ActionEvent evt) throws URISyntaxException {
         Backup fazerBackup = new Backup();
         fazerBackup.CriarBackup();
     }

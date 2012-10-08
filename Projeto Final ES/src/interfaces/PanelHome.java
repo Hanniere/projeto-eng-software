@@ -17,7 +17,7 @@ public class PanelHome {
         pnlHome.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(240, 240, 240)), " SISTEMA DE COMPRAS DE PASSAGENS DE ONIBUS ", TitledBorder.CENTER, TitledBorder.TOP, new Font("Segoe UI", 1, 14)));
         lblImagemInicial = new JLabel();
         String local = System.getProperty("user.dir"); //pega diretorio do projeto
-        lblImagemInicial.setIcon(new ImageIcon(local + "/src/imagens/logo.png"));
+        lblImagemInicial.setIcon(new ImageIcon(getClass().getResource("/imagens/logo.png")));
         pnlHome.add(lblImagemInicial);
         return pnlHome;
     }
