@@ -42,13 +42,13 @@ public class PanelMenu extends JPanel {
         btnItinerarioRota.setToolTipText("Rotas/Itinerarios");
 
         String local = System.getProperty("user.dir"); //pega diretorio do projeto
-        btnOnibus.setIcon(new ImageIcon(local + "/src/imagens/bt_onibus75m.png"));
-        btnMotorista.setIcon(new ImageIcon(local + "/src/imagens/bt_motorista75m.png"));
-        btnCidade.setIcon(new ImageIcon(local + "/src/imagens/bt_cidade75m.png"));
-        btnEstado.setIcon(new ImageIcon(local + "/src/imagens/bt_estados75m.png"));
-        btnRotaItinerario.setIcon(new ImageIcon(local + "/src/imagens/bt_rotaItinerario75m.png"));
-        btnHorario.setIcon(new ImageIcon(local + "/src/imagens/bt_itinerario75m.png"));
-        btnItinerarioRota.setIcon(new ImageIcon(local + "/src/imagens/bt_rota75m.png"));
+        btnOnibus.setIcon(new ImageIcon(getClass().getResource("/imagens/bt_onibus75m.png")));
+        btnMotorista.setIcon(new ImageIcon(getClass().getResource("/imagens/bt_motorista75m.png")));
+        btnCidade.setIcon(new ImageIcon(getClass().getResource("/imagens/bt_cidade75m.png")));
+        btnEstado.setIcon(new ImageIcon(getClass().getResource("/imagens/bt_estados75m.png")));
+        btnRotaItinerario.setIcon(new ImageIcon(getClass().getResource("/imagens/bt_rotaItinerario75m.png")));
+        btnItinerarioRota.setIcon(new ImageIcon(getClass().getResource("/imagens/bt_rota75m.png")));
+        btnHorario.setIcon(new ImageIcon(getClass().getResource("/imagens/bt_itinerario75m.png")));
 
         homePanel = new PanelHome();
         onibusPanel = new PanelOnibus();

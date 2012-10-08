@@ -12,6 +12,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
@@ -87,13 +88,11 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
 
     private void inserePnlInicioCompra() {
 
-        caminhoLocal = System.getProperty("user.dir"); //pega diretorio do projeto
-        pnlCompraFundoMotorista = new ImagePanel(caminhoLocal + "/src/imagens/motoristaCinza.jpg");
-        pnlCompraFundoOnibus = new ImagePanel(caminhoLocal + "/src/imagens/fundoCinza.jpg");
+        pnlCompraFundoMotorista = new ImagePanel("/imagens/motoristaCinza.jpg");
+        pnlCompraFundoOnibus = new ImagePanel("/imagens/fundoCinza.jpg");
         arrayLabelPoltronas = new ArrayList<JLabel>();
         arrayEscolhas = new ArrayList<Integer>();
 
-        caminhoLocal = caminhoLocal + "/src/imagens/cad_";
         caminhoImagemEscolhida = "_G";
         caminhoImagemLivre = "_N";
         caminhoImagemOcupada = "_R";
@@ -408,44 +407,44 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         for (int k = 4; k <= 48; k += 4) {
             if (arrayPoltronasOcupadas.contains(k)) {
                 arrayEscolhas.add(2);
-                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(caminhoLocal + k + caminhoImagemOcupada + tipoImagem));
+                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(getCadeiras(k, caminhoImagemOcupada)));
                 System.out.println("ocupada " + k);
             } else {
                 arrayEscolhas.add(0);
-                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(caminhoLocal + k + caminhoImagemLivre + tipoImagem));
+                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(getCadeiras(k, caminhoImagemLivre)));
             }
             contadorAssentos++;
         }
         for (int k = 3; k <= 47; k += 4) {
             if (arrayPoltronasOcupadas.contains(k)) {
                 arrayEscolhas.add(2);
-                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(caminhoLocal + k + caminhoImagemOcupada + tipoImagem));
+                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(getCadeiras(k, caminhoImagemOcupada)));
                 System.out.println("ocupada " + k);
             } else {
                 arrayEscolhas.add(0);
-                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(caminhoLocal + k + caminhoImagemLivre + tipoImagem));
+                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(getCadeiras(k, caminhoImagemLivre)));
             }
             contadorAssentos++;
         }
         for (int k = 2; k <= 46; k += 4) {
             if (arrayPoltronasOcupadas.contains(k)) {
                 arrayEscolhas.add(2);
-                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(caminhoLocal + k + caminhoImagemOcupada + tipoImagem));
+                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(getCadeiras(k, caminhoImagemOcupada)));
                 System.out.println("ocupada " + k);
             } else {
                 arrayEscolhas.add(0);
-                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(caminhoLocal + k + caminhoImagemLivre + tipoImagem));
+                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(getCadeiras(k, caminhoImagemLivre)));
             }
             contadorAssentos++;
         }
         for (int k = 1; k <= 45; k += 4) {
             if (arrayPoltronasOcupadas.contains(k)) {
                 arrayEscolhas.add(2);
-                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(caminhoLocal + k + caminhoImagemOcupada + tipoImagem));
+                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(getCadeiras(k, caminhoImagemOcupada)));
                 System.out.println("ocupada " + k);
             } else {
                 arrayEscolhas.add(0);
-                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(caminhoLocal + k + caminhoImagemLivre + tipoImagem));
+                arrayLabelPoltronas.get(contadorAssentos).setIcon(new ImageIcon(getCadeiras(k, caminhoImagemLivre)));
             }
             contadorAssentos++;
         }
@@ -552,10 +551,14 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                 txtAux1.setBackground(new Color(255, 255, 255));
             }
         }
-        String local = System.getProperty("user.dir");
+        //String local = System.getProperty("user.dir");
         try {
             double totalCompra = 0;
-            FileWriter f0 = new FileWriter(local + "/src/imagens/Comprovante_Compra.txt");
+            File comprovantes = new File("comprovantes");
+            if (!comprovantes.exists()) {
+            	comprovantes.mkdir();
+            }
+            FileWriter f0 = new FileWriter("comprovantes/Comprovante_Compra.txt");
             String barraN = System.getProperty ("line.separator");
             f0.write("Comprovante de Compra" + barraN + barraN + barraN);
             f0.write("Origem: " + cboCompraOrigem.getSelectedItem() + barraN);
@@ -601,7 +604,8 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                 }
             }
             f0.close();
-            java.awt.Desktop.getDesktop().open(new File(local + "/src/imagens/Comprovante_Compra.txt"));
+            new File("comprovantes").mkdir();
+            java.awt.Desktop.getDesktop().open(new File("comprovantes/Comprovante_Compra.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -831,13 +835,13 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         JLabel label = (JLabel) evt.getSource();
         int indiceLabel = (Integer.parseInt(label.getName()));
         if (arrayEscolhas.get(indiceLabel) == 0) {
-            label.setIcon(new ImageIcon(caminhoLocal + (Integer.parseInt(label.getText())) + caminhoImagemEscolhida + tipoImagem));
+            label.setIcon(new ImageIcon(getCadeiras((Integer.parseInt(label.getText())),caminhoImagemEscolhida)));
             System.out.println("clicou 0");
             //label.setIcon(new ImageIcon(caminhoImagemEscolhida + tipoImagem));
             arrayEscolhas.set(indiceLabel, 1);
         } else {
             if (arrayEscolhas.get(indiceLabel) == 1) {
-                label.setIcon(new ImageIcon(caminhoLocal + (Integer.parseInt(label.getText())) + caminhoImagemLivre + tipoImagem));
+                label.setIcon(new ImageIcon(getCadeiras((Integer.parseInt(label.getText())),caminhoImagemLivre)));
                 //label.setIcon(new ImageIcon(caminhoImagemLivre + tipoImagem));
                 arrayEscolhas.set(indiceLabel, 0);
             }
@@ -849,7 +853,7 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         JLabel label = (JLabel) evt.getSource();
         int indiceLabel = (Integer.parseInt(label.getName()));
         if (arrayEscolhas.get(indiceLabel) == 0) {
-            label.setIcon(new ImageIcon(caminhoLocal + (Integer.parseInt(label.getText())) + caminhoImagemEscolhida + tipoImagem));
+            label.setIcon(new ImageIcon(getCadeiras((Integer.parseInt(label.getText())),caminhoImagemEscolhida)));
             //label.setIcon(new ImageIcon(caminhoImagemEscolhida + tipoImagem));
         }
     }
@@ -860,9 +864,18 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         int indiceLabel = (Integer.parseInt(label.getName()));
         if (arrayEscolhas.get(indiceLabel) == 0) {
             System.out.println("exited = 0");
-            label.setIcon(new ImageIcon(caminhoLocal + (Integer.parseInt(label.getText())) + caminhoImagemLivre + tipoImagem));
+            label.setIcon(new ImageIcon(getCadeiras((Integer.parseInt(label.getText())),caminhoImagemLivre)));
             //label.setIcon(new ImageIcon(caminhoImagemLivre + tipoImagem));
         }
+    }
+    
+    private URL getCadeiras(int numeroCadeira, String tipoCadeira) {
+    	StringBuilder builder = new StringBuilder();
+    	builder.append("/imagens/cad_")
+    		   .append(numeroCadeira)
+    		   .append(tipoCadeira)
+    		   .append(tipoImagem);
+    	return getClass().getResource(builder.toString());
     }
 
     //nao usa
@@ -912,7 +925,6 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
     private JLabel lblCompraHorarioChegada;
     private JLabel lblCompraHorarioChegadaR;
     private JButton btnCompraAvancar;
-    private String caminhoLocal;
     private String caminhoImagemLivre;
     private String caminhoImagemOcupada;
     private String caminhoImagemEscolhida;

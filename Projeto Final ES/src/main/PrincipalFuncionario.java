@@ -88,6 +88,29 @@ public class PrincipalFuncionario extends JFrame {
         pnlLogin.add(lblSenha);
         pnlLogin.add(txtSenha);
         pnlLogin.add(btnLogar);
+        txtSenha.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+				
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					btnLogarClick(null);
+				}
+				
+			}
+		});
 
         btnLogar.addActionListener(new ActionListener() {
 

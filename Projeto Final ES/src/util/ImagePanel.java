@@ -11,7 +11,7 @@ public class ImagePanel extends JPanel {
     Image image;
 
     public ImagePanel(String caminho) {
-        image = new ImageIcon(caminho).getImage();
+        image = new ImageIcon(getClass().getResource(caminho)).getImage();
         Dimension d = new Dimension(image.getWidth(null), image.getHeight(null));
         setPreferredSize(d);
         setMinimumSize(d);
