@@ -337,10 +337,19 @@ public class PanelConsulta {
         sListConsultaPassagem.setPreferredSize(new Dimension(250, 210));
         //sListConsultaPassagem.setVisible(false);
         for (int i = 1; i <= 31; i++) {
-            cboConsultaPassagemDataDia.addItem(i);
+            if(i<10){
+                cboConsultaPassagemDataDia.addItem("0"+i);
+            } else {
+                cboConsultaPassagemDataDia.addItem(i);
+            }
         }
         for (int i = 1; i <= 12; i++) {
-            cboConsultaPassagemDataMes.addItem(i);
+            if(i<10){
+                cboConsultaPassagemDataMes.addItem("0"+i);
+                
+            } else {
+                cboConsultaPassagemDataMes.addItem(i);
+            }
         }
         for (int i = 2012; i <= 2013; i++) {
             cboConsultaPassagemDataAno.addItem(i);

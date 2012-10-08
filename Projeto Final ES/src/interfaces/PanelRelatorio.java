@@ -58,10 +58,18 @@ public class PanelRelatorio extends JFrame {
         frame.add(btnFecharFrame);
 
         for (int i = 1; i <= 31; i++) {
-            cboDia.addItem(i);
+            if(i<10){
+                cboDia.addItem("0"+i);
+            } else {
+                cboDia.addItem(i);
+            }
         }
         for (int i = 1; i <= 12; i++) {
-            cboMes.addItem(i);
+            if(i<10){
+                cboMes.addItem("0"+i);
+            } else {
+                cboMes.addItem(i);
+            }
         }
         for (int i = 2012; i >= 2000; i--) {
             cboAno.addItem(i);
@@ -131,14 +139,10 @@ public class PanelRelatorio extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent evt) {
-                fecharClick(evt);
+                setVisible(false);
             }
         });
 
-    }
-
-    private void fecharClick(ActionEvent evt) {
-        this.setVisible(false);
     }
     
     private DaoPassagem daoPassagem;

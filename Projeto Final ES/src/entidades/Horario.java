@@ -33,7 +33,7 @@ public class Horario implements Cloneable {
     }
 
     public void setHorario_rotaItinerarioId(int horario_rotaItinerarioId) {
-        horario_rotaItinerarioId = horario_rotaItinerarioId;
+        this.horario_rotaItinerarioId = horario_rotaItinerarioId;
     }
 
     public String getHorarioSaida() {
@@ -65,7 +65,7 @@ public class Horario implements Cloneable {
     }
 
     public void setHorario_motoristaId(int horario_motoristaId) {
-        horario_motoristaId = horario_motoristaId;
+        this.horario_motoristaId = horario_motoristaId;
     }
 
     public int getHorario_onibusId() {

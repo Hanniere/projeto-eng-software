@@ -243,7 +243,7 @@ public class DaoHorario {
             int destinoFinal = descobreCidadeDestinoFinal(idItinerario);
             int cidadeIntermediaria = descobreCidadeDestino(idHorario);
             System.out.println("destino final " + destinoFinal);
-            System.out.println("intermedi " + cidadeIntermediaria);
+            System.out.println("intermediario " + cidadeIntermediaria);
             if (cidadeIntermediaria == destinoFinal) {
                 System.out.println("entrou no if");
                 sql = "SELECT * FROM Horario WHERE HorarioId = " + horarioIdAux;

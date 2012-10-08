@@ -97,6 +97,7 @@ public class DaoMotorista {
             Connection conn = DriverManager.getConnection(banco.getStr_conn(), banco.getUsuario(), banco.getSenha());
             Statement stmt = conn.createStatement();
             String sql = "select * from Motorista where motoristaId = " + motorista.getMotoristaId();
+            System.out.println("ID motorista: "+motorista.getMotoristaId());
             ResultSet rs = stmt.executeQuery(sql);
             rs.next();
             dadosMotorista.setMotoristaRg(rs.getString("motoristaRg"));

@@ -2,6 +2,9 @@ package main;
 
 import entidades.Passagem;
 import dao.DaoPassagem;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.ImagePanel;
 import entidades.Horario;
 import java.awt.*;
@@ -22,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import javax.swing.text.MaskFormatter;
 
 public class PrincipalPassageiro extends JFrame implements MouseListener {
 
@@ -188,10 +192,19 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         btnCompraAvancar.setVisible(false);
 
         for (int i = 1; i <= 31; i++) {
-            cboCompraDataDia.addItem(i);
+            if(i<10){
+                cboCompraDataDia.addItem("0"+i);
+            } else {
+                cboCompraDataDia.addItem(i);
+            }
         }
         for (int i = 1; i <= 12; i++) {
-            cboCompraDataMes.addItem(i);
+            if(i<10){
+                cboCompraDataMes.addItem("0"+i);
+            } else {
+                cboCompraDataMes.addItem(i);
+            }
+            
         }
         for (int i = 2012; i <= 2013; i++) {
             cboCompraDataAno.addItem(i);
@@ -294,7 +307,7 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         }
     }
     
-    private void iniciaFimCompra(int qtde, ArrayList<Integer> arrayAssentos) {
+    private void iniciaFimCompra(int qtde, ArrayList<Integer> arrayAssentos) throws ParseException {
         listCompraFim.removeAll();
         Collections.sort(arrayAssentos);
         arrayAuxPnl = new ArrayList<JPanel>();
@@ -320,18 +333,42 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
             listCompraFim.add(arrayAuxPnl.get(i));
         }
         if (qtde % 2 == 0) {
-            listCompraFim.setPreferredSize(new Dimension(700, (qtde / 2) * 200 + 100));
+            listCompraFim.setPreferredSize(new Dimension(700, (qtde / 2) * 200 + 300));
         } else {
-            listCompraFim.setPreferredSize(new Dimension(700, (qtde / 2 + 1) * 200 + 100));
+            listCompraFim.setPreferredSize(new Dimension(700, (qtde / 2 + 1) * 200 + 300));
         }
+        JPanel aux2 = new JPanel(new FlowLayout(FlowLayout.LEFT,50,20));
+        aux2.setPreferredSize(new Dimension(500, 200));
         JPanel aux = new JPanel(new FlowLayout(FlowLayout.CENTER, 180, 0));
-        aux.setPreferredSize(new Dimension(880, 100));
+        aux.setPreferredSize(new Dimension(880, 100));     
+        MaskFormatter mascaraCartao = new MaskFormatter("####.####.####.####");
+        MaskFormatter mascaraData = new MaskFormatter("##/##/####");
+        MaskFormatter mascaraCodigo = new MaskFormatter("###");
+        JLabel cartaoCredito = new JLabel("Cartao de Credito:");
+        JLabel digitoSeguranca = new JLabel("Digito de segurança:");
+        JLabel dataValidade = new JLabel("Data de validade:");
+        JFormattedTextField txtCartaoCredito = new JFormattedTextField(mascaraCartao);
+        JFormattedTextField txtDigitoSeguranca = new JFormattedTextField(mascaraCodigo);
+        JFormattedTextField txtDataValidade = new JFormattedTextField(mascaraData);
+        cartaoCredito.setPreferredSize(new Dimension(120,30));
+        digitoSeguranca.setPreferredSize(new Dimension(120,30));
+        dataValidade.setPreferredSize(new Dimension(120,30));
+        txtCartaoCredito.setPreferredSize(new Dimension(200,30));
+        txtDigitoSeguranca.setPreferredSize(new Dimension(200,30));
+        txtDataValidade.setPreferredSize(new Dimension(200,30));
         btnFinalizarCompra = new JButton("Finalizar Compra");
         btnFinalizarCompra.setPreferredSize(new Dimension(250, 50));
         btnVoltarEtapaCompra = new JButton("Cancelar Compra");
         btnVoltarEtapaCompra.setPreferredSize(new Dimension(250, 50));
+        aux2.add(cartaoCredito);
+        aux2.add(txtCartaoCredito);
+        aux2.add(digitoSeguranca);
+        aux2.add(txtDigitoSeguranca);
+        aux2.add(dataValidade);
+        aux2.add(txtDataValidade);
         aux.add(btnVoltarEtapaCompra);
         aux.add(btnFinalizarCompra);
+        listCompraFim.add(aux2);
         listCompraFim.add(aux);
         arrayAuxPnl.get(0).getComponent(3).requestFocus();
 
@@ -488,7 +525,11 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         } else {
             pnlInicioCompra.setVisible(false);
             pnlFimCompra.setVisible(true);
-            iniciaFimCompra(contadorPoltronas, arrayAssentos);
+            try {
+                iniciaFimCompra(contadorPoltronas, arrayAssentos);
+            } catch (ParseException ex) {
+                Logger.getLogger(PrincipalPassageiro.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -511,22 +552,9 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                 txtAux1.setBackground(new Color(255, 255, 255));
             }
         }
-     /*   for (int i = 0; i < arrayAuxPnl.size(); i++) {
-            for (int j = i + 1; j < arrayAuxPnl.size(); j++) {
-                JTextField txtAux = (JTextField) arrayAuxPnl.get(i).getComponent(5);
-                JTextField txtAux1 = (JTextField) arrayAuxPnl.get(j).getComponent(5);
-                if (txtAux.getText().equals(txtAux1.getText())) {
-                    JOptionPane.showMessageDialog(null, "Nao foi possivel finalizar a compra. Digite CPFs diferentes para cada assento.");
-                    txtAux.setBackground(new Color(255, 200, 200));
-                    txtAux1.setBackground(new Color(255, 200, 200));
-                    txtAux.requestFocus();
-                    return;
-                }
-            }
-        }*/
         String local = System.getProperty("user.dir");
-        //escreve comprovante de compra
         try {
+            double totalCompra = 0;
             FileWriter f0 = new FileWriter(local + "/src/imagens/Comprovante_Compra.txt");
             String barraN = System.getProperty ("line.separator");
             f0.write("Comprovante de Compra" + barraN + barraN + barraN);
@@ -537,6 +565,7 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                 JLabel lblAux = (JLabel) arrayAuxPnl.get(i).getComponent(0);
                 JLabel lblAuxAssento = (JLabel) arrayAuxPnl.get(i).getComponent(1);
                 passagem.setPassagemNumAssentoComprado(Integer.parseInt(lblAuxAssento.getText().trim()));
+                totalCompra = totalCompra + Double.parseDouble(lblCompraHorarioPrecoR.getText().replace(",", "."));
                 f0.write(lblAux.getText() + " ");
                 f0.write(lblAuxAssento.getText() + barraN);
                 for (int j = 3; j < 6; j += 2) {
@@ -553,7 +582,9 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                     f0.write(lblAux1.getText() + " ");
                     f0.write(txtAux1.getText() + barraN);
                 }
-                f0.write(barraN + barraN);
+                f0.write(barraN + barraN + barraN);
+                DecimalFormat x = new DecimalFormat("#0.00");
+                f0.write("Total da compra: " + x.format(totalCompra));
                 
                 Calendar calendarPegarDiaSemana = Calendar.getInstance();
                 calendarPegarDiaSemana.set(Calendar.DAY_OF_MONTH, cboCompraDataDia.getSelectedIndex());
@@ -661,68 +692,43 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         }
     }
 
-    private void verificaDataEscolhida(String dia, String mes, String ano){
-        /*DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    private boolean verificaDataEscolhida(String dia, String mes, String ano){
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         Date date = new Date();
         String dataAtual = dateFormat.format(date);
         String dataEscolhida = ano+mes+dia;
-        System.out.println(dateFormat.format(ano+"/"+mes+"/"+dia));
-        System.out.println(Integer.parseInt(dataAtual));
-        System.out.println(Integer.parseInt(dataEscolhida));
         int resultado = Integer.parseInt(dataAtual) - Integer.parseInt(dataEscolhida);
         if(resultado<0){
-            System.out.println("pode comprar");
+            return true;
         } else if(resultado==0){
-            System.out.println("data igual");
+            return false;
         } else {
-            System.out.println("nao pode comprar");
+            return false;
         }
-    */
-        /*System.out.println(dataAtual);
-        System.out.println(dataEscolhida);
-        if(dataAtual.compareTo(dataEscolhida)>0){
-            System.out.println("data nao eh valida");
-        } else if (dataAtual.compareTo(dataEscolhida)==0){
-            System.out.println("data igual");
-        } else {
-            System.out.println("passou");
-        }*/
-        /*DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = new Date();
-        String dataAux = dateFormat.format(date);
-        Date dataAtual = new Date(dataAux);
-        
-        DateFormat dateFormat2 = new SimpleDateFormat("dd/MM/yyyy");
-        Date dataEscolhida = new Date(dataCompra);
-        
-        System.out.println(dataAtual);
-        System.out.println(dataEscolhida);
-        if (dataAtual.before(dataEscolhida) || dataEscolhida.after(dataAtual)) {
-            System.out.println("nao eh valida");
-        } else if (dataAtual.equals(dataEscolhida)) {
-            System.out.println("eh igual");
-        } else {
-            System.out.println("passou");
-        }*/
     }
     
     private void cboCompraDataAnoClick(ItemEvent evt) {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboCompraDataAno.getSelectedItem().equals("-"))) {
                 if (!(cboCompraDataDia.getSelectedItem().equals("-")) && !(cboCompraDataMes.getSelectedItem().equals("-"))) {
-                    //verificaDataEscolhida(String.valueOf(cboCompraDataDia.getSelectedItem())+"/"+ String.valueOf(cboCompraDataMes.getSelectedItem())+"/"+String.valueOf(cboCompraDataAno.getSelectedItem()));
-                    verificaDataEscolhida(String.valueOf(cboCompraDataDia.getSelectedItem()), String.valueOf(cboCompraDataMes.getSelectedItem()), String.valueOf(cboCompraDataAno.getSelectedItem()));
-                    ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboCompraDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
-                    cboCompraHorario.setEnabled(true);
-                    cboCompraHorario.removeAllItems();
-                    cboCompraHorario.addItem("Selecione");
-                    arrayHorariosId.clear();
-                    arrayHorariosId.add(0);
-                    for (int i = 0; i < horarios.size(); i++) {
-                        cboCompraHorario.addItem(horarios.get(i).getHorarioSaida());
-                        arrayHorariosId.add(horarios.get(i).getHorarioId());
+                    boolean verifica = verificaDataEscolhida(String.valueOf(cboCompraDataDia.getSelectedItem()), String.valueOf(cboCompraDataMes.getSelectedItem()), String.valueOf(cboCompraDataAno.getSelectedItem()));
+                    if(verifica){
+                        ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboCompraDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
+                        cboCompraHorario.setEnabled(true);
+                        cboCompraHorario.removeAllItems();
+                        cboCompraHorario.addItem("Selecione");
+                        arrayHorariosId.clear();
+                        arrayHorariosId.add(0);
+                        for (int i = 0; i < horarios.size(); i++) {
+                            cboCompraHorario.addItem(horarios.get(i).getHorarioSaida());
+                            arrayHorariosId.add(horarios.get(i).getHorarioId());
+                        }
+                        cboCompraHorario.requestFocus();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Data nao permitida para compra.");
+                        cboCompraHorario.setEnabled(false);
+                        cboCompraHorario.setSelectedIndex(0);
                     }
-                    cboCompraHorario.requestFocus();
                 }
             }
         }
@@ -732,17 +738,22 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboCompraDataMes.getSelectedItem().equals("-"))) {
                 if (!(cboCompraDataDia.getSelectedItem().equals("-")) && !(cboCompraDataAno.getSelectedItem().equals("-"))) {
-                    verificaDataEscolhida(String.valueOf(cboCompraDataDia.getSelectedItem()), String.valueOf(cboCompraDataMes.getSelectedItem()), String.valueOf(cboCompraDataAno.getSelectedItem()));
-                    //verificaDataEscolhida(String.valueOf(cboCompraDataDia.getSelectedItem())+"/"+ String.valueOf(cboCompraDataMes.getSelectedItem())+"/"+String.valueOf(cboCompraDataAno.getSelectedItem()));
-                    ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboCompraDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
-                    cboCompraHorario.setEnabled(true);
-                    cboCompraHorario.removeAllItems();
-                    cboCompraHorario.addItem("Selecione");
-                    arrayHorariosId.clear();
-                    arrayHorariosId.add(0);
-                    for (int i = 0; i < horarios.size(); i++) {
-                        cboCompraHorario.addItem(horarios.get(i).getHorarioSaida());
-                        arrayHorariosId.add(horarios.get(i).getHorarioId());
+                    boolean verifica = verificaDataEscolhida(String.valueOf(cboCompraDataDia.getSelectedItem()), String.valueOf(cboCompraDataMes.getSelectedItem()), String.valueOf(cboCompraDataAno.getSelectedItem()));
+                    if(verifica){
+                        ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboCompraDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
+                        cboCompraHorario.setEnabled(true);
+                        cboCompraHorario.removeAllItems();
+                        cboCompraHorario.addItem("Selecione");
+                        arrayHorariosId.clear();
+                        arrayHorariosId.add(0);
+                        for (int i = 0; i < horarios.size(); i++) {
+                            cboCompraHorario.addItem(horarios.get(i).getHorarioSaida());
+                            arrayHorariosId.add(horarios.get(i).getHorarioId());
+                        } 
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Data nao permitida para compra.");
+                        cboCompraHorario.setEnabled(false);
+                        cboCompraHorario.setSelectedIndex(0);
                     }
                 }
                 cboCompraDataAno.requestFocus();
@@ -754,18 +765,22 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             if (!(cboCompraDataDia.getSelectedItem().equals("-"))) {
                 if (!(cboCompraDataAno.getSelectedItem().equals("-")) && !(cboCompraDataMes.getSelectedItem().equals("-"))) {
-                    //verificaDataEscolhida(Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
-                    //verificaDataEscolhida(String.valueOf(cboCompraDataDia.getSelectedItem())+"/"+ String.valueOf(cboCompraDataMes.getSelectedItem())+"/"+String.valueOf(cboCompraDataAno.getSelectedItem()));
-                    verificaDataEscolhida(String.valueOf(cboCompraDataDia.getSelectedItem()), String.valueOf(cboCompraDataMes.getSelectedItem()), String.valueOf(cboCompraDataAno.getSelectedItem()));
-                    ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboCompraDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
-                    cboCompraHorario.setEnabled(true);
-                    cboCompraHorario.removeAllItems();
-                    cboCompraHorario.addItem("Selecione");
-                    arrayHorariosId.clear();
-                    arrayHorariosId.add(0);
-                    for (int i = 0; i < horarios.size(); i++) {
-                        cboCompraHorario.addItem(horarios.get(i).getHorarioSaida());
-                        arrayHorariosId.add(horarios.get(i).getHorarioId());
+                    boolean verifica = verificaDataEscolhida(String.valueOf(cboCompraDataDia.getSelectedItem()), String.valueOf(cboCompraDataMes.getSelectedItem()), String.valueOf(cboCompraDataAno.getSelectedItem()));
+                    if(verifica){
+                        ArrayList<Horario> horarios = daoPassagem.carregaHorarios(arrayRotaItinerarioIdCidadeDestino.get(cboCompraDestino.getSelectedIndex()), Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())), Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
+                        cboCompraHorario.setEnabled(true);
+                        cboCompraHorario.removeAllItems();
+                        cboCompraHorario.addItem("Selecione");
+                        arrayHorariosId.clear();
+                        arrayHorariosId.add(0);
+                        for (int i = 0; i < horarios.size(); i++) {
+                            cboCompraHorario.addItem(horarios.get(i).getHorarioSaida());
+                            arrayHorariosId.add(horarios.get(i).getHorarioId());
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Data nao permitida para compra.");
+                        cboCompraHorario.setEnabled(false);
+                        cboCompraHorario.setSelectedIndex(0);
                     }
                 }
                 cboCompraDataMes.requestFocus();
@@ -792,7 +807,6 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                 Horario precoEHorarioChegada = daoPassagem.consultaPrecoEHorarioChegada(arrayHorariosId.get(cboCompraHorario.getSelectedIndex()),arrayCidadesDestinoId.get(cboCompraDestino.getSelectedIndex()-1),Integer.parseInt(String.valueOf(cboCompraDataDia.getSelectedItem())),Integer.parseInt(String.valueOf(cboCompraDataMes.getSelectedItem())),Integer.parseInt(String.valueOf(cboCompraDataAno.getSelectedItem())));
                 lblCompraHorarioChegadaR.setText(precoEHorarioChegada.getHorarioChegada());
                 DecimalFormat x = new DecimalFormat("#0.00");
-                
                 lblCompraHorarioPrecoR.setText(String.valueOf(x.format(precoEHorarioChegada.getHorarioPreco())));
                 for (int i = 0; i < arrayTabelaHorarioId.size(); i++) {
                     System.out.println("horario: " + arrayTabelaHorarioId.get(i));
