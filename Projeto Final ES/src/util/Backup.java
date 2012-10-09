@@ -56,7 +56,7 @@ public class Backup {
                     	locationMysql = locationMysql.substring(0, locationMysql.lastIndexOf(".exe"));
                     	cmd = "cmd.exe /c \""+locationMysql+"\" -hlocalhost -uroot -proot ProjES < " + location;
                     }
-                    cmd = "cmd.exe /c \"C:\\Program Files\\MySQL\\MySQL Server 5.5\\bin\\mysql\" -hlocalhost -uroot -proot ProjES < " + location;
+                    //cmd = "cmd.exe /c \"C:\\Program Files\\MySQL\\MySQL Server 5.5\\bin\\mysql\" -hlocalhost -uroot -proot ProjES < " + location;
                 }
             }
             try {
