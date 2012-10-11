@@ -551,7 +551,6 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                 txtAux1.setBackground(new Color(255, 255, 255));
             }
         }
-        //String local = System.getProperty("user.dir");
         try {
             double totalCompra = 0;
             File comprovantes = new File("comprovantes");

@@ -24,7 +24,7 @@ import dao.DaoRota;
 import dao.DaoCidade;
 import entidades.*;
 
-public class PanelItinerarioRota extends JPanel {
+public class PanelItinerarioRota {
 
     public JPanel inserirPnlRotaItinerario() {
         fontePadrao = new Font("Segoe UI", 1, 14);

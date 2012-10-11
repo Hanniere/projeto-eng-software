@@ -19,7 +19,7 @@ import javax.swing.text.PlainDocument;
 import entidades.Motorista;
 
 
-public class PanelMotorista extends JPanel {
+public class PanelMotorista {
 
     public JPanel inserirPnlMotorista() throws ParseException {
         fontePadrao = new Font("Segoe UI", 1, 14);

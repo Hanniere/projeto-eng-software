@@ -34,7 +34,7 @@ import entidades.Itinerario;
 import entidades.Rota;
 import entidades.RotaItinerario;
 
-public class PanelRotaItinerario extends JPanel {
+public class PanelRotaItinerario {
 
     public JPanel inserirPnlItinerario() {
         fontePadrao = new Font("Segoe UI", 1, 14);
@@ -69,7 +69,7 @@ public class PanelRotaItinerario extends JPanel {
                             cboCadastroDestino.setEnabled(true);
                             btnCadastroAddRota.setEnabled(true);
                         } else {
-                            JOptionPane.showMessageDialog(PanelRotaItinerario.this, "Cidade de origem nao possui rotas associadas.");
+                            JOptionPane.showMessageDialog(null, "Cidade de origem nao possui rotas associadas.");
                             reinicia();
                         }
                     } else {
@@ -313,7 +313,7 @@ public class PanelRotaItinerario extends JPanel {
         scrollPaneRemocao.setBounds(2, 20, 321, 148);
         tableRotasRemocao.setVisible(false);
 
-        tableRotasRemocao.setToolTipText("Clique duas vezes para alterar rotas.");
+        //tableRotasRemocao.setToolTipText("Clique duas vezes para alterar rotas.");
         tbmRemocao.addColumn("Origem");
         tbmRemocao.addColumn("Destino");
         tableRotasRemocao.setFillsViewportHeight(true);

@@ -16,7 +16,7 @@ import main.PrincipalFuncionario;
 
 import util.Backup;
 
-public class PanelMenu extends JPanel {
+public class PanelMenu {
 
     public JPanel inserirPnlMenu() throws ParseException {
         pnlMenu = new JPanel();

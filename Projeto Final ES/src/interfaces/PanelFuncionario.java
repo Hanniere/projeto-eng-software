@@ -17,7 +17,7 @@ import javax.swing.text.PlainDocument;
 
 import entidades.Funcionario;
 
-public class PanelFuncionario extends JPanel {
+public class PanelFuncionario {
 
     public JPanel inserirPnlFuncionario() throws ParseException {
         fontePadrao = new Font("Segoe UI", 1, 14);

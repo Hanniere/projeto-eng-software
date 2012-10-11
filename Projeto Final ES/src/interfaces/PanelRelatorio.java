@@ -49,7 +49,7 @@ public class PanelRelatorio extends JFrame {
         btnGerarRelatorio.setBounds(15, 100, 130, 40);
         btnFecharFrame.setBounds(160, 100, 110, 40);
         barraN = System.clearProperty("line.separator");
-        
+
         frame.add(lblSelecioneData);
         frame.add(cboDia);
         frame.add(cboMes);
@@ -58,20 +58,20 @@ public class PanelRelatorio extends JFrame {
         frame.add(btnFecharFrame);
 
         for (int i = 1; i <= 31; i++) {
-            if(i<10){
-                cboDia.addItem("0"+i);
+            if (i < 10) {
+                cboDia.addItem("0" + i);
             } else {
                 cboDia.addItem(i);
             }
         }
         for (int i = 1; i <= 12; i++) {
-            if(i<10){
-                cboMes.addItem("0"+i);
+            if (i < 10) {
+                cboMes.addItem("0" + i);
             } else {
                 cboMes.addItem(i);
             }
         }
-        for (int i = 2013; i >= 2000; i--) {
+        for (int i = 2012; i >= 2000; i--) {
             cboAno.addItem(i);
         }
 
@@ -92,25 +92,25 @@ public class PanelRelatorio extends JFrame {
                     String local = System.getProperty("user.dir");
                     //escreve relatorio
                     try {
+                        double faturamentoDia = 0;
                         ArrayList<ArrayList<String>> passagens = daoPassagem.consultarTodasPassagensDoDia(String.valueOf(cboDia.getSelectedItem()) + "/" + String.valueOf(cboMes.getSelectedItem()) + "/" + String.valueOf(cboAno.getSelectedItem()));
-                        if(passagens.isEmpty()){
-                            JOptionPane.showMessageDialog(null, "Nao ha passagens compradas nesta data.");      
+                        if (passagens.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Nao ha passagens compradas nesta data.");
                         } else {
-                        	File relatorios = new File("relatorios");
-                            if (!relatorios.exists()) {
-                            	relatorios.mkdir();
-                            }
-                            FileWriter f0 = new FileWriter("relatorios/relatorioDoDia.txt");
-                           // FileWriter f0 = new FileWriter(local + "/src/imagens/ComprovanteCompra.txt");
+                            FileWriter f0 = new FileWriter("relatorios/relatorioDoDia"+String.valueOf(cboDia.getSelectedItem()) + "-" + String.valueOf(cboMes.getSelectedItem()) + "-" + String.valueOf(cboAno.getSelectedItem())+".txt");
                             f0.write("Relatorio do dia " + String.valueOf(cboDia.getSelectedItem()) + "/" + String.valueOf(cboMes.getSelectedItem()) + "/" + String.valueOf(cboAno.getSelectedItem()) + barraN + barraN + barraN);
-                            for (int i = 0; i < passagens.size()-1; i++) {
+                            for (int i = 0; i < passagens.size() - 1; i++) {
                                 int j = i;
                                 while ((passagens.get(j).get(1).equals(passagens.get(j + 1).get(1))) && (passagens.get(j).get(13).equals(passagens.get(j + 1).get(13))) && (passagens.get(j).get(3).equals(passagens.get(j + 1).get(3)))) {
+                                    faturamentoDia = faturamentoDia + Double.parseDouble(passagens.get(j).get(6));
+                                    System.out.println("j = " + j);
                                     j++;
-                                    if (j == passagens.size()-1) {
+                                    if (j == passagens.size() - 1) {
+                                        System.out.println("j = " + j);
                                         break;
                                     }
                                 }
+                                faturamentoDia = faturamentoDia + Double.parseDouble(passagens.get(j).get(6));
                                 f0.write(barraN + "Passageiro: " + passagens.get(i).get(2));
                                 f0.write(barraN + "CPF: " + passagens.get(i).get(1));
                                 f0.write(barraN + "Assento comprado: " + passagens.get(i).get(3));
@@ -121,12 +121,14 @@ public class PanelRelatorio extends JFrame {
                                 //f0.write(barraN+"Motorista que fez esta viagem: "+passagens.get(i).get(12));
 
 
-                                f0.write(barraN + barraN);
+                                f0.write(barraN + barraN + barraN + barraN);
                                 i = j;
-                                System.out.println("i modificado: "+ i);
+                                System.out.println("i modificado: " + i);
                             }
+                            f0.write("Faturamento total do dia: " + faturamentoDia);
+                            f0.write(barraN + barraN);
                             f0.close();
-                            java.awt.Desktop.getDesktop().open(new File(local + "/src/imagens/ComprovanteCompra.txt"));
+                            java.awt.Desktop.getDesktop().open(new File("relatorios/relatorioDoDia"+String.valueOf(cboDia.getSelectedItem()) + "-" + String.valueOf(cboMes.getSelectedItem()) + "-" + String.valueOf(cboAno.getSelectedItem())+".txt"));
                             cboDia.setSelectedIndex(0);
                             cboMes.setSelectedIndex(0);
                             cboAno.setSelectedIndex(0);
@@ -149,7 +151,7 @@ public class PanelRelatorio extends JFrame {
         });
 
     }
-    
+
     private DaoPassagem daoPassagem;
     private JLabel lblSelecioneData;
     private JComboBox cboDia;

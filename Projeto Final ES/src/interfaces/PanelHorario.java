@@ -34,7 +34,7 @@ import entidades.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class PanelHorario extends JPanel {
+public class PanelHorario {
 
     public JPanel inserirPnlHorario() {
         format = NumberFormat.getNumberInstance();
@@ -399,12 +399,12 @@ public class PanelHorario extends JPanel {
             public void itemStateChanged(ItemEvent evt) {
                 if (evt.getStateChange() == ItemEvent.SELECTED) {
                     if (cboHoraCadastro.getSelectedIndex() == 0 && flagMinCadastro == 0) {
-                        JOptionPane.showMessageDialog(PanelHorario.this, "Selecione a hora!");
+                        JOptionPane.showMessageDialog(null, "Selecione a hora!");
                         flagMinCadastro = 1;
                         cboMinCadastro.setSelectedIndex(0);
                         System.out.println("2 " + flagMinCadastro);
                     } else if (cboMinCadastro.getSelectedIndex() == 0 && flagMinCadastro == 0) {
-                        JOptionPane.showMessageDialog(PanelHorario.this, "Selecione os minutos!");
+                        JOptionPane.showMessageDialog(null, "Selecione os minutos!");
                         flagMinCadastro = 1;
                         System.out.println("3 " + flagMinCadastro);
                     } else if ((chBxDomingoCadastro.isSelected() || chBxSegundaFeiraCadastro.isSelected() || chBxTercaFeiraCadastro.isSelected() || chBxQuartaFeiraCadastro.isSelected()
@@ -432,7 +432,7 @@ public class PanelHorario extends JPanel {
                         }
                     } else if (flagMinCadastro == 0) {
                         System.out.println("5 " + flagMinCadastro);
-                        JOptionPane.showMessageDialog(PanelHorario.this, "Selecione pelo menos um dia da semana.");
+                        JOptionPane.showMessageDialog(null, "Selecione pelo menos um dia da semana.");
                         flagMinCadastro = 1;
                         cboMinCadastro.setSelectedIndex(0);
                         cboHoraCadastro.setSelectedIndex(0);
@@ -538,11 +538,11 @@ public class PanelHorario extends JPanel {
             public void itemStateChanged(ItemEvent ie) {
                 if (ie.getStateChange() == ItemEvent.SELECTED) {
                     if (cboHoraRemocao.getSelectedIndex() == 0 && flagMinRemocao == 0) {
-                        JOptionPane.showMessageDialog(PanelHorario.this, "Selecione a hora!");
+                        JOptionPane.showMessageDialog(null, "Selecione a hora!");
                         cboHoraRemocao.setSelectedIndex(0);
                         //flagMinRemocao = 1;
                     } else if (cboMinRemocao.getSelectedIndex() == 0 && flagMinRemocao == 0) {
-                        JOptionPane.showMessageDialog(PanelHorario.this, "Selecione os minutos!");
+                        JOptionPane.showMessageDialog(null, "Selecione os minutos!");
                         // flagMinRemocao = 1;
                     } else if (flagMinRemocao == 1) {
                         flagMinRemocao = 0;
@@ -1059,7 +1059,7 @@ public class PanelHorario extends JPanel {
             JComboBox cboMotorista = (JComboBox) arrayAuxPnlCadastro.get(i).getComponent(6);
 
             if (txtPreco.getText() == null || cboMotorista.getSelectedIndex() == 0) {
-                JOptionPane.showMessageDialog(PanelHorario.this, "Preencha todos os campos antes de confirmar.");
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos antes de confirmar.");
                 return false;
             }
         }
@@ -1110,7 +1110,7 @@ public class PanelHorario extends JPanel {
         horariosUtilizados = daoHorario.verificaHorarioItinerario(idItinerario, 1, dias, horaSaida);
 
         if (!horariosUtilizados.isEmpty()) {
-            JOptionPane.showMessageDialog(PanelHorario.this, "Horario de saida ja existe nos dias selecionados.");
+            JOptionPane.showMessageDialog(null, "Horario de saida ja existe nos dias selecionados.");
             reinicia();
             return false;
         }
