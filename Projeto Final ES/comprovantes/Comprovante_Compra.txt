@@ -1,0 +1,14 @@
+Comprovante de Compra
+
+
+Origem: São José dos Campos
+Destino: Atibaia
+
+
+Assento:      16
+Nome Passageiro: 1234
+CPF Passageiro: 234
+
+
+
+Total da compra: 32,00

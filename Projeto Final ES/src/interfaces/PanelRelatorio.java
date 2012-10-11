@@ -71,7 +71,7 @@ public class PanelRelatorio extends JFrame {
                 cboMes.addItem(i);
             }
         }
-        for (int i = 2012; i >= 2000; i--) {
+        for (int i = 2013; i >= 2000; i--) {
             cboAno.addItem(i);
         }
 
@@ -97,6 +97,10 @@ public class PanelRelatorio extends JFrame {
                         if (passagens.isEmpty()) {
                             JOptionPane.showMessageDialog(null, "Nao ha passagens compradas nesta data.");
                         } else {
+                            File relatorios = new File("relatorios");
+                            if (!relatorios.exists()) {
+                            	relatorios.mkdir();
+                            }
                             FileWriter f0 = new FileWriter("relatorios/relatorioDoDia"+String.valueOf(cboDia.getSelectedItem()) + "-" + String.valueOf(cboMes.getSelectedItem()) + "-" + String.valueOf(cboAno.getSelectedItem())+".txt");
                             f0.write("Relatorio do dia " + String.valueOf(cboDia.getSelectedItem()) + "/" + String.valueOf(cboMes.getSelectedItem()) + "/" + String.valueOf(cboAno.getSelectedItem()) + barraN + barraN + barraN);
                             for (int i = 0; i < passagens.size() - 1; i++) {

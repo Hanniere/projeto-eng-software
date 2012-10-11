@@ -585,8 +585,7 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                     f0.write(txtAux1.getText() + barraN);
                 }
                 f0.write(barraN + barraN + barraN);
-                DecimalFormat x = new DecimalFormat("#0.00");
-                f0.write("Total da compra: " + x.format(totalCompra));
+                
                 
                 Calendar calendarPegarDiaSemana = Calendar.getInstance();
                 calendarPegarDiaSemana.set(Calendar.DAY_OF_MONTH, cboCompraDataDia.getSelectedIndex());
@@ -602,6 +601,8 @@ public class PrincipalPassageiro extends JFrame implements MouseListener {
                     daoPassagem.cadastrarPassagemComprada(passagem);
                 }
             }
+            DecimalFormat x = new DecimalFormat("#0.00");
+            f0.write("Total da compra: " + x.format(totalCompra));
             f0.close();
             new File("comprovantes").mkdir();
             java.awt.Desktop.getDesktop().open(new File("comprovantes/Comprovante_Compra.txt"));
